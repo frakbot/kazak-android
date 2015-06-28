@@ -1,15 +1,19 @@
 package com.droidcon.uk.app
 
+import com.droidcon.uk.app.model.Schedule
+import com.droidcon.uk.app.model.Talk
+import com.droidcon.uk.app.rx.InfiniteOperator
 import rx.Observable
 import rx.subjects.BehaviorSubject
+import java.util.Collections
 
-public class ADataProvider : DataProvider {
+public class ADataRepository : DataRepository {
 
     val scheduleCache: BehaviorSubject<Schedule> = BehaviorSubject.create()
 
     override fun getSchedule(): Observable<Schedule> {
         if (!scheduleCache.hasValue()) {
-            fetchSchedule()
+            updateSchedule()
         }
         return scheduleCache
     }
@@ -24,8 +28,10 @@ public class ADataProvider : DataProvider {
         }
     }
 
-    private fun fetchSchedule() {
-        throw UnsupportedOperationException("not implemented") //To change body of created functions use File | Settings | File Templates.
+    private fun updateSchedule() {
+        Observable.just(Schedule(Collections.emptyList()))
+                .lift(InfiniteOperator<Schedule>())
+                .subscribe(scheduleCache)
     }
 
     override fun bar(param: String) {

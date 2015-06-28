@@ -1,4 +1,4 @@
-package com.droidcon.uk.app
+package com.droidcon.uk.app.model
 
 import java.util.*
 
