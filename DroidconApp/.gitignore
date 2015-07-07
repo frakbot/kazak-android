@@ -3,6 +3,7 @@
 /.idea/libraries
 *.iml
 .DS_Store
+Thumbs.db
 
 # Built application files
 *.apk
@@ -30,7 +31,3 @@ proguard/
 
 # Log Files
 *.log
-
-# Generated during build
-com_crashlytics_export_strings.xml
-crashlytics.properties
