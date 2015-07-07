@@ -1,6 +1,10 @@
 <resources>
-  <string name="app_name">Droidcon App</string>
 
-  <string name="hello_world">Hello world!</string>
-  <string name="action_settings">Settings</string>
+  <string name="app_name">Droidcon London</string>
+
+  <string name="error_loading_schedule">Error while loading schedule.</string>
+  <string name="action_retry">RETRY</string>
+
+  <string name="menu_nav_schedule">Schedule</string>
+
 </resources>
