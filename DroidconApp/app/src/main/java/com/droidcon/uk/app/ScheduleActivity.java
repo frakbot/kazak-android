@@ -44,6 +44,19 @@ public class ScheduleActivity extends AppCompatActivity {
         toolbar = (Toolbar) findViewById(R.id.appbar);
 
         setupAppBar();
+        hackToHideNavDrawerHeaderRipple();
+    }
+
+    private void hackToHideNavDrawerHeaderRipple() {
+        // TODO remove this when 22.2.1 is released
+        // See https://code.google.com/p/android/issues/detail?id=176400
+        View navigationHeader = findViewById(R.id.navigation_header);
+        ((View) navigationHeader.getParent()).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Do nothing
+            }
+        });
     }
 
     private void setupAppBar() {
