@@ -1,4 +1,4 @@
-package com.droidcon.uk.app;
+package uk.co.droidcon.kazak;
 
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -9,7 +9,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.FrameLayout;
 
-import com.droidcon.uk.app.model.Schedule;
+import uk.co.droidcon.kazak.app.R;
+import uk.co.droidcon.kazak.model.Schedule;
 
 import javax.inject.Inject;
 
@@ -116,6 +117,7 @@ public class ScheduleActivity extends AppCompatActivity {
         public void onNext(Schedule schedule) {
             updateWith(schedule);
         }
+
     }
 
 }

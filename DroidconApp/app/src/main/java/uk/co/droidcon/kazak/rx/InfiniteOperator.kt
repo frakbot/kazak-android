@@ -1,9 +1,10 @@
-package com.droidcon.uk.app.rx
+package uk.co.droidcon.kazak.rx
 
 import rx.Observable
 import rx.Subscriber
 
 public class InfiniteOperator<T> : Observable.Operator<T, T> {
+
     override fun call(subscriber: Subscriber<in T>): Subscriber<in T> {
         return object : Subscriber<T>() {
             override fun onCompleted() {
@@ -19,4 +20,5 @@ public class InfiniteOperator<T> : Observable.Operator<T, T> {
             }
         }
     }
+
 }

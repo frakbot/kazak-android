@@ -1,8 +1,8 @@
-package com.droidcon.uk.app
+package uk.co.droidcon.kazak
 
-import com.droidcon.uk.app.model.Schedule
-import com.droidcon.uk.app.model.Talk
-import com.droidcon.uk.app.rx.InfiniteOperator
+import uk.co.droidcon.kazak.model.Schedule
+import uk.co.droidcon.kazak.model.Talk
+import uk.co.droidcon.kazak.rx.InfiniteOperator
 import rx.Observable
 import rx.subjects.BehaviorSubject
 import java.util.Collections

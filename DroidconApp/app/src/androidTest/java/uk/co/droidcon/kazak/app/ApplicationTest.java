@@ -1,4 +1,4 @@
-package com.droidcon.uk.app;
+package uk.co.droidcon.kazak.app;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

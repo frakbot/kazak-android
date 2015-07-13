@@ -18,7 +18,7 @@ android {
     buildToolsVersion "22.0.1"
 
     defaultConfig {
-        applicationId "com.droidcon.uk.app"
+        applicationId "uk.co.droidcon.kazak"
         minSdkVersion 19
         targetSdkVersion 22
         versionCode 1

@@ -1,13 +1,15 @@
-package com.droidcon.uk.app
+package uk.co.droidcon.kazak
 
-import com.droidcon.uk.app.model.Schedule
-import com.droidcon.uk.app.model.Talk
+import uk.co.droidcon.kazak.model.Schedule
+import uk.co.droidcon.kazak.model.Talk
 import rx.Observable
 
 public interface DataRepository {
+
     fun getSchedule(): Observable<Schedule>
 
     fun getTalk(id : String): Observable<Talk>
 
     fun bar(param : String)
+
 }

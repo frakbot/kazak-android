@@ -1,9 +1,9 @@
-package com.droidcon.uk.app;
+package uk.co.droidcon.kazak;
 
 import android.app.Application;
 
-import com.droidcon.uk.app.injection.ApplicationInjector;
-import com.droidcon.uk.app.injection.DaggerApplicationInjector;
+import uk.co.droidcon.kazak.injection.ApplicationInjector;
+import uk.co.droidcon.kazak.injection.DaggerApplicationInjector;
 
 public class DroidconApplication extends Application {
 
@@ -21,4 +21,5 @@ public class DroidconApplication extends Application {
         }
         return applicationInjector;
     }
+
 }
