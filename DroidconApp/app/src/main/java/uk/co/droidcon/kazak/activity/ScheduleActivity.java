@@ -1,4 +1,4 @@
-package uk.co.droidcon.kazak;
+package uk.co.droidcon.kazak.activity;
 
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -9,14 +9,16 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.FrameLayout;
 
-import uk.co.droidcon.kazak.app.R;
-import uk.co.droidcon.kazak.model.Schedule;
-
 import javax.inject.Inject;
 
 import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.subscriptions.CompositeSubscription;
+import uk.co.droidcon.kazak.DataRepository;
+import uk.co.droidcon.kazak.DroidconApplication;
+import uk.co.droidcon.kazak.R;
+import uk.co.droidcon.kazak.model.Schedule;
+import uk.co.droidcon.kazak.view.ScheduleView;
 
 public class ScheduleActivity extends AppCompatActivity {
 
@@ -29,6 +31,7 @@ public class ScheduleActivity extends AppCompatActivity {
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
     private Toolbar toolbar;
+    private ScheduleView scheduleView;
 
     public ScheduleActivity() {
         subscriptions = new CompositeSubscription();
@@ -39,10 +42,12 @@ public class ScheduleActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         DroidconApplication.injector().inject(this);
         setContentView(R.layout.activity_schedule);
+
         contentRootView = (FrameLayout) findViewById(R.id.content_root);
         drawerLayout = (DrawerLayout) findViewById(R.id.navigation_drawer);
         navigationView = (NavigationView) findViewById(R.id.drawer_menu);
         toolbar = (Toolbar) findViewById(R.id.appbar);
+        scheduleView = (ScheduleView) findViewById(R.id.schedule);
 
         setupAppBar();
         hackToHideNavDrawerHeaderRipple();
@@ -91,7 +96,7 @@ public class ScheduleActivity extends AppCompatActivity {
     }
 
     private void updateWith(Schedule schedule) {
-        // TODO
+        scheduleView.updateWith(schedule);
     }
 
     private class ScheduleObserver implements Observer<Schedule> {
