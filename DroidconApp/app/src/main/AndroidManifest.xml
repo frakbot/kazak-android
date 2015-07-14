@@ -10,7 +10,7 @@
     android:theme="@style/Theme.Droidcon">
 
     <activity
-      android:name="uk.co.droidcon.kazak.activity.ScheduleActivity"
+      android:name="uk.co.droidcon.kazak.schedule.ScheduleActivity"
       android:label="@string/app_name">
 
       <intent-filter>

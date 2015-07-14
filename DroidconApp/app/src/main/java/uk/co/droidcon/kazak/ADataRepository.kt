@@ -1,11 +1,11 @@
 package uk.co.droidcon.kazak
 
-import uk.co.droidcon.kazak.model.Schedule
-import uk.co.droidcon.kazak.model.Talk
-import uk.co.droidcon.kazak.rx.InfiniteOperator
 import rx.Observable
 import rx.subjects.BehaviorSubject
-import java.util.Collections
+import uk.co.droidcon.kazak.model.*
+import uk.co.droidcon.kazak.rx.InfiniteOperator
+import java.util.ArrayList
+import java.util.Date
 
 public class ADataRepository : DataRepository {
 
@@ -29,9 +29,28 @@ public class ADataRepository : DataRepository {
     }
 
     private fun updateSchedule() {
-        Observable.just(Schedule(Collections.emptyList()))
+        // TODO implement real data we get from the server
+        Observable.just(Schedule(generateDummyDaySchedule()))
                 .lift(InfiniteOperator<Schedule>())
                 .subscribe(scheduleCache)
+    }
+
+    private fun generateDummyDaySchedule(): List<Day> {
+        val talks = generateDummyTalks()
+        val day = Day(Date(), talks)
+        val list = ArrayList<Day>(1)
+        list.add(day)
+        return list
+    }
+
+    private fun generateDummyTalks(): List<Talk> {
+        val talks = ArrayList<Talk>(10)
+        val room = Room("main", "Main room")
+        for (i in 0..9) {
+            val timeSlot = TimeSlot(Date(), Date())
+            talks.add(Talk("${i}", "Talk ${i}", timeSlot, room))
+        }
+        return talks
     }
 
     override fun bar(param: String) {
