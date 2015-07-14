@@ -4,7 +4,6 @@ import rx.Observable
 import rx.subjects.BehaviorSubject
 import uk.co.droidcon.kazak.model.*
 import uk.co.droidcon.kazak.rx.InfiniteOperator
-import java.util.ArrayList
 import java.util.Date
 
 public class ADataRepository : DataRepository {
@@ -30,27 +29,42 @@ public class ADataRepository : DataRepository {
 
     private fun updateSchedule() {
         // TODO implement real data we get from the server
-        Observable.just(Schedule(generateDummyDaySchedule()))
+        generateDummyDaySchedule()
                 .lift(InfiniteOperator<Schedule>())
                 .subscribe(scheduleCache)
     }
 
-    private fun generateDummyDaySchedule(): List<Day> {
-        val talks = generateDummyTalks()
-        val day = Day(Date(), talks)
-        val list = ArrayList<Day>(1)
-        list.add(day)
-        return list
+    private fun generateDummyDaySchedule(): Observable<Schedule> {
+        return Observable.range(0, 3)
+                .flatMap {
+                    getDummyDay()
+                }
+                .toList()
+                .map {
+                    Schedule(it)
+                }
     }
 
-    private fun generateDummyTalks(): List<Talk> {
-        val talks = ArrayList<Talk>(10)
-        val room = Room("main", "Main room")
-        for (i in 0..9) {
-            val timeSlot = TimeSlot(Date(), Date())
-            talks.add(Talk("${i}", "Talk ${i}", timeSlot, room))
-        }
-        return talks
+    private fun getDummyDay(): Observable<Day> {
+        return Observable.range(0, 4)
+                .map {
+                    Room(it.toString(), "Room ${it}")
+                }
+                .flatMap {
+                    getDummyRoomTalks(it)
+                }
+                .toList()
+                .map {
+                    Day(Date(), it)
+                }
+    }
+
+    private fun getDummyRoomTalks(room: Room): Observable<Talk> {
+        return Observable.range(0, 10)
+                .map {
+                    val timeSlot = TimeSlot(Date(), Date())
+                    Talk("${it}", "Talk ${it} in room ${room.name}", timeSlot, room)
+                }
     }
 
     override fun bar(param: String) {
