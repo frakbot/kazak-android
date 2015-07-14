@@ -1,4 +1,4 @@
-package uk.co.droidcon.kazak.activity;
+package uk.co.droidcon.kazak.schedule;
 
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -18,7 +18,7 @@ import uk.co.droidcon.kazak.DataRepository;
 import uk.co.droidcon.kazak.DroidconApplication;
 import uk.co.droidcon.kazak.R;
 import uk.co.droidcon.kazak.model.Schedule;
-import uk.co.droidcon.kazak.view.ScheduleView;
+import uk.co.droidcon.kazak.schedule.view.ScheduleView;
 
 public class ScheduleActivity extends AppCompatActivity {
 

@@ -1,4 +1,4 @@
-package uk.co.droidcon.kazak.view;
+package uk.co.droidcon.kazak.schedule.view;
 
 import android.annotation.TargetApi;
 import android.content.Context;
