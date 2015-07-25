@@ -9,14 +9,14 @@ public class Notifier {
     private static final int SINGLE_NOTIFICATION_ID = 42;
 
     private final NotificationManagerCompat notificationManagerCompat;
+    
+    private Notifier(NotificationManagerCompat notificationManagerCompat) {
+        this.notificationManagerCompat = notificationManagerCompat;
+    }
 
     public static Notifier from(Context context) {
         NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(context);
         return new Notifier(notificationManagerCompat);
-    }
-
-    private Notifier(NotificationManagerCompat notificationManagerCompat) {
-        this.notificationManagerCompat = notificationManagerCompat;
     }
 
     public void showNotification(Notification singleNotification) {

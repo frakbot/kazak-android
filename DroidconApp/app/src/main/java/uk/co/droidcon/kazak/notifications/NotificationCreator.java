@@ -80,8 +80,7 @@ public class NotificationCreator {
                 .append(context.getString(R.string.session_notification_starting_by, speakers))
                 .append('\n')
                 .append(context.getString(R.string.session_notification_starting_in, roomName));
-        return new NotificationCompat.BigTextStyle(
-                notifBuilder)
+        return new NotificationCompat.BigTextStyle(notifBuilder)
                 .setBigContentTitle(talk.getName())
                 .bigText(bigTextBuilder.toString());
     }
