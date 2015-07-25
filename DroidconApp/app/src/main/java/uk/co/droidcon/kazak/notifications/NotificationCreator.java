@@ -17,7 +17,6 @@ public class NotificationCreator {
     // pulsate every 1 second, indicating a relatively high degree of urgency
     private static final int NOTIFICATION_LED_ON_MS = 100;
     private static final int NOTIFICATION_LED_OFF_MS = 1000;
-    private static final int NOTIFICATION_ARGB_COLOR = 0xff0088ff; // cyan
 
     private final Context context;
 
@@ -49,7 +48,7 @@ public class NotificationCreator {
                 //.setColor(resources.getColor(R.color.theme_primary))
                 .setDefaults(Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE)
                 .setLights(
-                        NOTIFICATION_ARGB_COLOR,
+                        resources.getColor(R.color.notification_led_color),
                         NOTIFICATION_LED_ON_MS,
                         NOTIFICATION_LED_OFF_MS)
                 .setSmallIcon(R.drawable.ic_stat_notification)

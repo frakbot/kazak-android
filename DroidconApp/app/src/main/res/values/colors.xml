@@ -5,4 +5,6 @@
   <color name="color_primary_dark">#64a02b</color>
   <color name="color_status_bar">#33000000</color>
 
+  <color name="notification_led_color">@color/color_primary</color>
+
 </resources>
