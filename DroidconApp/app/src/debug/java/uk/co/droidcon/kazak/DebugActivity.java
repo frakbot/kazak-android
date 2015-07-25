@@ -47,6 +47,7 @@ public class DebugActivity extends Activity {
         notifier.showNotification(singleNotification);
     }
 
+    @NonNull
     private Talk createTestTalk() {
         return new Talk(
                 "12345",
@@ -76,6 +77,7 @@ public class DebugActivity extends Activity {
         );
     }
 
+    @NonNull
     private Speakers createTalkSpeakers() {
         List<Speaker> speakers = new ArrayList<>(2);
         speakers.add(new Speaker("0", "Awesome Speaker"));
