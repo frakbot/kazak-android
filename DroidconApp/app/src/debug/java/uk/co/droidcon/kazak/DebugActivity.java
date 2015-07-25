@@ -7,10 +7,14 @@ import android.support.annotation.NonNull;
 import android.view.View;
 import android.widget.Button;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import uk.co.droidcon.kazak.model.Room;
+import uk.co.droidcon.kazak.model.Speaker;
+import uk.co.droidcon.kazak.model.Speakers;
 import uk.co.droidcon.kazak.model.Talk;
 import uk.co.droidcon.kazak.model.TimeSlot;
 import uk.co.droidcon.kazak.notifications.NotificationCreator;
@@ -48,7 +52,8 @@ public class DebugActivity extends Activity {
                 "12345",
                 "A very interesting talk",
                 createTalkTimeSlot(),
-                createTalkRoom()
+                createTalkRoom(),
+                createTalkSpeakers()
         );
     }
 
@@ -69,6 +74,13 @@ public class DebugActivity extends Activity {
                 "45678",
                 "Room 1"
         );
+    }
+
+    private Speakers createTalkSpeakers() {
+        List<Speaker> speakers = new ArrayList<>(2);
+        speakers.add(new Speaker("0", "Awesome Speaker"));
+        speakers.add(new Speaker("1", "Meh Guy"));
+        return new Speakers(speakers);
     }
 
 }

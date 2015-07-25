@@ -73,7 +73,7 @@ public class NotificationCreator {
 
     private NotificationCompat.BigTextStyle createBigTextRichNotification(
             NotificationCompat.Builder notifBuilder, Talk talk) {
-        String speakers = "Talk speakers"; // TODO: get the actual ones from the session
+        String speakers = talk.getSpeakersNames(); // TODO: get the actual ones from the session
         String roomName = talk.getRoom().getName();
         StringBuilder bigTextBuilder = new StringBuilder()
                 .append(context.getString(R.string.session_notification_starting_by, speakers))
