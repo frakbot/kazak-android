@@ -41,9 +41,11 @@ public class NotificationCreator {
         Resources resources = context.getResources();
 
         NotificationCompat.WearableExtender extender = new NotificationCompat.WearableExtender();
+        // TODO: define a default background for wear notifications
         //extender.setBackground(BitmapFactory.decodeResource(resources, R.drawable.notification_background));
 
         return new NotificationCompat.Builder(context)
+                // TODO: use topic color
                 //.setColor(resources.getColor(R.color.theme_primary))
                 .setDefaults(Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE)
                 .setLights(
