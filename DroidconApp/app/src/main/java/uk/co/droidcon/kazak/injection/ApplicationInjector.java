@@ -7,6 +7,7 @@ import uk.co.droidcon.kazak.schedule.ScheduleActivity;
 
 @Singleton
 @Component(modules = {
+        ApiModule.class,
         RepositoriesModule.class
 })
 public interface ApplicationInjector {
