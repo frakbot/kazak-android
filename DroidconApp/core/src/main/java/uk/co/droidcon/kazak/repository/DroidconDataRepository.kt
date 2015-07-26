@@ -19,7 +19,7 @@ public class DroidconDataRepository(val api : DroidconApi) : DataRepository {
     }
 
     override fun getTalk(id: String): Observable<Talk> {
-        return scheduleCache.flatMap {
+        return getSchedule().flatMap {
             Observable.from(it.days)
         }.flatMap {
             Observable.from(it.talks)
