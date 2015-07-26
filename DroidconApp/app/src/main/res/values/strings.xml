@@ -5,6 +5,6 @@
   <string name="error_loading_schedule">Error while loading schedule.</string>
   <string name="action_retry">RETRY</string>
 
-  <string name="menu_nav_schedule">Schedule</string>
+  <string name="menu_nav_schedule">uk.co.droidcon.kazak.model.Schedule</string>
 
 </resources>

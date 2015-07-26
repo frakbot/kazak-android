@@ -1,8 +1,8 @@
-package uk.co.droidcon.kazak
+package uk.co.droidcon.kazak.repository
 
+import rx.Observable
 import uk.co.droidcon.kazak.model.Schedule
 import uk.co.droidcon.kazak.model.Talk
-import rx.Observable
 
 public interface DataRepository {
 

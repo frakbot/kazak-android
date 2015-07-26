@@ -1,4 +1,4 @@
-package uk.co.droidcon.kazak
+package uk.co.droidcon.kazak.repository
 
 import rx.Observable
 import rx.subjects.BehaviorSubject
@@ -6,7 +6,7 @@ import uk.co.droidcon.kazak.model.*
 import uk.co.droidcon.kazak.rx.InfiniteOperator
 import java.util.Date
 
-public class ADataRepository : DataRepository {
+public class DroidconDataRepository : DataRepository {
 
     val scheduleCache: BehaviorSubject<Schedule> = BehaviorSubject.create()
 

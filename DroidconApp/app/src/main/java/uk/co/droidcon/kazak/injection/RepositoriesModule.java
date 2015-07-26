@@ -4,8 +4,8 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
-import uk.co.droidcon.kazak.ADataRepository;
-import uk.co.droidcon.kazak.DataRepository;
+import uk.co.droidcon.kazak.repository.DataRepository;
+import uk.co.droidcon.kazak.repository.DroidconDataRepository;
 
 @Module
 public class RepositoriesModule {
@@ -13,7 +13,7 @@ public class RepositoriesModule {
     @Provides
     @Singleton
     DataRepository providesDataRepository() {
-        return new ADataRepository();
+        return new DroidconDataRepository();
     }
 
 }
