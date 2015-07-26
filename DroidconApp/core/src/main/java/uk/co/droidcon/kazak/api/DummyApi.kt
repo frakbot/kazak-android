@@ -1,38 +1,15 @@
-package uk.co.droidcon.kazak
+package uk.co.droidcon.kazak.api
 
 import rx.Observable
-import rx.subjects.BehaviorSubject
 import uk.co.droidcon.kazak.model.*
-import uk.co.droidcon.kazak.rx.InfiniteOperator
-import java.util.Date
+import java.util.*
 
-public class ADataRepository : DataRepository {
+public class DummyApi : DroidconApi {
 
-    val scheduleCache: BehaviorSubject<Schedule> = BehaviorSubject.create()
-
-    override fun getSchedule(): Observable<Schedule> {
-        if (!scheduleCache.hasValue()) {
-            updateSchedule()
-        }
-        return scheduleCache
+    override fun fetchSchedule(): Observable<Schedule> {
+        return generateDummyDaySchedule()
     }
 
-    override fun getTalk(id: String): Observable<Talk> {
-        return scheduleCache.flatMap {
-            Observable.from(it.days)
-        }.flatMap {
-            Observable.from(it.talks)
-        }.filter {
-            it.id == id
-        }
-    }
-
-    private fun updateSchedule() {
-        // TODO implement real data we get from the server
-        generateDummyDaySchedule()
-                .lift(InfiniteOperator<Schedule>())
-                .subscribe(scheduleCache)
-    }
 
     private fun generateDummyDaySchedule(): Observable<Schedule> {
         return Observable.range(0, 3)
@@ -66,9 +43,4 @@ public class ADataRepository : DataRepository {
                     Talk("${it}", "Talk ${it} in room ${room.name}", timeSlot, room)
                 }
     }
-
-    override fun bar(param: String) {
-        throw UnsupportedOperationException()
-    }
-
 }
