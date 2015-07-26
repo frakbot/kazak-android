@@ -14,10 +14,10 @@ import javax.inject.Inject;
 import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.subscriptions.CompositeSubscription;
-import uk.co.droidcon.kazak.DataRepository;
 import uk.co.droidcon.kazak.DroidconApplication;
 import uk.co.droidcon.kazak.R;
 import uk.co.droidcon.kazak.model.Schedule;
+import uk.co.droidcon.kazak.repository.DataRepository;
 import uk.co.droidcon.kazak.schedule.view.ScheduleView;
 
 public class ScheduleActivity extends AppCompatActivity {
