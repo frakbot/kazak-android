@@ -12,6 +12,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import uk.co.droidcon.kazak.model.Room;
 import uk.co.droidcon.kazak.model.Speaker;
 import uk.co.droidcon.kazak.model.Speakers;
@@ -23,9 +25,16 @@ import uk.co.droidcon.kazak.notifications.Notifier;
 
 public class DebugActivity extends Activity {
 
+    @Inject
+    NotificationCreator notificationCreator;
+
+    @Inject
+    Notifier notifier;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        DroidconApplication.injector().inject(this);
         setContentView(R.layout.activity_debug);
 
         Button buttonSingleNotification = (Button) findViewById(R.id.button_test_single_notification);
@@ -39,11 +48,9 @@ public class DebugActivity extends Activity {
     }
 
     private void testSingleNotification() {
-        NotificationCreator notificationCreator = new NotificationCreator(this);
         Talk talk = createTestTalk();
         Notification singleNotification = notificationCreator.createFrom(talk);
 
-        Notifier notifier = Notifier.from(this);
         notifier.showNotification(singleNotification);
     }
 

@@ -1,8 +1,10 @@
 package uk.co.droidcon.kazak;
 
 import android.app.Application;
+import android.content.Context;
 
 import uk.co.droidcon.kazak.injection.ApplicationInjector;
+import uk.co.droidcon.kazak.injection.ApplicationModule;
 import uk.co.droidcon.kazak.injection.DaggerApplicationInjector;
 
 public class DroidconApplication extends Application {
@@ -12,7 +14,10 @@ public class DroidconApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        applicationInjector = DaggerApplicationInjector.create();
+        applicationInjector = DaggerApplicationInjector
+                .builder()
+                .applicationModule(new ApplicationModule(this))
+                .build();
     }
 
     public static ApplicationInjector injector() {

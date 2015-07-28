@@ -9,7 +9,7 @@ public class Notifier {
     private static final int SINGLE_NOTIFICATION_ID = 42;
 
     private final NotificationManagerCompat notificationManagerCompat;
-    
+
     private Notifier(NotificationManagerCompat notificationManagerCompat) {
         this.notificationManagerCompat = notificationManagerCompat;
     }
