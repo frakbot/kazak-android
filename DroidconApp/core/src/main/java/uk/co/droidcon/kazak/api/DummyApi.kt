@@ -40,7 +40,9 @@ public class DummyApi : DroidconApi {
         return Observable.range(0, 10)
                 .map {
                     val timeSlot = TimeSlot(Date(), Date())
-                    Talk("${it}", "Talk ${it} in room ${room.name}", timeSlot, room)
+                    val speaker = Speaker("${it}", "Speaker ${it}")
+                    val speakers = Speakers(arrayListOf(speaker))
+                    Talk("${it}", "Talk ${it} in room ${room.name}", timeSlot, room, speakers)
                 }
     }
 }
