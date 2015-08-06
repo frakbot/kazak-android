@@ -1,8 +1,8 @@
 package uk.co.droidcon.kazak.repository
 
 import org.fest.assertions.api.Assertions
-import org.junit.Before
-import org.junit.Test
+import org.junit.Before as before
+import org.junit.Test as test
 import org.mockito.Mockito
 import rx.subjects.BehaviorSubject
 import uk.co.droidcon.kazak.api.DroidconApi
@@ -19,13 +19,13 @@ public class DroidconDataRepositoryTest {
 
     val repository : DataRepository = DroidconDataRepository(mockApi)
 
-    @Before
+    before
     fun setup() {
         Mockito.`when`(mockApi.fetchSchedule()).thenReturn(scheduleObservable)
         scheduleObservable.onNext(testSchedule())
     }
 
-    @Test
+    test
     fun itFetchesAScheduleFromApiIfMemoryCacheEmpty() {
         val schedule = repository.getSchedule().toBlocking().first();
 
@@ -33,7 +33,7 @@ public class DroidconDataRepositoryTest {
         Assertions.assertThat(schedule).isEqualTo(testSchedule())
     }
 
-    @Test
+    test
     fun itFindsATalkGivenAnId() {
         val talk = repository.getTalk(talkId).toBlocking().first();
 
