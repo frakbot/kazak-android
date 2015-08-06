@@ -43,18 +43,18 @@ android {
 }
 
 dependencies {
+    apt 'com.google.dagger:dagger-compiler:2.0'
+
+    provided 'org.glassfish:javax.annotation:10.0-b28'
+
     compile project(':core')
+    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     compile 'com.android.support:appcompat-v7:22.2.1'
     compile 'com.android.support:cardview-v7:22.2.1'
     compile 'com.android.support:design:22.2.1'
     compile 'io.reactivex:rxandroid:0.25.0'
     compile 'com.google.dagger:dagger:2.0.1'
-
-    apt 'com.google.dagger:dagger-compiler:2.0'
-
-    provided 'org.glassfish:javax.annotation:10.0-b28'
-
-    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    compile 'com.google.android.gms:play-services-maps:7.5.0'
 }
 
 repositories {
