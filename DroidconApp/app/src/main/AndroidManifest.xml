@@ -28,6 +28,10 @@
     </activity>
 
     <activity
+      android:name="uk.co.droidcon.kazak.talk.TalkDetailsActivity"
+      android:label="@string/activity_title_talk_details" />
+
+    <activity
       android:name="uk.co.droidcon.kazak.map.VenueMapActivity"
       android:label="@string/activity_title_venue_map" />
 

@@ -1,7 +1,7 @@
 package uk.co.droidcon.kazak.map;
 
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AppCompatActivity;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -13,7 +13,7 @@ import com.google.android.gms.maps.model.LatLng;
 import uk.co.droidcon.kazak.BuildConfig;
 import uk.co.droidcon.kazak.R;
 
-public class VenueMapActivity extends FragmentActivity {
+public class VenueMapActivity extends AppCompatActivity {
 
     private GoogleMap map; // Might be null if Google Play services APK is not available.
 
