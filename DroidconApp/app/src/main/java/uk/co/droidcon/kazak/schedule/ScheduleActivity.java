@@ -54,7 +54,7 @@ public class ScheduleActivity extends AppCompatActivity {
     }
 
     private void hackToHideNavDrawerHeaderRipple() {
-        // TODO remove this when 22.2.1 is released
+        // TODO remove this when the issue is fixed
         // See https://code.google.com/p/android/issues/detail?id=176400
         View navigationHeader = findViewById(R.id.navigation_header);
         ((View) navigationHeader.getParent()).setOnClickListener(new View.OnClickListener() {
