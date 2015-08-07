@@ -51,7 +51,7 @@ public class DroidconDataRepositoryTest {
 
     private fun testSpeakersList(): List<Speaker> {
         val speakers = ArrayList<Speaker>(1)
-        speakers[0] = Speaker("", "")
+        speakers + Speaker("", "")
         return speakers
     }
 
