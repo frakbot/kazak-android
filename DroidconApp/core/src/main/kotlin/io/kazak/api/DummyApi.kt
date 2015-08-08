@@ -1,6 +1,5 @@
 package io.kazak.api
 
-import io.kazak.api.KazakApi
 import io.kazak.model.*
 import rx.Observable
 import java.util.Date

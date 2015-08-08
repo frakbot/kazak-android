@@ -1,7 +1,6 @@
 package io.kazak.base
 
 import io.kazak.assertThat
-import io.kazak.base.safeTrim
 import org.junit.Before as before
 import org.junit.Test as test
 

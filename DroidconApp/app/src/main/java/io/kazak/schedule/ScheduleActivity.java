@@ -11,14 +11,14 @@ import android.widget.FrameLayout;
 
 import javax.inject.Inject;
 
-import rx.Observer;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.subscriptions.CompositeSubscription;
 import io.kazak.KazakApplication;
 import io.kazak.R;
 import io.kazak.model.Schedule;
 import io.kazak.repository.DataRepository;
 import io.kazak.schedule.view.ScheduleView;
+import rx.Observer;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.subscriptions.CompositeSubscription;
 
 public class ScheduleActivity extends AppCompatActivity {
 

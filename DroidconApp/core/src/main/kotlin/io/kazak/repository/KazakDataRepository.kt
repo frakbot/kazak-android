@@ -1,11 +1,11 @@
 package io.kazak.repository
 
+import io.kazak.api.KazakApi
+import io.kazak.model.Schedule
+import io.kazak.model.Talk
+import io.kazak.rx.InfiniteOperator
 import rx.Observable
 import rx.subjects.BehaviorSubject
-import io.kazak.api.KazakApi
-import io.kazak.model.*
-import io.kazak.rx.InfiniteOperator
-import java.util.Date
 
 public class KazakDataRepository(val api : KazakApi) : DataRepository {
 
