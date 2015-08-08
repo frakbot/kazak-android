@@ -1,20 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    package="uk.co.droidcon.kazak">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+  package="io.kazak">
 
-    <application>
+  <application>
 
-        <activity
-            android:name=".DebugActivity"
-            android:label="@string/debug_activity_title">
+    <activity
+      android:name="io.kazak.DebugActivity"
+      android:label="@string/debug_activity_title">
 
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+      <intent-filter>
+        <action android:name="android.intent.action.MAIN" />
+        <category android:name="android.intent.category.LAUNCHER" />
+      </intent-filter>
+    </activity>
 
-    </application>
+  </application>
 
 </manifest>
