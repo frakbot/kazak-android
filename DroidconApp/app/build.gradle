@@ -8,21 +8,22 @@ buildscript {
 apply plugin: 'com.android.application'
 apply plugin: 'com.neenbedankt.android-apt'
 
+BuildProperties defaultProperties = BuildProperties.load('/build-props/base.properties', project)
+BuildProperties.generateFlavors(new File('build-props').listFiles(), project)
+
 android {
     compileSdkVersion 22
     buildToolsVersion "22.0.1"
 
     defaultConfig {
-        applicationId "uk.co.droidcon.kazak"
+        versionName defaultProperties.getString('versionName')
         minSdkVersion 19
         targetSdkVersion 22
-        versionCode 1
-        versionName "1.0"
 
-        // TODO extract build config fields generation
-        buildConfigField "double", "VENUE_LOCATION_LAT", "51.535526"
-        buildConfigField "double", "VENUE_LOCATION_LON", "0.1051591"
-        buildConfigField "int", "VENUE_LOCATION_MAP_ZOOM", "21"
+        Calendar instance = Calendar.getInstance()
+        instance.setTimeInMillis(System.currentTimeMillis())
+
+        buildConfigField "String", "BUILD_TIME_FORMATTED", "\"${instance.getTime()}\""
     }
 
     buildTypes {
@@ -30,15 +31,14 @@ android {
             minifyEnabled false
         }
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
 
     productFlavors {
-        droidconUk2015 {
-            // TODO extract placeholders generation
-            manifestPlaceholders = [googleMapsApiKey: "TODO"]
+        example {
+            defaultProperties.configure(it)
         }
     }
 
