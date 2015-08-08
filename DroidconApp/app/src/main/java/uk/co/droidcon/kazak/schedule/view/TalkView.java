@@ -23,6 +23,7 @@ public class TalkView extends CardView {
 
     @Override
     protected void onFinishInflate() {
+        super.onFinishInflate();
         LayoutInflater.from(getContext()).inflate(R.layout.merge_talk_card_contents, this);
 
         titleView = (TextView) findViewById(R.id.talk_title);

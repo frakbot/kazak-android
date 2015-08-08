@@ -1,0 +1,25 @@
+###############################################################
+# This file can be used to store all the config parameters
+# needed to build the Android app and used in app/build.gradle.
+#
+# NOTE: the flavor generated from this file will be used to
+# generate all the builds for this flavor. All the
+# values not specified here are inherited from base.properties.
+
+extends=base.properties
+
+# Build properties
+applicationId=com.example.mykazak
+versionCode=1
+versionName=0.0.1
+
+# Global app configuration
+app.hasVenueMap=false
+
+# API keys
+googleMaps.apiKey=TODO
+
+# Venue map configuration
+venue.latitude=0
+venue.longitude=0
+venue.map.defaultZoom=21
