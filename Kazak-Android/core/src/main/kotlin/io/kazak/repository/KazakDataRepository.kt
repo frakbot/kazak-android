@@ -52,11 +52,11 @@ public class KazakDataRepository(val api : KazakApi) : DataRepository {
             syncSubject.onNext(SyncEvent(SyncState.IDLE, null))
         }
 
-        override fun onError(e: Throwable?) {
+        override fun onError(e: Throwable) {
             syncSubject.onNext(SyncEvent(SyncState.ERROR, e))
         }
 
-        override fun onNext(t: Schedule?) {
+        override fun onNext(t: Schedule) {
             subject.onNext(t)
             syncSubject.onNext(SyncEvent(SyncState.IDLE, null))
         }
