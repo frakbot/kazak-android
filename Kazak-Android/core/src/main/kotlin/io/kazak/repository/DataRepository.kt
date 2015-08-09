@@ -2,8 +2,8 @@ package io.kazak.repository
 
 import io.kazak.model.Schedule
 import io.kazak.model.Talk
+import io.kazak.repository.event.SyncEvent
 import rx.Observable
-import uk.co.droidcon.kazak.repository.SyncEvent
 
 public interface DataRepository {
 
