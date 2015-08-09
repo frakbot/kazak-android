@@ -1,4 +1,4 @@
-package uk.co.droidcon.kazak.repository
+package io.kazak.repository.event
 
 enum class SyncState {
     IDLE,

@@ -15,11 +15,11 @@ import io.kazak.KazakApplication;
 import io.kazak.R;
 import io.kazak.model.Schedule;
 import io.kazak.repository.DataRepository;
+import io.kazak.repository.event.SyncEvent;
 import io.kazak.schedule.view.ScheduleView;
 import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.subscriptions.CompositeSubscription;
-import uk.co.droidcon.kazak.repository.SyncEvent;
 
 public class ScheduleActivity extends AppCompatActivity {
 

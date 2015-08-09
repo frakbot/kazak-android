@@ -3,11 +3,11 @@ package io.kazak.repository
 import io.kazak.api.KazakApi
 import io.kazak.model.Schedule
 import io.kazak.model.Talk
+import io.kazak.repository.event.SyncEvent
+import io.kazak.repository.event.SyncState
 import rx.Observable
 import rx.Observer
 import rx.subjects.BehaviorSubject
-import uk.co.droidcon.kazak.repository.SyncEvent
-import uk.co.droidcon.kazak.repository.SyncState
 
 public class KazakDataRepository(val api : KazakApi) : DataRepository {
 
