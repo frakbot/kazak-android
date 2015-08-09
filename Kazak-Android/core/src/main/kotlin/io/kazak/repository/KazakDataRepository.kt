@@ -7,7 +7,7 @@ import rx.Observable
 import rx.Observer
 import rx.subjects.BehaviorSubject
 import uk.co.droidcon.kazak.repository.SyncEvent
-import uk.co.droidcon.kazak.repository.SyncState
+import io.kazak.repository.event.SyncState
 
 public class KazakDataRepository(val api : KazakApi) : DataRepository {
 
