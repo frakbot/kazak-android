@@ -18,6 +18,7 @@ import uk.co.droidcon.kazak.DroidconApplication;
 import uk.co.droidcon.kazak.R;
 import uk.co.droidcon.kazak.model.Schedule;
 import uk.co.droidcon.kazak.repository.DataRepository;
+import uk.co.droidcon.kazak.repository.SyncEvent;
 import uk.co.droidcon.kazak.schedule.view.ScheduleView;
 
 public class ScheduleActivity extends AppCompatActivity {
@@ -57,22 +58,24 @@ public class ScheduleActivity extends AppCompatActivity {
         // TODO remove this when the issue is fixed
         // See https://code.google.com/p/android/issues/detail?id=176400
         View navigationHeader = findViewById(R.id.navigation_header);
-        ((View) navigationHeader.getParent()).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Do nothing
-            }
-        });
+        ((View) navigationHeader.getParent()).setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        // Do nothing
+                    }
+                });
     }
 
     private void setupAppBar() {
         setSupportActionBar(toolbar);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                drawerLayout.openDrawer(navigationView);
-            }
-        });
+        toolbar.setNavigationOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        drawerLayout.openDrawer(navigationView);
+                    }
+                });
     }
 
     @Override
@@ -86,6 +89,11 @@ public class ScheduleActivity extends AppCompatActivity {
                 dataRepository.getSchedule()
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(new ScheduleObserver())
+        );
+        subscriptions.add(
+                dataRepository.getScheduleSyncEvents()
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new SyncEventObserver())
         );
     }
 
@@ -108,21 +116,50 @@ public class ScheduleActivity extends AppCompatActivity {
 
         @Override
         public void onError(Throwable e) {
-            Snackbar.make(contentRootView, R.string.error_loading_schedule, Snackbar.LENGTH_LONG)
-                    .setAction(R.string.action_retry, new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            subscribeToSchedule();
-                        }
-                    })
-                    .show();
+            throw new IllegalStateException(e);
         }
 
         @Override
-        public void onNext(Schedule schedule) {
+        public void onNext(uk.co.droidcon.kazak.model.Schedule schedule) {
             updateWith(schedule);
         }
 
+    }
+
+    private class SyncEventObserver implements Observer<SyncEvent> {
+
+        @Override
+        public void onCompleted() {
+            // Ignore
+        }
+
+        @Override
+        public void onError(Throwable e) {
+            throw new IllegalStateException(e);
+        }
+
+        @Override
+        public void onNext(SyncEvent syncEvent) {
+            switch (syncEvent.getState()) {
+                case ERROR:
+                    Snackbar.make(contentRootView, R.string.error_loading_schedule, Snackbar.LENGTH_LONG)
+                            .setAction(
+                                    R.string.action_retry, new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            subscribeToSchedule();
+                                        }
+                                    })
+                            .show();
+                    break;
+                case IDLE:
+                    //Display empty screen if no data
+                    break;
+                case LOADING:
+                    //Display loading screen
+                    break;
+            }
+        }
     }
 
 }

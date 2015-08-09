@@ -8,6 +8,8 @@ public interface DataRepository {
 
     fun getSchedule(): Observable<Schedule>
 
+    fun getScheduleSyncEvents(): Observable<SyncEvent>
+
     fun getTalk(id : String): Observable<Talk>
 
     fun bar(param : String)
