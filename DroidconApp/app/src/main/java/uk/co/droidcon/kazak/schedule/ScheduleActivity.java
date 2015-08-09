@@ -64,7 +64,8 @@ public class ScheduleActivity extends AppCompatActivity {
                     public void onClick(View v) {
                         // Do nothing
                     }
-                });
+                }
+        );
     }
 
     private void setupAppBar() {
@@ -75,7 +76,8 @@ public class ScheduleActivity extends AppCompatActivity {
                     public void onClick(View v) {
                         drawerLayout.openDrawer(navigationView);
                     }
-                });
+                }
+        );
     }
 
     @Override
@@ -120,7 +122,7 @@ public class ScheduleActivity extends AppCompatActivity {
         }
 
         @Override
-        public void onNext(uk.co.droidcon.kazak.model.Schedule schedule) {
+        public void onNext(Schedule schedule) {
             updateWith(schedule);
         }
 
