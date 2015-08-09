@@ -26,9 +26,9 @@ public class DebugActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(io.kazak.R.layout.activity_debug);
+        setContentView(R.layout.activity_debug);
 
-        Button buttonSingleNotification = (Button) findViewById(io.kazak.R.id.button_test_single_notification);
+        Button buttonSingleNotification = (Button) findViewById(R.id.button_test_single_notification);
         buttonSingleNotification.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
