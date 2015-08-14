@@ -1,6 +1,7 @@
 package io.kazak.schedule;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.DrawerLayout;
@@ -16,9 +17,11 @@ import io.kazak.R;
 import io.kazak.model.Schedule;
 import io.kazak.repository.DataRepository;
 import io.kazak.repository.event.SyncEvent;
-import io.kazak.schedule.view.ScheduleView;
+import io.kazak.schedule.view.table.ScheduleTableAdapter;
+import io.kazak.schedule.view.table.ScheduleTableView;
 import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Func1;
 import rx.subscriptions.CompositeSubscription;
 
 public class ScheduleActivity extends AppCompatActivity {
@@ -32,7 +35,7 @@ public class ScheduleActivity extends AppCompatActivity {
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
     private Toolbar toolbar;
-    private ScheduleView scheduleView;
+    private ScheduleTableView scheduleView;
 
     public ScheduleActivity() {
         subscriptions = new CompositeSubscription();
@@ -48,7 +51,7 @@ public class ScheduleActivity extends AppCompatActivity {
         drawerLayout = (DrawerLayout) findViewById(R.id.navigation_drawer);
         navigationView = (NavigationView) findViewById(R.id.drawer_menu);
         toolbar = (Toolbar) findViewById(R.id.appbar);
-        scheduleView = (ScheduleView) findViewById(R.id.schedule);
+        scheduleView = (ScheduleTableView) findViewById(R.id.schedule);
 
         setupAppBar();
         hackToHideNavDrawerHeaderRipple();
@@ -89,6 +92,7 @@ public class ScheduleActivity extends AppCompatActivity {
     private void subscribeToSchedule() {
         subscriptions.add(
                 dataRepository.getSchedule()
+                        .map(createAdapterData)
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(new ScheduleObserver())
         );
@@ -105,11 +109,20 @@ public class ScheduleActivity extends AppCompatActivity {
         subscriptions.clear();
     }
 
-    private void updateWith(Schedule schedule) {
-        scheduleView.updateWith(schedule);
+    private void updateWith(@NonNull ScheduleTableAdapter.Data data) {
+        scheduleView.updateWith(data);
     }
 
-    private class ScheduleObserver implements Observer<Schedule> {
+    private final Func1<Schedule, ScheduleTableAdapter.Data> createAdapterData = new Func1<Schedule, ScheduleTableAdapter.Data>() {
+
+        @Override
+        public ScheduleTableAdapter.Data call(Schedule schedule) {
+            return scheduleView.createAdapterData(schedule);
+        }
+
+    };
+
+    private class ScheduleObserver implements Observer<ScheduleTableAdapter.Data> {
 
         @Override
         public void onCompleted() {
@@ -122,8 +135,8 @@ public class ScheduleActivity extends AppCompatActivity {
         }
 
         @Override
-        public void onNext(Schedule schedule) {
-            updateWith(schedule);
+        public void onNext(ScheduleTableAdapter.Data data) {
+            updateWith(data);
         }
 
     }
