@@ -14,7 +14,7 @@ public abstract class TableTreeAdapter<ITEM, ROW, BOUND, VH extends TableViewHol
     private final TreeSet<RangePosition> emptySet = new TreeSet<>();
 
     @NonNull
-    List<ITEM> items = Collections.emptyList();
+    private List<ITEM> items = Collections.emptyList();
 
     @NonNull
     private TreeMap<ROW, TreeSet<RangePosition>> positions = new TreeMap<>();
