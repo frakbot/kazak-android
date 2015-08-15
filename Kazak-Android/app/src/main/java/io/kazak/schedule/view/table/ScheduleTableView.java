@@ -10,6 +10,7 @@ import android.util.AttributeSet;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import io.kazak.R;
 import io.kazak.model.Schedule;
@@ -45,7 +46,7 @@ public class ScheduleTableView extends RecyclerView {
         int timeSlotDurationMinutes = a.getInt(R.styleable.ScheduleTableView_timeSlotUnitDurationMinutes, 0);
         a.recycle();
 
-        int timeSlotDurationMilliseconds = timeSlotDurationMinutes * 60 * 1000;
+        int timeSlotDurationMilliseconds = (int)TimeUnit.MINUTES.toMillis(timeSlotDurationMinutes);
 
         adapter = new ScheduleTableAdapter(context);
         setHasFixedSize(true);
