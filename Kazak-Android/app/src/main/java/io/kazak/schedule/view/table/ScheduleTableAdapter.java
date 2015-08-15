@@ -109,7 +109,7 @@ public class ScheduleTableAdapter extends TableTreeAdapter<Talk, Room, Date, Sch
     private static final class RoomComparator implements Comparator<Room> {
 
         @Override
-        public int compare(Room lhs, Room rhs) {
+        public int compare(@NonNull Room lhs, @NonNull Room rhs) {
             return lhs.getName().compareToIgnoreCase(rhs.getName());
         }
 
