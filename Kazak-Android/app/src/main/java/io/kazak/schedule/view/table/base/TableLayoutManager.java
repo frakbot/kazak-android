@@ -65,8 +65,8 @@ public class TableLayoutManager extends RecyclerView.LayoutManager {
         onDataOrSizeChanged(recycler, state, adapter);
     }
 
-    private <C> void onDataOrSizeChanged(
-            RecyclerView.Recycler recycler, RecyclerView.State state, @Nullable TableAdapterAbs<?, ?, C, ?> adapter) {
+    private <BOUND> void onDataOrSizeChanged(
+            RecyclerView.Recycler recycler, RecyclerView.State state, @Nullable TableAdapterAbs<?, ?, BOUND, ?> adapter) {
         scrollX = scrollY = 0;
         visibleUnits = (int) Math.ceil(unitsPerPixel * getWidth());
 
@@ -77,8 +77,8 @@ public class TableLayoutManager extends RecyclerView.LayoutManager {
         }
 
         if (adapter != null) {
-            C minStart = adapter.getMinStart();
-            C maxEnd = adapter.getMaxEnd();
+            BOUND minStart = adapter.getMinStart();
+            BOUND maxEnd = adapter.getMaxEnd();
             if (minStart != null && maxEnd != null) {
                 Collection<?> rows = adapter.getRows();
                 scrollXRange = (int) Math.ceil(adapter.dataHandler.getLength(minStart, maxEnd) * pixelsPerUnit) + getTotalPaddingHorizontal();
@@ -101,18 +101,19 @@ public class TableLayoutManager extends RecyclerView.LayoutManager {
         fillVisibleItems(recycler, state, adapter);
     }
 
-    private <T, C> void fillVisibleItems(RecyclerView.Recycler recycler, RecyclerView.State state, @Nullable TableAdapterAbs<?, T, C, ?> adapter) {
+    private <ROW, BOUND> void fillVisibleItems(
+            RecyclerView.Recycler recycler, RecyclerView.State state, @Nullable TableAdapterAbs<?, ROW, BOUND, ?> adapter) {
         if (adapter == null) {
             throw new IllegalStateException();
         }
 
         detachAndScrapAttachedViews(recycler);
 
-        C minStart = adapter.getMinStart();
-        C maxEnd = adapter.getMaxEnd();
+        BOUND minStart = adapter.getMinStart();
+        BOUND maxEnd = adapter.getMaxEnd();
         if (minStart != null && maxEnd != null) {
 
-            Collection<T> rows = adapter.getRows();
+            Collection<ROW> rows = adapter.getRows();
             if (!rows.isEmpty()) {
 
                 int parentHeight = getHeight();
@@ -120,10 +121,10 @@ public class TableLayoutManager extends RecyclerView.LayoutManager {
 
                 int scrollXUnits = (int) Math.floor(unitsPerPixel * scrollX);
 
-                TableDataHandler<?, T, C> dataHandler = adapter.dataHandler;
+                TableDataHandler<?, ROW, BOUND> dataHandler = adapter.dataHandler;
 
-                C start = dataHandler.sum(minStart, scrollXUnits);
-                C end = dataHandler.sum(start, visibleUnits);
+                BOUND start = dataHandler.sum(minStart, scrollXUnits);
+                BOUND end = dataHandler.sum(start, visibleUnits);
 
                 int shiftX = scrollX - getWidthFor(minStart, start, dataHandler);
 
@@ -133,7 +134,7 @@ public class TableLayoutManager extends RecyclerView.LayoutManager {
                 int lastRowIndex = rows.size() - 1;
                 int placeholdersCount = 0;
 
-                for (T row : rows) {
+                for (ROW row : rows) {
                     if (y >= parentHeight) {
                         break;
                     }
@@ -147,7 +148,7 @@ public class TableLayoutManager extends RecyclerView.LayoutManager {
                             int pos = range.getPosition();
                             View view = recycler.getViewForPosition(pos);
 
-                            TableViewHolder<?, T, C> vh = adapter.getViewHolder(view);
+                            TableViewHolder<?, ROW, BOUND> vh = adapter.getViewHolder(view);
                             TableLayoutParams lp = TableLayoutParams.getOrCreateFor(view);
 
                             lp.isFirstRow = isFirstRow;
@@ -269,7 +270,7 @@ public class TableLayoutManager extends RecyclerView.LayoutManager {
         return scrollYRange;
     }
 
-    private <C> int getWidthFor(@NonNull C start, @NonNull C end, @NonNull TableDataHandler<?, ?, C> dataHandler) {
+    private <BOUND> int getWidthFor(@NonNull BOUND start, @NonNull BOUND end, @NonNull TableDataHandler<?, ?, BOUND> dataHandler) {
         return (int) Math.round(dataHandler.getLength(start, end) * pixelsPerUnit);
     }
 

@@ -10,32 +10,32 @@ import java.util.Comparator;
 
 import org.jetbrains.annotations.NotNull;
 
-public abstract class TableAdapterAbs<I, R, C, VH extends TableViewHolder<I, R, C>> extends RecyclerView.Adapter<VH> {
+public abstract class TableAdapterAbs<ITEM, ROW, BOUND, VH extends TableViewHolder<ITEM, ROW, BOUND>> extends RecyclerView.Adapter<VH> {
 
     protected static final int VIEW_TYPE_NORMAL = 0;
     protected static final int VIEW_TYPE_PLACEHOLDER = 1;
 
-    final TableDataHandler<I, R, C> dataHandler;
+    final TableDataHandler<ITEM, ROW, BOUND> dataHandler;
 
     protected RecyclerView recyclerView;
 
-    protected TableAdapterAbs(@NonNull TableDataHandler<I, R, C> dataHandler) {
+    protected TableAdapterAbs(@NonNull TableDataHandler<ITEM, ROW, BOUND> dataHandler) {
         this.dataHandler = dataHandler;
     }
 
-    abstract public I getItem(int position);
+    abstract public ITEM getItem(int position);
 
     @Nullable
-    abstract public C getMinStart();
+    abstract public BOUND getMinStart();
 
     @Nullable
-    abstract public C getMaxEnd();
+    abstract public BOUND getMaxEnd();
 
     @NonNull
-    abstract Collection<R> getRows();
+    abstract Collection<ROW> getRows();
 
     @NonNull
-    abstract Collection<RangePosition> getPositionsIn(@NonNull R row, @NonNull C start, @NonNull C end);
+    abstract Collection<RangePosition> getPositionsIn(@NonNull ROW row, @NonNull BOUND start, @NonNull BOUND end);
 
     /**
      * Called from after {@link #getRows()} and/or {@link #getPositionsIn(Object, Object, Object)} in order to release any eventual resources.
@@ -51,7 +51,7 @@ public abstract class TableAdapterAbs<I, R, C, VH extends TableViewHolder<I, R, 
      *                              Note that this will not fail if the generic types are different, because of type erasure.
      */
     @NonNull
-    TableViewHolder<I, R, C> getViewHolder(@NonNull View view)
+    TableViewHolder<ITEM, ROW, BOUND> getViewHolder(@NonNull View view)
             throws NullPointerException, ClassCastException {
         RecyclerView.ViewHolder vh = recyclerView.getChildViewHolder(view);
         if (vh == null) {
@@ -59,7 +59,7 @@ public abstract class TableAdapterAbs<I, R, C, VH extends TableViewHolder<I, R, 
         }
         try {
             //noinspection unchecked
-            return (TableViewHolder<I, R, C>) vh;
+            return (TableViewHolder<ITEM, ROW, BOUND>) vh;
         } catch (ClassCastException e) {
             throw new IllegalArgumentException("ViewHolder is not a " + TableViewHolder.class.getSimpleName() + ".", e);
         }
@@ -67,7 +67,7 @@ public abstract class TableAdapterAbs<I, R, C, VH extends TableViewHolder<I, R, 
 
     @Override
     public void onBindViewHolder(VH holder, int position) {
-        I item = getItem(position);
+        ITEM item = getItem(position);
         holder.updateWith(
                 item,
                 dataHandler.getRowFrom(item),
@@ -78,7 +78,7 @@ public abstract class TableAdapterAbs<I, R, C, VH extends TableViewHolder<I, R, 
 
     @Override
     public int getItemViewType(int position) {
-        I item = getItem(position);
+        ITEM item = getItem(position);
         return dataHandler.isPlaceholder(item) ? VIEW_TYPE_PLACEHOLDER : VIEW_TYPE_NORMAL;
     }
 
@@ -110,12 +110,12 @@ public abstract class TableAdapterAbs<I, R, C, VH extends TableViewHolder<I, R, 
      */
     public class RangePosition implements Comparable<RangePosition> {
 
-        private C start;
-        private C end;
+        private BOUND start;
+        private BOUND end;
 
         private final int position;
 
-        public RangePosition(@NotNull C start, @NotNull C end, int position) {
+        public RangePosition(@NotNull BOUND start, @NotNull BOUND end, int position) {
             this.start = start;
             this.end = end;
             this.position = position;
@@ -135,12 +135,12 @@ public abstract class TableAdapterAbs<I, R, C, VH extends TableViewHolder<I, R, 
             return position < 0;
         }
 
-        protected void setStartMarker(@NonNull C start) {
+        protected void setStartMarker(@NonNull BOUND start) {
             this.start = start;
             end = null;
         }
 
-        protected void setEndMarker(@NonNull C end) {
+        protected void setEndMarker(@NonNull BOUND end) {
             this.end = end;
             start = null;
         }
@@ -156,12 +156,12 @@ public abstract class TableAdapterAbs<I, R, C, VH extends TableViewHolder<I, R, 
         }
 
         @NotNull
-        public C getStart() {
+        public BOUND getStart() {
             return start;
         }
 
         @NotNull
-        public C getEnd() {
+        public BOUND getEnd() {
             return end;
         }
 
@@ -175,15 +175,15 @@ public abstract class TableAdapterAbs<I, R, C, VH extends TableViewHolder<I, R, 
         }
 
         private int compare(
-                @Nullable C start1, @Nullable C end1,
-                @Nullable C start2, @Nullable C end2) {
+                @Nullable BOUND start1, @Nullable BOUND end1,
+                @Nullable BOUND start2, @Nullable BOUND end2) {
 
             // if start and end are both null, return -1
             if ((start1 == null && end1 == null) || (start2 == null && end2 == null)) {
                 return -1;
             }
 
-            Comparator<C> comparator = TableAdapterAbs.this.dataHandler;
+            Comparator<BOUND> comparator = TableAdapterAbs.this.dataHandler;
 
             boolean firstIsMarker = start1 == null || end1 == null;
             boolean secondIsMarker = start2 == null || end2 == null;
@@ -201,8 +201,8 @@ public abstract class TableAdapterAbs<I, R, C, VH extends TableViewHolder<I, R, 
             boolean inverse = false;
             if (secondIsMarker) {
                 inverse = true;
-                C _start2 = start2;
-                C _end2 = end2;
+                BOUND _start2 = start2;
+                BOUND _end2 = end2;
                 start2 = start1;
                 end2 = end1;
                 start1 = _start2;
@@ -211,13 +211,13 @@ public abstract class TableAdapterAbs<I, R, C, VH extends TableViewHolder<I, R, 
 
             // start must be before end
             if (comparator.compare(start2, end2) > 0) {
-                C _start2 = start2;
+                BOUND _start2 = start2;
                 start2 = end2;
                 end2 = _start2;
             }
 
-            C start = start2;
-            C end = end2;
+            BOUND start = start2;
+            BOUND end = end2;
 
             // compare
             final int result;
@@ -231,7 +231,7 @@ public abstract class TableAdapterAbs<I, R, C, VH extends TableViewHolder<I, R, 
             return result * (inverse ? -1 : 1);
         }
 
-        private int compareStartMarker(Comparator<C> comparator, C startMarker, C start, C end) {
+        private int compareStartMarker(Comparator<BOUND> comparator, BOUND startMarker, BOUND start, BOUND end) {
             // range starts...
             if (comparator.compare(start, startMarker) >= 0) {
                 // ...ON or AFTER the start marker -> start marker is BEFORE (include range)
@@ -248,7 +248,7 @@ public abstract class TableAdapterAbs<I, R, C, VH extends TableViewHolder<I, R, 
             }
         }
 
-        private int compareEndMarker(Comparator<C> comparator, C endMarker, C start, C end) {
+        private int compareEndMarker(Comparator<BOUND> comparator, BOUND endMarker, BOUND start, BOUND end) {
             // range ends...
             if (comparator.compare(end, endMarker) <= 0) {
                 // ...either BEFORE or ON the end marker -> end marker is AFTER (include range)
@@ -266,9 +266,9 @@ public abstract class TableAdapterAbs<I, R, C, VH extends TableViewHolder<I, R, 
         }
 
         private int compareNonMarkers(
-                Comparator<C> comparator,
-                @NonNull C start1, @NonNull C end1,
-                @NonNull C start2, @NonNull C end2) {
+                Comparator<BOUND> comparator,
+                @NonNull BOUND start1, @NonNull BOUND end1,
+                @NonNull BOUND start2, @NonNull BOUND end2) {
             int result = comparator.compare(start1, start2);
             return result != 0 ? result : comparator.compare(end1, end2);
         }

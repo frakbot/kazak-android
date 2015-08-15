@@ -2,18 +2,18 @@ package io.kazak.schedule.view.table.base;
 
 import java.util.Comparator;
 
-public interface TableDataHandler<I, R, C> extends Comparator<C> {
+public interface TableDataHandler<ITEM, ROW, BOUND> extends Comparator<BOUND> {
 
-    R getRowFrom(I item);
+    ROW getRowFrom(ITEM item);
 
-    C getStartFrom(I item);
+    BOUND getStartFrom(ITEM item);
 
-    C getEndFrom(I item);
+    BOUND getEndFrom(ITEM item);
 
-    int getLength(C start, C end);
+    int getLength(BOUND start, BOUND end);
 
-    C sum(C start, int units);
+    BOUND sum(BOUND start, int units);
 
-    boolean isPlaceholder(I item);
+    boolean isPlaceholder(ITEM item);
 
 }
