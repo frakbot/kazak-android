@@ -19,7 +19,7 @@ public abstract class TableAdapterAbs<ITEM, ROW, BOUND, VH extends TableViewHold
 
     private final TableDataHandler<ITEM, ROW, BOUND> dataHandler;
 
-    private RecyclerView recyclerView;
+    private RecyclerView boundRecyclerView;
 
     protected TableAdapterAbs(@NonNull TableDataHandler<ITEM, ROW, BOUND> dataHandler) {
         this.dataHandler = dataHandler;
@@ -55,7 +55,7 @@ public abstract class TableAdapterAbs<ITEM, ROW, BOUND, VH extends TableViewHold
      */
     @NonNull
     TableViewHolder<ITEM, ROW, BOUND> getViewHolder(@NonNull View view) {
-        RecyclerView.ViewHolder vh = recyclerView.getChildViewHolder(view);
+        RecyclerView.ViewHolder vh = boundRecyclerView.getChildViewHolder(view);
         if (vh == null) {
             throw new DeveloperError("No ViewHolder associated with this view.");
         }
@@ -87,12 +87,12 @@ public abstract class TableAdapterAbs<ITEM, ROW, BOUND, VH extends TableViewHold
 
     @Override
     public void onAttachedToRecyclerView(RecyclerView recyclerView) {
-        this.recyclerView = recyclerView;
+        boundRecyclerView = recyclerView;
     }
 
     @Override
     public void onDetachedFromRecyclerView(RecyclerView recyclerView) {
-        this.recyclerView = null;
+        boundRecyclerView = null;
     }
 
     @NonNull
