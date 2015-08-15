@@ -34,6 +34,7 @@ public class ScheduleTableView extends RecyclerView {
     }
 
     public ScheduleTableView(Context context, AttributeSet attrs, @AttrRes int defStyleAttr, @StyleRes int defStyleRes) {
+        // this is the right super call as RecyclerView doesn't supported the 4th View constructor
         super(context, attrs, defStyleAttr);
 
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.ScheduleTableView, defStyleAttr, defStyleRes);
