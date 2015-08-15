@@ -177,7 +177,7 @@ public abstract class TableAdapterAbs<ITEM, ROW, BOUND, VH extends TableViewHold
                 @Nullable BOUND start2, @Nullable BOUND end2) {
 
             // if start and end are both null, return -1
-            if ((start1 == null && end1 == null) || (start2 == null && end2 == null)) {
+            if (start1 == null && end1 == null || start2 == null && end2 == null) {
                 return -1;
             }
 
