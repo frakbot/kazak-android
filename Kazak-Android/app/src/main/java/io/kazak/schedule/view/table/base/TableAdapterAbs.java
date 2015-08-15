@@ -68,9 +68,9 @@ public abstract class TableAdapterAbs<ITEM, ROW, BOUND, VH extends TableViewHold
         ITEM item = getItem(position);
         holder.updateWith(
                 item,
-                dataHandler.getRowFrom(item),
-                dataHandler.getStartFrom(item),
-                dataHandler.getEndFrom(item),
+                dataHandler.getRowFor(item),
+                dataHandler.getStartFor(item),
+                dataHandler.getEndFor(item),
                 dataHandler.isPlaceholder(item));
     }
 

@@ -70,17 +70,17 @@ public class ScheduleTableAdapter extends TableTreeAdapter<Talk, Room, Date, Sch
     private static final class TalkDataHandler implements TableDataHandler<Talk, Room, Date> {
 
         @Override
-        public Room getRowFrom(Talk item) {
+        public Room getRowFor(Talk item) {
             return item.getRoom();
         }
 
         @Override
-        public Date getStartFrom(Talk item) {
+        public Date getStartFor(Talk item) {
             return item.getTimeSlot().getStart();
         }
 
         @Override
-        public Date getEndFrom(Talk item) {
+        public Date getEndFor(Talk item) {
             return item.getTimeSlot().getEnd();
         }
 
