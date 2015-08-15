@@ -17,6 +17,8 @@ public abstract class TableAdapterAbs<ITEM, ROW, BOUND, VH extends TableViewHold
     protected static final int VIEW_TYPE_NORMAL = 0;
     protected static final int VIEW_TYPE_PLACEHOLDER = 1;
 
+    private static final int MAGIC_ODD_PRIME = 31;
+
     private final TableDataHandler<ITEM, ROW, BOUND> dataHandler;
 
     private RecyclerView boundRecyclerView;
@@ -300,7 +302,7 @@ public abstract class TableAdapterAbs<ITEM, ROW, BOUND, VH extends TableViewHold
         @Override
         public int hashCode() {
             int result = start != null ? start.hashCode() : 0;
-            result = 31 * result + (end != null ? end.hashCode() : 0);
+            result = MAGIC_ODD_PRIME * result + (end != null ? end.hashCode() : 0);
             return result;
         }
 
