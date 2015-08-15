@@ -59,7 +59,7 @@ public class TableLayoutParams extends RecyclerView.LayoutParams {
         this.isLastRow = isLastRow;
     }
 
-    public boolean isStartsFirst() {
+    public boolean startsFirst() {
         return startsFirst;
     }
 
@@ -67,7 +67,7 @@ public class TableLayoutParams extends RecyclerView.LayoutParams {
         this.startsFirst = startsFirst;
     }
 
-    public boolean isEndsLast() {
+    public boolean endsLast() {
         return endsLast;
     }
 
