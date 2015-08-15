@@ -23,18 +23,4 @@
   <attr name="scheduleViewDefaultStyle"
     format="reference" />
 
-  <style name="ScheduleViewDefaultStyle">
-    <item name="itemsPaddingHorizontal">@dimen/schedule_view_default_items_padding_horizontal</item>
-    <item name="itemsPaddingVertical">@dimen/schedule_view_default_items_padding_vertical</item>
-    <item name="rowHeight">@dimen/schedule_view_default_row_height</item>
-    <item name="timeSlotUnitWidth">@dimen/schedule_view_default_timeslot_unit_width</item>
-    <item name="timeSlotUnitDurationMinutes">@integer/schedule_view_default_timeslot_unit_duration_minutes</item>
-  </style>
-
-  <dimen name="schedule_view_default_items_padding_horizontal">5dp</dimen>
-  <dimen name="schedule_view_default_items_padding_vertical">5dp</dimen>
-  <dimen name="schedule_view_default_row_height">100dp</dimen>
-  <dimen name="schedule_view_default_timeslot_unit_width">100dp</dimen>
-  <integer name="schedule_view_default_timeslot_unit_duration_minutes">15</integer>
-
 </resources>
