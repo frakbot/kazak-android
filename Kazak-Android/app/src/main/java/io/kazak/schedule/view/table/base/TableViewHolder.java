@@ -19,12 +19,12 @@ public class TableViewHolder<ITEM, ROW, BOUND> extends RecyclerView.ViewHolder {
     }
 
     @CallSuper
-    public void updateWith(ITEM item, ROW row, BOUND start, BOUND end, boolean isPlaceholder) {
-        this.item = item;
-        this.row = row;
-        this.start = start;
-        this.end = end;
-        this.isPlaceholder = isPlaceholder;
+    public void updateWith(ITEM newItem, ROW newRow, BOUND newStart, BOUND newEnd, boolean newIsPlaceholder) {
+        item = newItem;
+        row = newRow;
+        start = newStart;
+        end = newEnd;
+        isPlaceholder = newIsPlaceholder;
     }
 
     public ITEM getItem() {
