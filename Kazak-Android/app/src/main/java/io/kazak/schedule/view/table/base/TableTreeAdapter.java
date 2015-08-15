@@ -36,13 +36,13 @@ public abstract class TableTreeAdapter<ITEM, ROW, BOUND, VH extends TableViewHol
     }
 
     public void updateWith(
-            @NonNull List<ITEM> items,
-            @NonNull TreeMap<ROW, TreeSet<RangePosition>> positions,
-            @Nullable BOUND minStart, @Nullable BOUND maxEnd) {
-        this.items = items;
-        this.positions = positions;
-        this.minStart = minStart;
-        this.maxEnd = maxEnd;
+            @NonNull List<ITEM> newItems,
+            @NonNull TreeMap<ROW, TreeSet<RangePosition>> newPositions,
+            @Nullable BOUND newMinStart, @Nullable BOUND newMaxEnd) {
+        items = newItems;
+        positions = newPositions;
+        minStart = newMinStart;
+        maxEnd = newMaxEnd;
         notifyDataSetChanged();
     }
 
