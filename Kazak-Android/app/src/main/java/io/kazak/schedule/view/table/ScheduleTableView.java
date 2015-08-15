@@ -46,7 +46,7 @@ public class ScheduleTableView extends RecyclerView {
         int timeSlotDurationMinutes = a.getInt(R.styleable.ScheduleTableView_timeSlotUnitDurationMinutes, 0);
         a.recycle();
 
-        int timeSlotDurationMilliseconds = (int)TimeUnit.MINUTES.toMillis(timeSlotDurationMinutes);
+        int timeSlotDurationMilliseconds = (int) TimeUnit.MINUTES.toMillis(timeSlotDurationMinutes);
 
         adapter = new ScheduleTableAdapter(context);
         setHasFixedSize(true);
