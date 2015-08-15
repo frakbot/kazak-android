@@ -23,13 +23,13 @@ public abstract class TableAdapterAbs<ITEM, ROW, BOUND, VH extends TableViewHold
         this.dataHandler = dataHandler;
     }
 
-    abstract public ITEM getItem(int position);
+    public abstract ITEM getItem(int position);
 
     @Nullable
-    abstract public BOUND getMinStart();
+    public abstract BOUND getMinStart();
 
     @Nullable
-    abstract public BOUND getMaxEnd();
+    public abstract BOUND getMaxEnd();
 
     @NonNull
     abstract Collection<ROW> getRows();
