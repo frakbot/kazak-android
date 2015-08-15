@@ -26,10 +26,8 @@ public class TableItemPaddingDecoration extends RecyclerView.ItemDecoration {
         outRect.right = horizontalPadding;
 
         TableLayoutParams tlp = TableLayoutParams.getFor(view);
-        if (tlp != null) {
-            if (tlp.isPlaceholder) {
-                getPlaceholderOffsets(outRect, parent, tlp);
-            }
+        if (tlp != null && tlp.isPlaceholder) {
+            getPlaceholderOffsets(outRect, parent, tlp);
         }
     }
 
