@@ -19,7 +19,7 @@ public abstract class TableAdapterAbs<ITEM, ROW, BOUND, VH extends TableViewHold
 
     private final TableDataHandler<ITEM, ROW, BOUND> dataHandler;
 
-    protected RecyclerView recyclerView;
+    private RecyclerView recyclerView;
 
     protected TableAdapterAbs(@NonNull TableDataHandler<ITEM, ROW, BOUND> dataHandler) {
         this.dataHandler = dataHandler;
