@@ -21,8 +21,8 @@ public abstract class TableAdapterAbs<ITEM, ROW, BOUND, VH extends TableViewHold
 
     private RecyclerView boundRecyclerView;
 
-    protected TableAdapterAbs(@NonNull TableDataHandler<ITEM, ROW, BOUND> dataHandler) {
-        this.dataHandler = dataHandler;
+    protected TableAdapterAbs(@NonNull TableDataHandler<ITEM, ROW, BOUND> dh) {
+        dataHandler = dh;
     }
 
     public abstract ITEM getItem(int position);
@@ -118,10 +118,10 @@ public abstract class TableAdapterAbs<ITEM, ROW, BOUND, VH extends TableViewHold
 
         private final int position;
 
-        public RangePosition(@NotNull BOUND start, @NotNull BOUND end, int position) {
-            this.start = start;
-            this.end = end;
-            this.position = position;
+        public RangePosition(@NotNull BOUND s, @NotNull BOUND e, int p) {
+            start = s;
+            end = e;
+            position = p;
             if (position < 0) {
                 throw new DeveloperError("Position can't be negative.");
             }
@@ -129,22 +129,22 @@ public abstract class TableAdapterAbs<ITEM, ROW, BOUND, VH extends TableViewHold
 
         // reserved for markers (see class documentation)
         private RangePosition() {
-            this.start = null;
-            this.end = null;
-            this.position = -1;
+            start = null;
+            end = null;
+            position = -1;
         }
 
         protected boolean isMarker() {
             return position < 0;
         }
 
-        protected void setStartMarker(@NonNull BOUND start) {
-            this.start = start;
+        protected void setStartMarker(@NonNull BOUND startMarker) {
+            start = startMarker;
             end = null;
         }
 
-        protected void setEndMarker(@NonNull BOUND end) {
-            this.end = end;
+        protected void setEndMarker(@NonNull BOUND endMarker) {
+            end = endMarker;
             start = null;
         }
 
@@ -175,7 +175,7 @@ public abstract class TableAdapterAbs<ITEM, ROW, BOUND, VH extends TableViewHold
 
         @Override
         public int compareTo(@NonNull RangePosition another) {
-            return compare(this.start, this.end, another.start, another.end);
+            return compare(start, end, another.start, another.end);
         }
 
         private int compare(
