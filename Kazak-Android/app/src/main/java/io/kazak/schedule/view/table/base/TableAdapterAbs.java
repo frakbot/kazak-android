@@ -17,7 +17,7 @@ public abstract class TableAdapterAbs<ITEM, ROW, BOUND, VH extends TableViewHold
     protected static final int VIEW_TYPE_NORMAL = 0;
     protected static final int VIEW_TYPE_PLACEHOLDER = 1;
 
-    final TableDataHandler<ITEM, ROW, BOUND> dataHandler;
+    private final TableDataHandler<ITEM, ROW, BOUND> dataHandler;
 
     protected RecyclerView recyclerView;
 
@@ -38,6 +38,11 @@ public abstract class TableAdapterAbs<ITEM, ROW, BOUND, VH extends TableViewHold
 
     @NonNull
     abstract Collection<RangePosition> getPositionsIn(@NonNull ROW row, @NonNull BOUND start, @NonNull BOUND end);
+
+    @NonNull
+    TableDataHandler<ITEM, ROW, BOUND> getDataHandler() {
+        return dataHandler;
+    }
 
     /**
      * Called from after {@link #getRows()} and/or {@link #getPositionsIn(Object, Object, Object)} in order to release any eventual resources.

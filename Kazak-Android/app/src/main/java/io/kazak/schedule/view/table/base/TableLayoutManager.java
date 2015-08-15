@@ -85,7 +85,7 @@ public class TableLayoutManager extends RecyclerView.LayoutManager {
             BOUND maxEnd = adapter.getMaxEnd();
             if (minStart != null && maxEnd != null) {
                 Collection<?> rows = adapter.getRows();
-                scrollXRange = (int) Math.ceil(adapter.dataHandler.getLength(minStart, maxEnd) * pixelsPerUnit) + getTotalPaddingHorizontal();
+                scrollXRange = (int) Math.ceil(adapter.getDataHandler().getLength(minStart, maxEnd) * pixelsPerUnit) + getTotalPaddingHorizontal();
                 scrollYRange = rows.size() * rowHeightPx + getTotalPaddingVertical();
                 return;
             }
@@ -140,7 +140,7 @@ public class TableLayoutManager extends RecyclerView.LayoutManager {
 
                 int scrollXUnits = (int) Math.floor(unitsPerPixel * scrollX);
 
-                TableDataHandler<?, ROW, BOUND> dataHandler = adapter.dataHandler;
+                TableDataHandler<?, ROW, BOUND> dataHandler = adapter.getDataHandler();
 
                 BOUND start = dataHandler.sum(minStart, scrollXUnits);
                 BOUND end = dataHandler.sum(start, visibleUnits);
