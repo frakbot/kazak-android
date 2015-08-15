@@ -181,16 +181,16 @@ public class TableLayoutManager extends RecyclerView.LayoutManager {
                             TableLayoutParams lp = TableLayoutParams.getOrCreateFor(view);
 
                             // update the LayoutParams based on the new view position
-                            lp.isFirstRow = isFirstRow;
-                            lp.isLastRow = isLastRow;
-                            lp.startsFirst = minStart.equals(vh.start);
-                            lp.endsLast = maxEnd.equals(vh.end);
-                            lp.isPlaceholder = vh.isPlaceholder;
+                            lp.setIsFirstRow(isFirstRow);
+                            lp.setIsLastRow(isLastRow);
+                            lp.setStartsFirst(minStart.equals(vh.start));
+                            lp.setEndsLast(maxEnd.equals(vh.end));
+                            lp.setIsPlaceholder(vh.isPlaceholder);
                             view.setLayoutParams(lp);
 
                             // add the view. if it's a placeholder, add it before other views
                             // (so it gets drawn first) but keep the order between placeholders
-                            int viewIndex = lp.isPlaceholder ? placeholdersCount++ : VIEW_INDEX_END;
+                            int viewIndex = lp.isPlaceholder() ? placeholdersCount++ : VIEW_INDEX_END;
                             addView(view, viewIndex);
 
                             // calculate normal and decorated dimensions/position

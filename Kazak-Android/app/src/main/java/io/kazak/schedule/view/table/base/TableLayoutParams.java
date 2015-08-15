@@ -8,12 +8,12 @@ import android.view.ViewGroup;
 
 public class TableLayoutParams extends RecyclerView.LayoutParams {
 
-    boolean isFirstRow;
-    boolean isLastRow;
-    boolean startsFirst;
-    boolean endsLast;
+    private boolean isFirstRow;
+    private boolean isLastRow;
+    private boolean startsFirst;
+    private boolean endsLast;
 
-    boolean isPlaceholder;
+    private boolean isPlaceholder;
 
     public TableLayoutParams() {
         super(WRAP_CONTENT, WRAP_CONTENT);
@@ -41,6 +41,46 @@ public class TableLayoutParams extends RecyclerView.LayoutParams {
     public static TableLayoutParams getFor(@Nullable View view) {
         ViewGroup.LayoutParams lp = view == null ? null : view.getLayoutParams();
         return !(lp instanceof TableLayoutParams) ? null : (TableLayoutParams) lp;
+    }
+
+    public boolean isFirstRow() {
+        return isFirstRow;
+    }
+
+    void setIsFirstRow(boolean isFirstRow) {
+        this.isFirstRow = isFirstRow;
+    }
+
+    public boolean isLastRow() {
+        return isLastRow;
+    }
+
+    void setIsLastRow(boolean isLastRow) {
+        this.isLastRow = isLastRow;
+    }
+
+    public boolean isStartsFirst() {
+        return startsFirst;
+    }
+
+    void setStartsFirst(boolean startsFirst) {
+        this.startsFirst = startsFirst;
+    }
+
+    public boolean isEndsLast() {
+        return endsLast;
+    }
+
+    void setEndsLast(boolean endsLast) {
+        this.endsLast = endsLast;
+    }
+
+    public boolean isPlaceholder() {
+        return isPlaceholder;
+    }
+
+    void setIsPlaceholder(boolean isPlaceholder) {
+        this.isPlaceholder = isPlaceholder;
     }
 
 }

@@ -26,7 +26,7 @@ public class TableItemPaddingDecoration extends RecyclerView.ItemDecoration {
         outRect.right = horizontalPadding;
 
         TableLayoutParams tlp = TableLayoutParams.getFor(view);
-        if (tlp != null && tlp.isPlaceholder) {
+        if (tlp != null && tlp.isPlaceholder()) {
             getPlaceholderOffsets(outRect, parent, tlp);
         }
     }
@@ -35,7 +35,7 @@ public class TableItemPaddingDecoration extends RecyclerView.ItemDecoration {
         // if an item is a placeholder, it will extends from its bounds (negative padding) until the next element or the end of the parent
         outRect.left *= -1;
         outRect.right *= -1;
-        if (tlp.startsFirst || tlp.endsLast) {
+        if (tlp.isStartsFirst() || tlp.isEndsLast()) {
             int extraHorizontalPadding = 0;
             RecyclerView.LayoutManager lm = parent.getLayoutManager();
             if (lm instanceof TableLayoutManager) {
@@ -43,13 +43,13 @@ public class TableItemPaddingDecoration extends RecyclerView.ItemDecoration {
                 extraHorizontalPadding = tlm.getExtraHorizontalPadding();
             }
             boolean drawInPadding = !lm.getClipToPadding();
-            if (tlp.startsFirst) {
+            if (tlp.isStartsFirst()) {
                 outRect.left = -extraHorizontalPadding;
                 if (drawInPadding) {
                     outRect.left -= parent.getPaddingLeft();
                 }
             }
-            if (tlp.endsLast) {
+            if (tlp.isEndsLast()) {
                 outRect.right = -extraHorizontalPadding;
                 if (drawInPadding) {
                     outRect.left -= parent.getPaddingRight();
