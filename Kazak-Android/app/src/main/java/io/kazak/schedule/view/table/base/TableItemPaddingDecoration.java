@@ -1,6 +1,7 @@
 package io.kazak.schedule.view.table.base;
 
 import android.graphics.Rect;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
@@ -31,7 +32,7 @@ public class TableItemPaddingDecoration extends RecyclerView.ItemDecoration {
         }
     }
 
-    private void getPlaceholderOffsets(Rect outRect, RecyclerView parent, TableLayoutParams tlp) {
+    private void getPlaceholderOffsets(Rect outRect, RecyclerView parent, @NonNull TableLayoutParams tlp) {
         // if an item is a placeholder, it will extends from its bounds (negative padding) until the next element or the end of the parent
         outRect.left *= -1;
         outRect.right *= -1;
