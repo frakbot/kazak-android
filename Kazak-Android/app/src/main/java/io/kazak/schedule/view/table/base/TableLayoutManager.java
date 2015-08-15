@@ -66,6 +66,11 @@ public class TableLayoutManager extends RecyclerView.LayoutManager {
         onDataOrSizeChanged(recycler, state, adapter);
     }
 
+    /**
+     * This is just a way to make use of the generic types, don't use it directly.
+     *
+     * @see #onDataOrSizeChanged(RecyclerView.Recycler, RecyclerView.State)
+     */
     private <BOUND> void onDataOrSizeChanged(
             RecyclerView.Recycler recycler, RecyclerView.State state, @Nullable TableAdapterAbs<?, ?, BOUND, ?> adapter) {
         scrollX = scrollY = 0;
@@ -106,12 +111,19 @@ public class TableLayoutManager extends RecyclerView.LayoutManager {
         fillVisibleItems(recycler, state, adapter);
     }
 
+    /**
+     * This is just a way to make use of the generic types, don't use it directly.
+     *
+     * @see #fillVisibleItems(RecyclerView.Recycler, RecyclerView.State)
+     */
     private <ROW, BOUND> void fillVisibleItems(
             RecyclerView.Recycler recycler, RecyclerView.State state, @Nullable TableAdapterAbs<?, ROW, BOUND, ?> adapter) {
         if (adapter == null) {
             throw new DeveloperError("Adapter must be set.");
         }
 
+        // detach all the views. some might be reattached (potentially in a different order),
+        // and all those left detached will be scraped at the end.
         detachAndScrapAttachedViews(recycler);
 
         BOUND minStart = adapter.getMinStart();
@@ -131,6 +143,7 @@ public class TableLayoutManager extends RecyclerView.LayoutManager {
                 BOUND start = dataHandler.sum(minStart, scrollXUnits);
                 BOUND end = dataHandler.sum(start, visibleUnits);
 
+                // this is to account for any rounding error in the conversion from "units" to "pixels"
                 int shiftX = scrollX - getWidthFor(minStart, start, dataHandler);
 
                 int y = -scrollY;
@@ -139,23 +152,31 @@ public class TableLayoutManager extends RecyclerView.LayoutManager {
                 int lastRowIndex = rows.size() - 1;
                 int placeholdersCount = 0;
 
+                // iterate each row, starting from the first. this is efficient for our use case (few rows, known height)
+                // instead of keeping track of the first visible row and the offset.
                 for (ROW row : rows) {
+
+                    // if y is past the visible vertical range, stop
                     if (y >= parentHeight) {
                         break;
                     }
+
+                    // only do something if it's in the visible vertical range
                     if (y + height > 0) {
 
                         isFirstRow = rowIndex == 0;
                         isLastRow = rowIndex == lastRowIndex;
 
-                        for (TableAdapterAbs.RangePosition range : adapter.getPositionsIn(row, start, end)) {
+                        // get all the views in the horizontal visible range
+                        for (TableAdapterAbs.RangePosition rangePosition : adapter.getPositionsIn(row, start, end)) {
 
-                            int pos = range.getPosition();
-                            View view = recycler.getViewForPosition(pos);
+                            int pos = rangePosition.getPosition();
+                            View view = recycler.getViewForPosition(rangePosition.getPosition());
 
                             TableViewHolder<?, ROW, BOUND> vh = adapter.getViewHolder(view);
                             TableLayoutParams lp = TableLayoutParams.getOrCreateFor(view);
 
+                            // update the LayoutParams based on the new view position
                             lp.isFirstRow = isFirstRow;
                             lp.isLastRow = isLastRow;
                             lp.startsFirst = minStart.equals(vh.start);
@@ -163,9 +184,12 @@ public class TableLayoutManager extends RecyclerView.LayoutManager {
                             lp.isPlaceholder = vh.isPlaceholder;
                             view.setLayoutParams(lp);
 
+                            // add the view. if it's a placeholder, add it before other views
+                            // (so it gets drawn first) but keep the order between placeholders
                             int viewIndex = lp.isPlaceholder ? placeholdersCount++ : -1;
                             addView(view, viewIndex);
 
+                            // calculate normal and decorated dimensions/position
                             int width = getWidthFor(vh.start, vh.end, dataHandler);
                             int x = getWidthFor(start, vh.start, dataHandler) + shiftX;
                             Rect decoration = tmpRect;
@@ -189,6 +213,7 @@ public class TableLayoutManager extends RecyclerView.LayoutManager {
             }
         }
 
+        // scrap all detached views
         List<RecyclerView.ViewHolder> scrapList = recycler.getScrapList();
         for (RecyclerView.ViewHolder viewHolder : scrapList) {
             removeView(viewHolder.itemView);
