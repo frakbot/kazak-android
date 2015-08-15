@@ -7,12 +7,12 @@ import android.view.View;
 
 public class TableViewHolder<ITEM, ROW, BOUND> extends RecyclerView.ViewHolder {
 
-    ITEM item;
-    ROW row;
-    BOUND start;
-    BOUND end;
+    private ITEM item;
+    private ROW row;
+    private BOUND start;
+    private BOUND end;
 
-    boolean isPlaceholder;
+    private boolean isPlaceholder;
 
     public TableViewHolder(@NonNull View view) {
         super(view);
@@ -25,6 +25,26 @@ public class TableViewHolder<ITEM, ROW, BOUND> extends RecyclerView.ViewHolder {
         this.start = start;
         this.end = end;
         this.isPlaceholder = isPlaceholder;
+    }
+
+    public ITEM getItem() {
+        return item;
+    }
+
+    public ROW getRow() {
+        return row;
+    }
+
+    public BOUND getStart() {
+        return start;
+    }
+
+    public BOUND getEnd() {
+        return end;
+    }
+
+    public boolean isPlaceholder() {
+        return isPlaceholder;
     }
 
 }
