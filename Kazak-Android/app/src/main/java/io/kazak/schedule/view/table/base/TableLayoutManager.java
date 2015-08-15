@@ -37,7 +37,7 @@ public class TableLayoutManager extends RecyclerView.LayoutManager {
     private final Rect tmpRect = new Rect();
 
     @Nullable
-    private TableAdapterAbs<?, ?, ?, ?> adapter;
+    private TableAdapterAbs<?, ?, ?, ?> boundAdapter;
 
     public TableLayoutManager(int rowHeightPx, int minSpanWidthPx, int minSpanLengthUnits, int extraHorizontalPadding, int extraVerticalPadding) {
         this.rowHeightPx = rowHeightPx;
@@ -65,7 +65,7 @@ public class TableLayoutManager extends RecyclerView.LayoutManager {
     }
 
     private void onDataOrSizeChanged(RecyclerView.Recycler recycler, RecyclerView.State state) {
-        onDataOrSizeChanged(recycler, state, adapter);
+        onDataOrSizeChanged(recycler, state, boundAdapter);
     }
 
     /**
@@ -112,7 +112,7 @@ public class TableLayoutManager extends RecyclerView.LayoutManager {
     }
 
     private void fillVisibleItems(RecyclerView.Recycler recycler, RecyclerView.State state) {
-        fillVisibleItems(recycler, state, adapter);
+        fillVisibleItems(recycler, state, boundAdapter);
     }
 
     /**
@@ -321,12 +321,12 @@ public class TableLayoutManager extends RecyclerView.LayoutManager {
         super.onAdapterChanged(oldAdapter, newAdapter);
         if (newAdapter != null) {
             try {
-                adapter = (TableAdapterAbs<?, ?, ?, ?>) newAdapter;
+                boundAdapter = (TableAdapterAbs<?, ?, ?, ?>) newAdapter;
             } catch (ClassCastException e) {
                 throw new DeveloperError(e, "Adapter must be a %s.", TableAdapterAbs.class.getSimpleName());
             }
         }
-        if (adapter == null) {
+        if (boundAdapter == null) {
             onDataOrSizeChanged(null, null);
         }
     }

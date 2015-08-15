@@ -120,10 +120,10 @@ public abstract class TableAdapterAbs<ITEM, ROW, BOUND, VH extends TableViewHold
 
         private final int position;
 
-        public RangePosition(@NotNull BOUND s, @NotNull BOUND e, int p) {
-            start = s;
-            end = e;
-            position = p;
+        public RangePosition(@NotNull BOUND rangeStart, @NotNull BOUND rangeEnd, int adapterPosition) {
+            start = rangeStart;
+            end = rangeEnd;
+            position = adapterPosition;
             if (position < 0) {
                 throw new DeveloperError("Position can't be negative.");
             }
@@ -222,29 +222,26 @@ public abstract class TableAdapterAbs<ITEM, ROW, BOUND, VH extends TableViewHold
                 end2 = tmpStart2;
             }
 
-            BOUND start = start2;
-            BOUND end = end2;
-
             // compare
             final int result;
             if (end1 == null) {
-                result = compareStartMarker(comparator, start1, start, end);
+                result = compareStartMarker(comparator, start1, start2, end2);
             } else if (start1 == null) {
-                result = compareEndMarker(comparator, end1, start, end);
+                result = compareEndMarker(comparator, end1, start2, end2);
             } else {
                 result = compareNonMarkers(comparator, start1, end1, start2, end2);
             }
             return result * (inverse ? -1 : 1);
         }
 
-        private int compareStartMarker(Comparator<BOUND> comparator, BOUND startMarker, BOUND start, BOUND end) {
+        private int compareStartMarker(Comparator<BOUND> comparator, BOUND startMarker, BOUND rangeStart, BOUND rangeEnd) {
             // range starts...
-            if (comparator.compare(start, startMarker) >= 0) {
+            if (comparator.compare(rangeStart, startMarker) >= 0) {
                 // ...ON or AFTER the start marker -> start marker is BEFORE (include range)
                 return -1;
             } else {
                 // ...BEFORE the marker, and ends...
-                if (comparator.compare(end, startMarker) <= 0) {
+                if (comparator.compare(rangeEnd, startMarker) <= 0) {
                     // ...either BEFORE or ON the start marker -> start marker is AFTER (exclude range)
                     return 1;
                 } else {
@@ -254,14 +251,14 @@ public abstract class TableAdapterAbs<ITEM, ROW, BOUND, VH extends TableViewHold
             }
         }
 
-        private int compareEndMarker(Comparator<BOUND> comparator, BOUND endMarker, BOUND start, BOUND end) {
+        private int compareEndMarker(Comparator<BOUND> comparator, BOUND endMarker, BOUND rangeStart, BOUND rangeEnd) {
             // range ends...
-            if (comparator.compare(end, endMarker) <= 0) {
+            if (comparator.compare(rangeEnd, endMarker) <= 0) {
                 // ...either BEFORE or ON the end marker -> end marker is AFTER (include range)
                 return 1;
             } else {
                 // ...AFTER the end marker, and starts...
-                if (comparator.compare(start, endMarker) >= 0) {
+                if (comparator.compare(rangeStart, endMarker) >= 0) {
                     // ...either ON or AFTER the end marker -> end marker BEFORE (exclude range)
                     return -1;
                 } else {
