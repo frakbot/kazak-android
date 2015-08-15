@@ -75,7 +75,7 @@ public class ScheduleTableView extends RecyclerView {
         if (schedule.getDays().isEmpty()) {
             return Collections.emptyList();
         } else {
-            return schedule.getDays().get(0).getTalks();
+            return schedule.getDays().get(0).getTalks(); //TODO
         }
     }
 
