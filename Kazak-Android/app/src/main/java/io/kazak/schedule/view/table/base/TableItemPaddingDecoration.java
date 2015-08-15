@@ -36,25 +36,26 @@ public class TableItemPaddingDecoration extends RecyclerView.ItemDecoration {
         // if an item is a placeholder, it will extends from its bounds (negative padding) until the next element or the end of the parent
         outRect.left *= -1;
         outRect.right *= -1;
-        if (tlp.startsFirst() || tlp.endsLast()) {
-            int extraHorizontalPadding = 0;
-            RecyclerView.LayoutManager lm = parent.getLayoutManager();
-            if (lm instanceof TableLayoutManager) {
-                TableLayoutManager tlm = (TableLayoutManager) lm;
-                extraHorizontalPadding = tlm.getExtraHorizontalPadding();
+        if (!tlp.startsFirst() && !tlp.endsLast()) {
+            return;
+        }
+        int extraHorizontalPadding = 0;
+        RecyclerView.LayoutManager lm = parent.getLayoutManager();
+        if (lm instanceof TableLayoutManager) {
+            TableLayoutManager tlm = (TableLayoutManager) lm;
+            extraHorizontalPadding = tlm.getExtraHorizontalPadding();
+        }
+        boolean drawInPadding = !lm.getClipToPadding();
+        if (tlp.startsFirst()) {
+            outRect.left = -extraHorizontalPadding;
+            if (drawInPadding) {
+                outRect.left -= parent.getPaddingLeft();
             }
-            boolean drawInPadding = !lm.getClipToPadding();
-            if (tlp.startsFirst()) {
-                outRect.left = -extraHorizontalPadding;
-                if (drawInPadding) {
-                    outRect.left -= parent.getPaddingLeft();
-                }
-            }
-            if (tlp.endsLast()) {
-                outRect.right = -extraHorizontalPadding;
-                if (drawInPadding) {
-                    outRect.left -= parent.getPaddingRight();
-                }
+        }
+        if (tlp.endsLast()) {
+            outRect.right = -extraHorizontalPadding;
+            if (drawInPadding) {
+                outRect.left -= parent.getPaddingRight();
             }
         }
     }
