@@ -245,17 +245,18 @@ public class TableLayoutManager extends RecyclerView.LayoutManager {
     }
 
     private int clipScrollDelta(int currentValue, int delta, int max) {
+        int clippedDelta = delta;
         int newValue = currentValue + delta;
         if (newValue < 0) {
-            delta = -currentValue;
+            clippedDelta = -currentValue;
         } else {
             if (max < 0) {
-                delta = 0;
+                clippedDelta = 0;
             } else if (newValue > max) {
-                delta = max - currentValue;
+                clippedDelta = max - currentValue;
             }
         }
-        return delta;
+        return clippedDelta;
     }
 
     public int getExtraHorizontalPadding() {
