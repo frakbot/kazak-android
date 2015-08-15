@@ -42,6 +42,7 @@ public class DummyApi : KazakApi {
 
     private fun getDummyRoomTalks(room: Room): Observable<Talk> {
         val start = GregorianCalendar()
+        //TODO this should not be hardcoded
         val end = GregorianCalendar(2015, Calendar.OCTOBER, 1, 10, 0)
         return Observable.range(0, 10)
                 .map {
