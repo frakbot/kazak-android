@@ -16,6 +16,7 @@ android {
         targetSdkVersion 22
 
         buildConfigField "String", "BUILD_TIME_FORMATTED", "\"${getBuildTimestamp()}\""
+        project.ext.intermediateClasses = "$projectDir/build/intermediates/classes/debug/"
     }
 
     buildTypes {
@@ -31,6 +32,7 @@ android {
     productFlavors {
         example {
             defaultProperties.configure(it)
+            project.ext.intermediateClasses = "$projectDir/build/intermediates/classes/example/debug/"
         }
     }
 
@@ -63,3 +65,5 @@ def getBuildTimestamp() {
     dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
     return dateFormat.format(new Date());
 }
+
+apply from: '../config/static_analysis.gradle'
