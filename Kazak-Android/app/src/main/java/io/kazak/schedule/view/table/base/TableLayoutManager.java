@@ -55,7 +55,7 @@ public class TableLayoutManager extends RecyclerView.LayoutManager {
     private void validateState() {
         ensurePositive(rowHeightPx, "rowHeightPx");
         ensurePositive(minSpanWidthPx, "minSpanWidthPx");
-        ensurePositive(minSpanLengthUnits, "minSpanLength");
+        ensurePositive(minSpanLengthUnits, "minSpanLengthUnits");
     }
 
     private static void ensurePositive(float value, String name) {
