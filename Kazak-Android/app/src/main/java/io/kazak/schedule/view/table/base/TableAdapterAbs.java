@@ -288,7 +288,6 @@ public abstract class TableAdapterAbs<ITEM, ROW, BOUND, VH extends TableViewHold
                 return false;
             }
             return !(end != null ? !end.equals(that.end) : that.end != null);
-
         }
 
         // auto-generated, ignores position
