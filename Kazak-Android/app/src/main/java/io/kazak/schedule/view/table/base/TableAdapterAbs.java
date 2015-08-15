@@ -205,12 +205,12 @@ public abstract class TableAdapterAbs<ITEM, ROW, BOUND, VH extends TableViewHold
             boolean inverse = false;
             if (secondIsMarker) {
                 inverse = true;
-                BOUND _start2 = start2;
-                BOUND _end2 = end2;
+                BOUND start2_tmp = start2;
+                BOUND end2_tmp = end2;
                 start2 = start1;
                 end2 = end1;
-                start1 = _start2;
-                end1 = _end2;
+                start1 = start2_tmp;
+                end1 = end2_tmp;
             }
 
             // start must be before end
