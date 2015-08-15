@@ -40,7 +40,7 @@ public class TableLayoutParams extends RecyclerView.LayoutParams {
     @Nullable
     public static TableLayoutParams getFor(@Nullable View view) {
         ViewGroup.LayoutParams lp = view == null ? null : view.getLayoutParams();
-        return lp instanceof TableLayoutParams ? (TableLayoutParams) lp : null;
+        return !(lp instanceof TableLayoutParams) ? null : (TableLayoutParams) lp;
     }
 
 }
