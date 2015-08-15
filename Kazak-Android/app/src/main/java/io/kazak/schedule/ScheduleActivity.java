@@ -14,14 +14,12 @@ import javax.inject.Inject;
 
 import io.kazak.KazakApplication;
 import io.kazak.R;
-import io.kazak.model.Schedule;
 import io.kazak.repository.DataRepository;
 import io.kazak.repository.event.SyncEvent;
 import io.kazak.schedule.view.table.ScheduleTableAdapter;
 import io.kazak.schedule.view.table.ScheduleTableView;
 import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Func1;
 import rx.subscriptions.CompositeSubscription;
 
 public class ScheduleActivity extends AppCompatActivity {
@@ -92,7 +90,7 @@ public class ScheduleActivity extends AppCompatActivity {
     private void subscribeToSchedule() {
         subscriptions.add(
                 dataRepository.getSchedule()
-                        .map(createAdapterData)
+                        .map(ScheduleActivityFunctions.createAdapterData(scheduleView))
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(new ScheduleObserver())
         );
@@ -112,15 +110,6 @@ public class ScheduleActivity extends AppCompatActivity {
     private void updateWith(@NonNull ScheduleTableAdapter.Data data) {
         scheduleView.updateWith(data);
     }
-
-    private final Func1<Schedule, ScheduleTableAdapter.Data> createAdapterData = new Func1<Schedule, ScheduleTableAdapter.Data>() {
-
-        @Override
-        public ScheduleTableAdapter.Data call(Schedule schedule) {
-            return scheduleView.createAdapterData(schedule);
-        }
-
-    };
 
     private class ScheduleObserver implements Observer<ScheduleTableAdapter.Data> {
 
