@@ -71,11 +71,7 @@ public class TableLayoutManager extends RecyclerView.LayoutManager {
         scrollX = scrollY = 0;
         visibleUnits = (int) Math.ceil(unitsPerPixel * getWidth());
 
-        if (recycler != null) {
-            int numberOfVisibleRows = (int) Math.ceil((double) getHeight() / rowHeightPx);
-            int numberOfVisibleUnits = (int) Math.ceil((double) getWidth() / minSpanWidthPx);
-            recycler.setViewCacheSize(numberOfVisibleRows + numberOfVisibleUnits);
-        }
+        setViewCacheSize(recycler);
 
         if (adapter != null) {
             BOUND minStart = adapter.getMinStart();
@@ -90,6 +86,14 @@ public class TableLayoutManager extends RecyclerView.LayoutManager {
         // else -> no data
         scrollXRange = scrollYRange = 0;
         removeAllViews();
+    }
+
+    private void setViewCacheSize(@Nullable RecyclerView.Recycler recycler) {
+        if (recycler != null) {
+            int numberOfVisibleRows = (int) Math.ceil((double) getHeight() / rowHeightPx);
+            int numberOfVisibleUnits = (int) Math.ceil((double) getWidth() / minSpanWidthPx);
+            recycler.setViewCacheSize(numberOfVisibleRows + numberOfVisibleUnits);
+        }
     }
 
     @Override
