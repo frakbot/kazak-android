@@ -55,6 +55,7 @@ public abstract class TableAdapterAbs<ITEM, ROW, BOUND, VH extends TableViewHold
             throw new DeveloperError("No ViewHolder associated with this view.");
         }
         try {
+            // suppressed as checking the correctness of the cast would be very hard and not worth it (blame type erasure)
             //noinspection unchecked
             return (TableViewHolder<ITEM, ROW, BOUND>) vh;
         } catch (ClassCastException e) {
