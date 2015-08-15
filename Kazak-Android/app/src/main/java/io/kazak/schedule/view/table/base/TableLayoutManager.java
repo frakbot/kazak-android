@@ -178,7 +178,7 @@ public class TableLayoutManager extends RecyclerView.LayoutManager {
                             View view = recycler.getViewForPosition(rangePosition.getPosition());
 
                             TableViewHolder<?, ROW, BOUND> vh = adapter.getViewHolder(view);
-                            TableLayoutParams lp = TableLayoutParams.getOrCreateFor(view);
+                            TableLayoutParams lp = TableLayoutParams.getFor(view, true);
 
                             // update the LayoutParams based on the new view position
                             lp.setIsFirstRow(isFirstRow);

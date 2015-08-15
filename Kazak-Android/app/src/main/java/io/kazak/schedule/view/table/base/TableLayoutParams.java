@@ -1,10 +1,11 @@
 package io.kazak.schedule.view.table.base;
 
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
+
+import org.jetbrains.annotations.Contract;
 
 public class TableLayoutParams extends RecyclerView.LayoutParams {
 
@@ -31,16 +32,23 @@ public class TableLayoutParams extends RecyclerView.LayoutParams {
         }
     }
 
-    @NonNull
-    public static TableLayoutParams getOrCreateFor(@Nullable View view) {
-        TableLayoutParams lp = getFor(view);
-        return lp != null ? lp : new TableLayoutParams();
+    @Nullable
+    @Contract("null->null")
+    public static TableLayoutParams getFor(@Nullable View view) {
+        return getFor(view, false);
     }
 
     @Nullable
-    public static TableLayoutParams getFor(@Nullable View view) {
+    @Contract("null,false->null; _,true->!null")
+    public static TableLayoutParams getFor(@Nullable View view, boolean createIfNull) {
         ViewGroup.LayoutParams lp = view == null ? null : view.getLayoutParams();
-        return !(lp instanceof TableLayoutParams) ? null : (TableLayoutParams) lp;
+        if (lp instanceof TableLayoutParams) {
+            return (TableLayoutParams) lp;
+        } else if (createIfNull) {
+            return new TableLayoutParams();
+        } else {
+            return null;
+        }
     }
 
     public boolean isFirstRow() {

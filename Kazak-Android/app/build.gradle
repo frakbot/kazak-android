@@ -51,6 +51,8 @@ dependencies {
 
     provided 'org.glassfish:javax.annotation:10.0-b28'
 
+    provided 'org.jetbrains:annotations:13.0'
+
     compile project(':core')
     compile 'com.android.support:appcompat-v7:22.2.1'
     compile 'com.android.support:recyclerview-v7:22.2.1'
