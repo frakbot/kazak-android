@@ -15,11 +15,14 @@ import io.kazak.R;
 import io.kazak.model.Room;
 import io.kazak.model.Talk;
 import io.kazak.model.TimeSlot;
+import io.kazak.schedule.view.TalkView;
 import io.kazak.schedule.view.table.base.TableDataHandler;
 import io.kazak.schedule.view.table.base.TableTreeAdapter;
-import io.kazak.schedule.view.TalkView;
 
 public class ScheduleTableAdapter extends TableTreeAdapter<Talk, Room, Date, ScheduleTableViewHolder> {
+
+    private static final TableDataHandler<Talk, Room, Date> TALK_DATA_HANDLER = new TalkDataHandler();
+    private static final Comparator<Room> ROOM_COMPARATOR = new RoomComparator();
 
     private final LayoutInflater inflater;
 
@@ -65,7 +68,7 @@ public class ScheduleTableAdapter extends TableTreeAdapter<Talk, Room, Date, Sch
         return new Data(talks, map, minTime, maxTime);
     }
 
-    private static final TableDataHandler<Talk, Room, Date> TALK_DATA_HANDLER = new TableDataHandler<Talk, Room, Date>() {
+    private static final class TalkDataHandler implements TableDataHandler<Talk, Room, Date> {
 
         @Override
         public Room getRowFrom(Talk item) {
@@ -104,13 +107,13 @@ public class ScheduleTableAdapter extends TableTreeAdapter<Talk, Room, Date, Sch
 
     };
 
-    private static final Comparator<Room> ROOM_COMPARATOR = new Comparator<Room>() {
+    private static final class RoomComparator implements Comparator<Room> {
 
         @Override
-        public int compare(@NonNull Room lhs, @NonNull Room rhs) {
+        public int compare(Room lhs, Room rhs) {
             return lhs.getName().compareToIgnoreCase(rhs.getName());
         }
 
-    };
+    }
 
 }
