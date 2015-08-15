@@ -19,6 +19,8 @@ import static android.view.View.MeasureSpec.makeMeasureSpec;
 
 public class TableLayoutManager extends RecyclerView.LayoutManager {
 
+    private static final int VIEW_INDEX_END = -1;
+
     private final int rowHeightPx;
     private final int minSpanWidthPx;
     private final int minSpanLengthUnits;
@@ -186,7 +188,7 @@ public class TableLayoutManager extends RecyclerView.LayoutManager {
 
                             // add the view. if it's a placeholder, add it before other views
                             // (so it gets drawn first) but keep the order between placeholders
-                            int viewIndex = lp.isPlaceholder ? placeholdersCount++ : -1;
+                            int viewIndex = lp.isPlaceholder ? placeholdersCount++ : VIEW_INDEX_END;
                             addView(view, viewIndex);
 
                             // calculate normal and decorated dimensions/position
