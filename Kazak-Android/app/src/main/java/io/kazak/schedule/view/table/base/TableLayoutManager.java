@@ -75,7 +75,8 @@ public class TableLayoutManager extends RecyclerView.LayoutManager {
      */
     private <BOUND> void onDataOrSizeChanged(
             RecyclerView.Recycler recycler, RecyclerView.State state, @Nullable TableAdapterAbs<?, ?, BOUND, ?> adapter) {
-        scrollX = scrollY = 0;
+        scrollX = 0;
+        scrollY = 0;
         visibleUnits = (int) Math.ceil(unitsPerPixel * getWidth());
 
         setViewCacheSize(recycler);
@@ -91,7 +92,8 @@ public class TableLayoutManager extends RecyclerView.LayoutManager {
             }
         }
         // else -> no data
-        scrollXRange = scrollYRange = 0;
+        scrollXRange = 0;
+        scrollYRange = 0;
         removeAllViews();
     }
 
