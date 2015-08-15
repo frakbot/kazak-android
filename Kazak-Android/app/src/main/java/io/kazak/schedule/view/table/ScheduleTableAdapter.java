@@ -58,12 +58,11 @@ public class ScheduleTableAdapter extends TableTreeAdapter<Talk, Room, Date, Sch
                 maxTime = endTime;
             }
             TreeSet<RangePosition> row = map.get(room);
-            RangePosition tp = new RangePosition(startTime, endTime, i);
             if (row == null) {
                 row = new TreeSet<>();
                 map.put(room, row);
             }
-            row.add(tp);
+            row.add(new RangePosition(startTime, endTime, i));
         }
         return new Data(talks, map, minTime, maxTime);
     }
