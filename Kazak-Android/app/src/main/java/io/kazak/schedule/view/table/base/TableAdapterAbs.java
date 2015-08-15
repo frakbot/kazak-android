@@ -122,7 +122,7 @@ public abstract class TableAdapterAbs<ITEM, ROW, BOUND, VH extends TableViewHold
             }
         }
 
-        // reserved for markers
+        // reserved for markers (see class documentation)
         private RangePosition() {
             this.start = null;
             this.end = null;
