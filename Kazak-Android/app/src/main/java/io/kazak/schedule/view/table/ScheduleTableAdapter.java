@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
+import java.io.Serializable;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
@@ -67,7 +68,7 @@ public class ScheduleTableAdapter extends TableTreeAdapter<Talk, Room, Date, Sch
         return new Data(talks, map, minTime, maxTime);
     }
 
-    private static final class TalkDataHandler implements TableDataHandler<Talk, Room, Date> {
+    private static final class TalkDataHandler implements TableDataHandler<Talk, Room, Date>, Serializable {
 
         @Override
         public Room getRowFor(Talk item) {
@@ -106,7 +107,7 @@ public class ScheduleTableAdapter extends TableTreeAdapter<Talk, Room, Date, Sch
 
     };
 
-    private static final class RoomComparator implements Comparator<Room> {
+    private static final class RoomComparator implements Comparator<Room>, Serializable {
 
         @Override
         public int compare(@NonNull Room lhs, @NonNull Room rhs) {
