@@ -155,7 +155,8 @@ public abstract class TableAdapterAbs<ITEM, ROW, BOUND, VH extends TableViewHold
             if (!isMarker()) {
                 throw new DeveloperError("Can only release markers.");
             }
-            start = end = null;
+            start = null;
+            end = null;
         }
 
         @NotNull
