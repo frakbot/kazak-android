@@ -24,8 +24,8 @@ public class TableLayoutManager extends RecyclerView.LayoutManager {
     private final int rowHeightPx;
     private final int minSpanWidthPx;
     private final int minSpanLengthUnits;
-    final int extraHorizontalPadding;
-    final int extraVerticalPadding;
+    private final int extraHorizontalPadding;
+    private final int extraVerticalPadding;
 
     private final double pixelsPerUnit;
     private final double unitsPerPixel;
@@ -254,6 +254,14 @@ public class TableLayoutManager extends RecyclerView.LayoutManager {
             }
         }
         return delta;
+    }
+
+    public int getExtraHorizontalPadding() {
+        return extraHorizontalPadding;
+    }
+
+    public int getExtraVerticalPadding() {
+        return extraVerticalPadding;
     }
 
     private int getTotalPaddingLeft() {

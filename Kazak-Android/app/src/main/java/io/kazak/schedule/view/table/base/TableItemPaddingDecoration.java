@@ -40,7 +40,7 @@ public class TableItemPaddingDecoration extends RecyclerView.ItemDecoration {
             RecyclerView.LayoutManager lm = parent.getLayoutManager();
             if (lm instanceof TableLayoutManager) {
                 TableLayoutManager tlm = (TableLayoutManager) lm;
-                extraHorizontalPadding = tlm.extraHorizontalPadding;
+                extraHorizontalPadding = tlm.getExtraHorizontalPadding();
             }
             boolean drawInPadding = !lm.getClipToPadding();
             if (tlp.startsFirst) {
