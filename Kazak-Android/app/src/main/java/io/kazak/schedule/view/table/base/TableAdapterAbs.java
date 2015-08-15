@@ -10,6 +10,8 @@ import java.util.Comparator;
 
 import org.jetbrains.annotations.NotNull;
 
+import io.kazak.base.DeveloperError;
+
 public abstract class TableAdapterAbs<ITEM, ROW, BOUND, VH extends TableViewHolder<ITEM, ROW, BOUND>> extends RecyclerView.Adapter<VH> {
 
     protected static final int VIEW_TYPE_NORMAL = 0;
@@ -45,23 +47,18 @@ public abstract class TableAdapterAbs<ITEM, ROW, BOUND, VH extends TableViewHold
 
     /**
      * Returns the ViewHolder associated with the View, optimistically casted.
-     *
-     * @throws NullPointerException If there's no ViewHolder associated with this View.
-     * @throws ClassCastException   If the ViewHolder is not of the correct type.
-     *                              Note that this will not fail if the generic types are different, because of type erasure.
      */
     @NonNull
-    TableViewHolder<ITEM, ROW, BOUND> getViewHolder(@NonNull View view)
-            throws NullPointerException, ClassCastException {
+    TableViewHolder<ITEM, ROW, BOUND> getViewHolder(@NonNull View view) {
         RecyclerView.ViewHolder vh = recyclerView.getChildViewHolder(view);
         if (vh == null) {
-            throw new IllegalArgumentException("No ViewHolder associated with this view.");
+            throw new DeveloperError("No ViewHolder associated with this view.");
         }
         try {
             //noinspection unchecked
             return (TableViewHolder<ITEM, ROW, BOUND>) vh;
         } catch (ClassCastException e) {
-            throw new IllegalArgumentException("ViewHolder is not a " + TableViewHolder.class.getSimpleName() + ".", e);
+            throw new DeveloperError(e, "ViewHolder is not a %s.", TableViewHolder.class.getSimpleName());
         }
     }
 
@@ -120,7 +117,7 @@ public abstract class TableAdapterAbs<ITEM, ROW, BOUND, VH extends TableViewHold
             this.end = end;
             this.position = position;
             if (position < 0) {
-                throw new IllegalArgumentException("Position can't be negative.");
+                throw new DeveloperError("Position can't be negative.");
             }
         }
 
@@ -150,7 +147,7 @@ public abstract class TableAdapterAbs<ITEM, ROW, BOUND, VH extends TableViewHold
          */
         protected void releaseMarker() {
             if (!isMarker()) {
-                throw new UnsupportedOperationException("Can only release markers.");
+                throw new DeveloperError("Can only release markers.");
             }
             start = end = null;
         }

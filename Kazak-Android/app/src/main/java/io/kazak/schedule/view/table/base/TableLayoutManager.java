@@ -12,9 +12,10 @@ import android.view.ViewGroup;
 import java.util.Collection;
 import java.util.List;
 
+import io.kazak.base.DeveloperError;
+
 import static android.view.View.MeasureSpec.EXACTLY;
 import static android.view.View.MeasureSpec.makeMeasureSpec;
-import static java.lang.String.format;
 
 public class TableLayoutManager extends RecyclerView.LayoutManager {
 
@@ -57,7 +58,7 @@ public class TableLayoutManager extends RecyclerView.LayoutManager {
 
     private static void ensurePositive(float value, String name) {
         if (value <= 0) {
-            throw new IllegalArgumentException(format("Value of '%s' must be positive.", name));
+            throw new DeveloperError("Value of '%s' must be positive.", name);
         }
     }
 
@@ -104,7 +105,7 @@ public class TableLayoutManager extends RecyclerView.LayoutManager {
     private <ROW, BOUND> void fillVisibleItems(
             RecyclerView.Recycler recycler, RecyclerView.State state, @Nullable TableAdapterAbs<?, ROW, BOUND, ?> adapter) {
         if (adapter == null) {
-            throw new IllegalStateException();
+            throw new DeveloperError("Adapter must be set.");
         }
 
         detachAndScrapAttachedViews(recycler);
@@ -281,7 +282,7 @@ public class TableLayoutManager extends RecyclerView.LayoutManager {
             try {
                 adapter = (TableAdapterAbs<?, ?, ?, ?>) newAdapter;
             } catch (ClassCastException e) {
-                throw new IllegalArgumentException("Adapter must be a " + TableAdapterAbs.class.getSimpleName() + ".", e);
+                throw new DeveloperError(e, "Adapter must be a %s.", TableAdapterAbs.class.getSimpleName());
             }
         }
         if (adapter == null) {
