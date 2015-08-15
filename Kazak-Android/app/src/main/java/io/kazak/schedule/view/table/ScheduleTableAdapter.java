@@ -17,6 +17,7 @@ import io.kazak.model.Room;
 import io.kazak.model.Talk;
 import io.kazak.model.TimeSlot;
 import io.kazak.schedule.view.TalkView;
+import io.kazak.schedule.view.table.base.RangePosition;
 import io.kazak.schedule.view.table.base.TableDataHandler;
 import io.kazak.schedule.view.table.base.TableTreeAdapter;
 
@@ -43,7 +44,7 @@ public class ScheduleTableAdapter extends TableTreeAdapter<Talk, Room, Date, Sch
 
     @NonNull
     public Data createSortedData(@NonNull List<Talk> talks) {
-        TreeMap<Room, TreeSet<RangePosition>> map = new TreeMap<>(ROOM_COMPARATOR);
+        TreeMap<Room, TreeSet<RangePosition<Date>>> map = new TreeMap<>(ROOM_COMPARATOR);
         Date minTime = null;
         Date maxTime = null;
         for (int i = 0, end = talks.size(); i < end; i++) {
@@ -58,12 +59,12 @@ public class ScheduleTableAdapter extends TableTreeAdapter<Talk, Room, Date, Sch
             if (maxTime == null || maxTime.compareTo(endTime) < 0) {
                 maxTime = endTime;
             }
-            TreeSet<RangePosition> row = map.get(room);
+            TreeSet<RangePosition<Date>> row = map.get(room);
             if (row == null) {
                 row = new TreeSet<>();
                 map.put(room, row);
             }
-            row.add(new RangePosition(startTime, endTime, i));
+            row.add(createRangePosition(startTime, endTime, i));
         }
         return new Data(talks, map, minTime, maxTime);
     }

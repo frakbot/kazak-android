@@ -11,16 +11,16 @@ import java.util.TreeSet;
 
 public abstract class TableTreeAdapter<ITEM, ROW, BOUND, VH extends TableViewHolder<ITEM, ROW, BOUND>> extends TableAdapterAbs<ITEM, ROW, BOUND, VH> {
 
-    private final TreeSet<RangePosition> emptySet = new TreeSet<>();
+    private final TreeSet<RangePosition<BOUND>> emptySet = new TreeSet<>();
 
     @NonNull
     private List<ITEM> items = Collections.emptyList();
 
     @NonNull
-    private TreeMap<ROW, TreeSet<RangePosition>> positions = new TreeMap<>();
+    private TreeMap<ROW, TreeSet<RangePosition<BOUND>>> positions = new TreeMap<>();
 
-    private final RangePosition startMarker = makeRangePositionMarker();
-    private final RangePosition endMarker = makeRangePositionMarker();
+    private final RangePosition<BOUND> startMarker;
+    private final RangePosition<BOUND> endMarker;
 
     @Nullable
     private BOUND minStart;
@@ -29,6 +29,8 @@ public abstract class TableTreeAdapter<ITEM, ROW, BOUND, VH extends TableViewHol
 
     protected TableTreeAdapter(@NonNull TableDataHandler<ITEM, ROW, BOUND> dataHandler) {
         super(dataHandler);
+        startMarker = createRangePositionMarker();
+        endMarker = createRangePositionMarker();
     }
 
     public void updateWith(@NonNull Data data) {
@@ -37,7 +39,7 @@ public abstract class TableTreeAdapter<ITEM, ROW, BOUND, VH extends TableViewHol
 
     public void updateWith(
             @NonNull List<ITEM> newItems,
-            @NonNull TreeMap<ROW, TreeSet<RangePosition>> newPositions,
+            @NonNull TreeMap<ROW, TreeSet<RangePosition<BOUND>>> newPositions,
             @Nullable BOUND newMinStart, @Nullable BOUND newMaxEnd) {
         items = newItems;
         positions = newPositions;
@@ -76,9 +78,8 @@ public abstract class TableTreeAdapter<ITEM, ROW, BOUND, VH extends TableViewHol
 
     @NonNull
     @Override
-    NavigableSet<RangePosition> getPositionsIn(@NonNull ROW row, @NonNull BOUND start, @NonNull BOUND end) {
-        TreeMap<ROW, TreeSet<RangePosition>> m = positions;
-        TreeSet<RangePosition> rowSet = m.get(row);
+    NavigableSet<RangePosition<BOUND>> getPositionsIn(@NonNull ROW row, @NonNull BOUND start, @NonNull BOUND end) {
+        TreeSet<RangePosition<BOUND>> rowSet = positions.get(row);
         if (rowSet == null || rowSet.isEmpty()) {
             return emptySet;
         }
@@ -98,7 +99,7 @@ public abstract class TableTreeAdapter<ITEM, ROW, BOUND, VH extends TableViewHol
         @NonNull
         private final List<ITEM> items;
         @NonNull
-        private final TreeMap<ROW, TreeSet<RangePosition>> positions;
+        private final TreeMap<ROW, TreeSet<RangePosition<BOUND>>> positions;
         @Nullable
         private final BOUND minStart;
         @Nullable
@@ -106,7 +107,7 @@ public abstract class TableTreeAdapter<ITEM, ROW, BOUND, VH extends TableViewHol
 
         public Data(
                 @NonNull List<ITEM> items,
-                @NonNull TreeMap<ROW, TreeSet<RangePosition>> positions,
+                @NonNull TreeMap<ROW, TreeSet<RangePosition<BOUND>>> positions,
                 @Nullable BOUND minStart, @Nullable BOUND maxEnd) {
             this.items = items;
             this.positions = positions;

@@ -172,7 +172,7 @@ public class TableLayoutManager extends RecyclerView.LayoutManager {
                         isLastRow = rowIndex == lastRowIndex;
 
                         // get all the views in the horizontal visible range
-                        for (TableAdapterAbs.RangePosition rangePosition : adapter.getPositionsIn(row, start, end)) {
+                        for (RangePosition<BOUND> rangePosition : adapter.getPositionsIn(row, start, end)) {
 
                             int pos = rangePosition.getPosition();
                             View view = recycler.getViewForPosition(rangePosition.getPosition());
