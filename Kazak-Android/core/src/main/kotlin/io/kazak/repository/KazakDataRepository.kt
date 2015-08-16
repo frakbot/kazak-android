@@ -7,22 +7,28 @@ import io.kazak.repository.event.SyncEvent
 import io.kazak.repository.event.SyncState
 import rx.Observable
 import rx.Observer
+import rx.functions.Func2
 import rx.subjects.BehaviorSubject
 
 public class KazakDataRepository(val api : KazakApi) : DataRepository {
 
-    val scheduleCache: BehaviorSubject<Schedule> = BehaviorSubject.create()
+    val scheduleCache: BehaviorSubject<Schedule?> = BehaviorSubject.create()
     val scheduleSyncCache: BehaviorSubject<SyncEvent> = BehaviorSubject.create()
+    val scheduleCombinedCache: Observable<Pair<SyncEvent, Schedule?>> = Observable.zip(scheduleSyncCache, scheduleCache, object : Func2<SyncEvent, Schedule?, Pair<SyncEvent, Schedule?>> {
+        override fun call(t1: SyncEvent?, t2: Schedule?): Pair<SyncEvent, Schedule?> {
+            return Pair(t1!!, t2)
+        }
+    })
 
     override fun getSchedule(): Observable<Schedule> {
         if (!scheduleCache.hasValue()) {
             updateSchedule()
         }
-        return scheduleCache
+        return scheduleCombinedCache.filter { it.second != null }.distinctUntilChanged { it.second }.map { it.second }
     }
 
     override fun getScheduleSyncEvents(): Observable<SyncEvent> {
-        return scheduleSyncCache;
+        return scheduleCombinedCache.map { it.first };
     }
 
     override fun getTalk(id: String): Observable<Talk> {
@@ -38,7 +44,7 @@ public class KazakDataRepository(val api : KazakApi) : DataRepository {
     // ATM there is no separate flow for talks we simply fetch them by filtering the schedule.
     // This can be revisited once a DB layer is in place.
     override fun getTalkSyncEvents(): Observable<SyncEvent> {
-        return scheduleSyncCache;
+        return scheduleCombinedCache.map { it.first };
     }
 
     private fun updateSchedule() {
@@ -52,7 +58,7 @@ public class KazakDataRepository(val api : KazakApi) : DataRepository {
         throw UnsupportedOperationException()
     }
 
-    class ScheduleObserver(val subject: BehaviorSubject<Schedule>, val syncSubject: BehaviorSubject<SyncEvent>) : Observer<Schedule> {
+    class ScheduleObserver(val subject: BehaviorSubject<Schedule?>, val syncSubject: BehaviorSubject<SyncEvent>) : Observer<Schedule> {
 
         override fun onCompleted() {
             syncSubject.onNext(SyncEvent(SyncState.IDLE, null))
