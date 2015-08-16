@@ -5,9 +5,13 @@ import io.kazak.model.Schedule
 import io.kazak.model.Talk
 import io.kazak.repository.event.SyncEvent
 import io.kazak.repository.event.SyncState
+import org.fusesource.leveldbjni.JniDBFactory
+import org.iq80.leveldb.Options
+import org.iq80.leveldb.ReadOptions
 import rx.Observable
 import rx.Observer
 import rx.subjects.BehaviorSubject
+import java.io.File
 
 public class KazakDataRepository(val api : KazakApi) : DataRepository {
 

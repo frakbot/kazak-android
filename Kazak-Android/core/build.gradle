@@ -9,6 +9,7 @@ apply plugin: 'kotlin'
 
 dependencies {
     compile 'io.reactivex:rxjava:1.0.12'
+    compile 'org.fusesource.leveldbjni:leveldbjni-all:1.8'
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     testCompile('junit:junit:4.11') {
         exclude module: 'hamcrest'
