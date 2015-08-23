@@ -13,6 +13,8 @@ public interface DataRepository {
 
     fun getTalk(id : String): Observable<Talk>
 
+    fun getTalkSyncEvents(): Observable<SyncEvent>
+
     fun bar(param : String)
 
 }

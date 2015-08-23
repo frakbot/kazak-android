@@ -35,6 +35,12 @@ public class KazakDataRepository(val api : KazakApi) : DataRepository {
         }
     }
 
+    // ATM there is no separate flow for talks we simply fetch them by filtering the schedule.
+    // This can be revisited once a DB layer is in place.
+    override fun getTalkSyncEvents(): Observable<SyncEvent> {
+        return scheduleSyncCache;
+    }
+
     private fun updateSchedule() {
         scheduleSyncCache.onNext(SyncEvent(SyncState.LOADING, null))
         // TODO implement real data we get from the server
