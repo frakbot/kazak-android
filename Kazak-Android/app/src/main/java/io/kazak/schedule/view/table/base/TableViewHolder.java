@@ -5,12 +5,12 @@ import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
-public class TableViewHolder<ITEM, ROW, BOUND> extends RecyclerView.ViewHolder {
+public class TableViewHolder<ScheduleItem, ScheduleRow, ScheduleBound> extends RecyclerView.ViewHolder {
 
-    private ITEM item;
-    private ROW row;
-    private BOUND start;
-    private BOUND end;
+    private ScheduleItem item;
+    private ScheduleRow row;
+    private ScheduleBound start;
+    private ScheduleBound end;
 
     private boolean isPlaceholder;
 
@@ -19,7 +19,7 @@ public class TableViewHolder<ITEM, ROW, BOUND> extends RecyclerView.ViewHolder {
     }
 
     @CallSuper
-    public void updateWith(ITEM newItem, ROW newRow, BOUND newStart, BOUND newEnd, boolean newIsPlaceholder) {
+    public void updateWith(ScheduleItem newItem, ScheduleRow newRow, ScheduleBound newStart, ScheduleBound newEnd, boolean newIsPlaceholder) {
         item = newItem;
         row = newRow;
         start = newStart;
@@ -27,19 +27,19 @@ public class TableViewHolder<ITEM, ROW, BOUND> extends RecyclerView.ViewHolder {
         isPlaceholder = newIsPlaceholder;
     }
 
-    public ITEM getItem() {
+    public ScheduleItem getItem() {
         return item;
     }
 
-    public ROW getRow() {
+    public ScheduleRow getRow() {
         return row;
     }
 
-    public BOUND getStart() {
+    public ScheduleBound getStart() {
         return start;
     }
 
-    public BOUND getEnd() {
+    public ScheduleBound getEnd() {
         return end;
     }
 

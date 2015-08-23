@@ -2,18 +2,22 @@ package io.kazak.schedule.view.table.base;
 
 import java.util.Comparator;
 
-public interface TableDataHandler<ITEM, ROW, BOUND> extends Comparator<BOUND> {
+import io.kazak.model.ScheduleBound;
+import io.kazak.model.ScheduleItem;
+import io.kazak.model.ScheduleRow;
 
-    ROW getRowFor(ITEM item);
+public interface TableDataHandler extends Comparator<ScheduleBound> {
 
-    BOUND getStartFor(ITEM item);
+    ScheduleRow getRowFor(ScheduleItem item);
 
-    BOUND getEndFor(ITEM item);
+    ScheduleBound getStartFor(ScheduleItem item);
 
-    int getLength(BOUND start, BOUND end);
+    ScheduleBound getEndFor(ScheduleItem item);
 
-    BOUND sum(BOUND start, int units);
+    int getLength(ScheduleBound start, ScheduleBound end);
 
-    boolean isPlaceholder(ITEM item);
+    ScheduleBound sum(ScheduleBound start, int units);
+
+    boolean isPlaceholder(ScheduleItem item);
 
 }

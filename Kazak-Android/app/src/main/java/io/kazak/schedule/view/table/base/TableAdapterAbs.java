@@ -6,45 +6,49 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import java.util.Collection;
+import java.util.NavigableSet;
 
 import org.jetbrains.annotations.NotNull;
 
 import io.kazak.base.DeveloperError;
+import io.kazak.model.ScheduleBound;
+import io.kazak.model.ScheduleItem;
+import io.kazak.model.ScheduleRow;
 
-public abstract class TableAdapterAbs<ITEM, ROW, BOUND, VH extends TableViewHolder<ITEM, ROW, BOUND>> extends RecyclerView.Adapter<VH> {
+public abstract class TableAdapterAbs extends RecyclerView.Adapter<TableViewHolder<ScheduleItem, ScheduleRow, ScheduleBound>> {
 
     protected static final int VIEW_TYPE_NORMAL = 0;
     protected static final int VIEW_TYPE_PLACEHOLDER = 1;
 
-    private final TableDataHandler<ITEM, ROW, BOUND> dataHandler;
+    private final TableDataHandler dataHandler;
 
     private RecyclerView boundRecyclerView;
 
-    protected TableAdapterAbs(@NonNull TableDataHandler<ITEM, ROW, BOUND> dh) {
+    protected TableAdapterAbs(@NonNull TableDataHandler dh) {
         dataHandler = dh;
     }
 
-    public abstract ITEM getItem(int position);
+    public abstract ScheduleItem getItem(int position);
 
     @Nullable
-    public abstract BOUND getMinStart();
+    public abstract ScheduleBound getMinStart();
 
     @Nullable
-    public abstract BOUND getMaxEnd();
+    public abstract ScheduleBound getMaxEnd();
 
     @NonNull
-    abstract Collection<ROW> getRows();
+    abstract NavigableSet<? extends ScheduleRow> getRows();
 
     @NonNull
-    abstract Collection<RangePosition<BOUND>> getPositionsIn(@NonNull ROW row, @NonNull BOUND start, @NonNull BOUND end);
+    abstract Collection<RangePosition<ScheduleBound>> getPositionsIn(@NonNull ScheduleRow row, @NonNull ScheduleBound start, @NonNull ScheduleBound end);
 
     @NonNull
-    TableDataHandler<ITEM, ROW, BOUND> getDataHandler() {
+    TableDataHandler getDataHandler() {
         return dataHandler;
     }
 
     /**
-     * Called from after {@link #getRows()} and/or {@link #getPositionsIn(Object, Object, Object)} in order to release any eventual resources.
+     * Called from after {@link #getRows()} and/or {@link #getPositionsIn(ScheduleRow, ScheduleBound, ScheduleBound)} in order to release any eventual resources.
      */
     protected void onReleaseRowsPositionsResources() {
     }
@@ -53,7 +57,7 @@ public abstract class TableAdapterAbs<ITEM, ROW, BOUND, VH extends TableViewHold
      * Returns the ViewHolder associated with the View, optimistically casted.
      */
     @NonNull
-    TableViewHolder<ITEM, ROW, BOUND> getViewHolder(@NonNull View view) {
+    TableViewHolder<ScheduleItem, ScheduleRow, ScheduleBound> getViewHolder(@NonNull View view) {
         RecyclerView.ViewHolder vh = boundRecyclerView.getChildViewHolder(view);
         if (vh == null) {
             throw new DeveloperError("No ViewHolder associated with this view.");
@@ -61,15 +65,15 @@ public abstract class TableAdapterAbs<ITEM, ROW, BOUND, VH extends TableViewHold
         try {
             // suppressed as checking the correctness of the cast would be very hard and not worth it (blame type erasure)
             //noinspection unchecked
-            return (TableViewHolder<ITEM, ROW, BOUND>) vh;
+            return (TableViewHolder<ScheduleItem, ScheduleRow, ScheduleBound>) vh;
         } catch (ClassCastException e) {
             throw new DeveloperError(e, "ViewHolder is not a %s.", TableViewHolder.class.getSimpleName());
         }
     }
 
     @Override
-    public void onBindViewHolder(VH holder, int position) {
-        ITEM item = getItem(position);
+    public void onBindViewHolder(TableViewHolder<ScheduleItem, ScheduleRow, ScheduleBound> holder, int position) {
+        ScheduleItem item = getItem(position);
         holder.updateWith(
                 item,
                 dataHandler.getRowFor(item),
@@ -80,7 +84,7 @@ public abstract class TableAdapterAbs<ITEM, ROW, BOUND, VH extends TableViewHold
 
     @Override
     public int getItemViewType(int position) {
-        ITEM item = getItem(position);
+        ScheduleItem item = getItem(position);
         return dataHandler.isPlaceholder(item) ? VIEW_TYPE_PLACEHOLDER : VIEW_TYPE_NORMAL;
     }
 
@@ -95,12 +99,12 @@ public abstract class TableAdapterAbs<ITEM, ROW, BOUND, VH extends TableViewHold
     }
 
     @NonNull
-    protected RangePosition<BOUND> createRangePosition(@NotNull BOUND rangeStart, @NotNull BOUND rangeEnd, int adapterPosition) {
+    protected RangePosition<ScheduleBound> createRangePosition(@NotNull ScheduleBound rangeStart, @NotNull ScheduleBound rangeEnd, int adapterPosition) {
         return new RangePosition<>(dataHandler, rangeStart, rangeEnd, adapterPosition);
     }
 
     @NonNull
-    protected RangePosition<BOUND> createRangePositionMarker() {
+    protected RangePosition<ScheduleBound> createRangePositionMarker() {
         return RangePosition.createMarker(dataHandler);
     }
 

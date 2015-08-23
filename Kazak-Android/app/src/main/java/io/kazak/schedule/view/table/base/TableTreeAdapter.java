@@ -9,25 +9,29 @@ import java.util.NavigableSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
-public abstract class TableTreeAdapter<ITEM, ROW, BOUND, VH extends TableViewHolder<ITEM, ROW, BOUND>> extends TableAdapterAbs<ITEM, ROW, BOUND, VH> {
+import io.kazak.model.ScheduleBound;
+import io.kazak.model.ScheduleItem;
+import io.kazak.model.ScheduleRow;
 
-    private final TreeSet<RangePosition<BOUND>> emptySet = new TreeSet<>();
+public abstract class TableTreeAdapter extends TableAdapterAbs {
+
+    private final TreeSet<RangePosition<ScheduleBound>> emptySet = new TreeSet<>();
 
     @NonNull
-    private List<ITEM> items = Collections.emptyList();
+    private List<? extends ScheduleItem> items = Collections.emptyList();
 
     @NonNull
-    private TreeMap<ROW, TreeSet<RangePosition<BOUND>>> positions = new TreeMap<>();
+    private TreeMap<? extends ScheduleRow, TreeSet<RangePosition<ScheduleBound>>> positions = new TreeMap<>();
 
-    private final RangePosition<BOUND> startMarker;
-    private final RangePosition<BOUND> endMarker;
+    private final RangePosition<ScheduleBound> startMarker;
+    private final RangePosition<ScheduleBound> endMarker;
 
     @Nullable
-    private BOUND minStart;
+    private ScheduleBound minStart;
     @Nullable
-    private BOUND maxEnd;
+    private ScheduleBound maxEnd;
 
-    protected TableTreeAdapter(@NonNull TableDataHandler<ITEM, ROW, BOUND> dataHandler) {
+    protected TableTreeAdapter(@NonNull TableDataHandler dataHandler) {
         super(dataHandler);
         startMarker = createRangePositionMarker();
         endMarker = createRangePositionMarker();
@@ -38,9 +42,9 @@ public abstract class TableTreeAdapter<ITEM, ROW, BOUND, VH extends TableViewHol
     }
 
     public void updateWith(
-            @NonNull List<ITEM> newItems,
-            @NonNull TreeMap<ROW, TreeSet<RangePosition<BOUND>>> newPositions,
-            @Nullable BOUND newMinStart, @Nullable BOUND newMaxEnd) {
+            @NonNull List<? extends ScheduleItem> newItems,
+            @NonNull TreeMap<? extends ScheduleRow, TreeSet<RangePosition<ScheduleBound>>> newPositions,
+            @Nullable ScheduleBound newMinStart, @Nullable ScheduleBound newMaxEnd) {
         items = newItems;
         positions = newPositions;
         minStart = newMinStart;
@@ -54,32 +58,32 @@ public abstract class TableTreeAdapter<ITEM, ROW, BOUND, VH extends TableViewHol
     }
 
     @Override
-    public ITEM getItem(int position) {
+    public ScheduleItem getItem(int position) {
         return items.get(position);
     }
 
     @Nullable
     @Override
-    public BOUND getMinStart() {
+    public ScheduleBound getMinStart() {
         return minStart;
     }
 
     @Nullable
     @Override
-    public BOUND getMaxEnd() {
+    public ScheduleBound getMaxEnd() {
         return maxEnd;
     }
 
     @NonNull
     @Override
-    NavigableSet<ROW> getRows() {
+    NavigableSet<? extends ScheduleRow> getRows() {
         return positions.navigableKeySet();
     }
 
     @NonNull
     @Override
-    NavigableSet<RangePosition<BOUND>> getPositionsIn(@NonNull ROW row, @NonNull BOUND start, @NonNull BOUND end) {
-        TreeSet<RangePosition<BOUND>> rowSet = positions.get(row);
+    NavigableSet<RangePosition<ScheduleBound>> getPositionsIn(@NonNull ScheduleRow row, @NonNull ScheduleBound start, @NonNull ScheduleBound end) {
+        TreeSet<RangePosition<ScheduleBound>> rowSet = positions.get(row);
         if (rowSet == null || rowSet.isEmpty()) {
             return emptySet;
         }
@@ -97,18 +101,18 @@ public abstract class TableTreeAdapter<ITEM, ROW, BOUND, VH extends TableViewHol
     public final class Data {
 
         @NonNull
-        private final List<ITEM> items;
+        private final List<? extends ScheduleItem> items;
         @NonNull
-        private final TreeMap<ROW, TreeSet<RangePosition<BOUND>>> positions;
+        private final TreeMap<? extends ScheduleRow, TreeSet<RangePosition<ScheduleBound>>> positions;
         @Nullable
-        private final BOUND minStart;
+        private final ScheduleBound minStart;
         @Nullable
-        private final BOUND maxEnd;
+        private final ScheduleBound maxEnd;
 
         public Data(
-                @NonNull List<ITEM> items,
-                @NonNull TreeMap<ROW, TreeSet<RangePosition<BOUND>>> positions,
-                @Nullable BOUND minStart, @Nullable BOUND maxEnd) {
+                @NonNull List<? extends ScheduleItem> items,
+                @NonNull TreeMap<? extends ScheduleRow, TreeSet<RangePosition<ScheduleBound>>> positions,
+                @Nullable ScheduleBound minStart, @Nullable ScheduleBound maxEnd) {
             this.items = items;
             this.positions = positions;
             this.minStart = minStart;

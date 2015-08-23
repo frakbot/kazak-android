@@ -3,7 +3,6 @@ package io.kazak.api
 import io.kazak.model.*
 import rx.Observable
 import java.util.Calendar
-import java.util.Date
 import java.util.GregorianCalendar
 import java.util.Random
 
@@ -36,7 +35,7 @@ public class DummyApi : KazakApi {
                 }
                 .toList()
                 .map {
-                    Day(Date(), it)
+                    Day(DateBound(java.util.Date()), it)
                 }
     }
 
@@ -61,4 +60,5 @@ public class DummyApi : KazakApi {
                     Talk("${it}", "Talk ${it} in room ${room.name}", timeSlot, room, speakers)
                 }
     }
+
 }

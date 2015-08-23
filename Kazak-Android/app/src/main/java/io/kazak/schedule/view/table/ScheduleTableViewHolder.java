@@ -2,14 +2,14 @@ package io.kazak.schedule.view.table;
 
 import android.support.annotation.NonNull;
 
-import java.util.Date;
-
-import io.kazak.model.Room;
+import io.kazak.model.ScheduleBound;
+import io.kazak.model.ScheduleItem;
+import io.kazak.model.ScheduleRow;
 import io.kazak.model.Talk;
-import io.kazak.schedule.view.table.base.TableViewHolder;
 import io.kazak.schedule.view.TalkView;
+import io.kazak.schedule.view.table.base.TableViewHolder;
 
-public class ScheduleTableViewHolder extends TableViewHolder<Talk, Room, Date> {
+public class ScheduleTableViewHolder extends TableViewHolder<ScheduleItem, ScheduleRow, ScheduleBound> {
 
     private TalkView talkView;
 
@@ -19,9 +19,9 @@ public class ScheduleTableViewHolder extends TableViewHolder<Talk, Room, Date> {
     }
 
     @Override
-    public void updateWith(Talk item, Room row, Date start, Date end, boolean isPlaceholder) {
+    public void updateWith(ScheduleItem item, ScheduleRow row, ScheduleBound start, ScheduleBound end, boolean isPlaceholder) {
         super.updateWith(item, row, start, end, isPlaceholder);
-        talkView.updateWith(item);
+        talkView.updateWith((Talk) item);
     }
 
 }

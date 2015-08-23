@@ -7,23 +7,27 @@ import android.view.ViewGroup;
 
 import java.io.Serializable;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.List;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
 import io.kazak.R;
+import io.kazak.model.DateBound;
 import io.kazak.model.Room;
+import io.kazak.model.ScheduleBound;
+import io.kazak.model.ScheduleItem;
+import io.kazak.model.ScheduleRow;
 import io.kazak.model.Talk;
 import io.kazak.model.TimeSlot;
 import io.kazak.schedule.view.TalkView;
 import io.kazak.schedule.view.table.base.RangePosition;
 import io.kazak.schedule.view.table.base.TableDataHandler;
 import io.kazak.schedule.view.table.base.TableTreeAdapter;
+import io.kazak.schedule.view.table.base.TableViewHolder;
 
-public class ScheduleTableAdapter extends TableTreeAdapter<Talk, Room, Date, ScheduleTableViewHolder> {
+public class ScheduleTableAdapter extends TableTreeAdapter {
 
-    private static final TableDataHandler<Talk, Room, Date> TALK_DATA_HANDLER = new TalkDataHandler();
+    private static final TableDataHandler TALK_DATA_HANDLER = new TalkDataHandler();
     private static final Comparator<Room> ROOM_COMPARATOR = new RoomComparator();
 
     private final LayoutInflater inflater;
@@ -34,8 +38,9 @@ public class ScheduleTableAdapter extends TableTreeAdapter<Talk, Room, Date, Sch
     }
 
     @Override
-    public ScheduleTableViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new ScheduleTableViewHolder((TalkView) inflater.inflate(R.layout.view_talk_item, parent, false));
+    public TableViewHolder<ScheduleItem, ScheduleRow, ScheduleBound> onCreateViewHolder(ViewGroup parent, int viewType) {
+        TalkView talkView = (TalkView) inflater.inflate(R.layout.view_talk_item, parent, false);
+        return new ScheduleTableViewHolder(talkView);
     }
 
     public void updateWith(@NonNull List<Talk> talks) {
@@ -44,22 +49,22 @@ public class ScheduleTableAdapter extends TableTreeAdapter<Talk, Room, Date, Sch
 
     @NonNull
     public Data createSortedData(@NonNull List<Talk> talks) {
-        TreeMap<Room, TreeSet<RangePosition<Date>>> map = new TreeMap<>(ROOM_COMPARATOR);
-        Date minTime = null;
-        Date maxTime = null;
+        TreeMap<Room, TreeSet<RangePosition<ScheduleBound>>> map = new TreeMap<>(ROOM_COMPARATOR);
+        DateBound minTime = null;
+        DateBound maxTime = null;
         for (int i = 0, end = talks.size(); i < end; i++) {
             Talk talk = talks.get(i);
             Room room = talk.getRoom();
             TimeSlot timeSlot = talk.getTimeSlot();
-            Date startTime = timeSlot.getStart();
-            Date endTime = timeSlot.getEnd();
+            DateBound startTime = timeSlot.getStart();
+            DateBound endTime = timeSlot.getEnd();
             if (minTime == null || minTime.compareTo(startTime) > 0) {
                 minTime = startTime;
             }
             if (maxTime == null || maxTime.compareTo(endTime) < 0) {
                 maxTime = endTime;
             }
-            TreeSet<RangePosition<Date>> row = map.get(room);
+            TreeSet<RangePosition<ScheduleBound>> row = map.get(room);
             if (row == null) {
                 row = new TreeSet<>();
                 map.put(room, row);
@@ -69,44 +74,44 @@ public class ScheduleTableAdapter extends TableTreeAdapter<Talk, Room, Date, Sch
         return new Data(talks, map, minTime, maxTime);
     }
 
-    private static final class TalkDataHandler implements TableDataHandler<Talk, Room, Date>, Serializable {
+    private static final class TalkDataHandler implements TableDataHandler, Serializable {
 
         @Override
-        public Room getRowFor(Talk item) {
-            return item.getRoom();
+        public ScheduleRow getRowFor(ScheduleItem item) {
+            return ((Talk) item).getRoom();
         }
 
         @Override
-        public Date getStartFor(Talk item) {
-            return item.getTimeSlot().getStart();
+        public ScheduleBound getStartFor(ScheduleItem item) {
+            return ((Talk) item).getTimeSlot().getStart();
         }
 
         @Override
-        public Date getEndFor(Talk item) {
-            return item.getTimeSlot().getEnd();
+        public DateBound getEndFor(ScheduleItem item) {
+            return ((Talk) item).getTimeSlot().getEnd();
         }
 
         @Override
-        public int getLength(Date start, Date end) {
-            return (int) (end.getTime() - start.getTime());
+        public int getLength(ScheduleBound start, ScheduleBound end) {
+            return (int) (((DateBound) end).getTime() - ((DateBound) start).getTime());
         }
 
         @Override
-        public Date sum(Date start, int units) {
-            return new Date(start.getTime() + units);
+        public DateBound sum(ScheduleBound start, int units) {
+            return new DateBound(((DateBound) start).getTime() + units);
         }
 
         @Override
-        public boolean isPlaceholder(Talk item) {
+        public boolean isPlaceholder(ScheduleItem item) {
             return false; //TODO
         }
 
         @Override
-        public int compare(@NonNull Date lhs, @NonNull Date rhs) {
+        public int compare(@NonNull ScheduleBound lhs, @NonNull ScheduleBound rhs) {
             return lhs.compareTo(rhs);
         }
 
-    };
+    }
 
     private static final class RoomComparator implements Comparator<Room>, Serializable {
 

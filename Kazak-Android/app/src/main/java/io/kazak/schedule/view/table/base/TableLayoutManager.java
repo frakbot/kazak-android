@@ -11,8 +11,11 @@ import android.view.ViewGroup;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.NavigableSet;
 
 import io.kazak.base.DeveloperError;
+import io.kazak.model.ScheduleBound;
+import io.kazak.model.ScheduleRow;
 
 import static android.view.View.MeasureSpec.EXACTLY;
 import static android.view.View.MeasureSpec.makeMeasureSpec;
@@ -37,7 +40,7 @@ public class TableLayoutManager extends RecyclerView.LayoutManager {
     private final Rect tmpRect = new Rect();
 
     @Nullable
-    private TableAdapterAbs<?, ?, ?, ?> boundAdapter;
+    private TableAdapterAbs boundAdapter;
 
     public TableLayoutManager(int rowHeightPx, int minSpanWidthPx, int minSpanLengthUnits, int extraHorizontalPadding, int extraVerticalPadding) {
         this.rowHeightPx = rowHeightPx;
@@ -64,17 +67,16 @@ public class TableLayoutManager extends RecyclerView.LayoutManager {
         }
     }
 
-    private void onDataOrSizeChanged(RecyclerView.Recycler recycler, RecyclerView.State state) {
-        onDataOrSizeChanged(recycler, state, boundAdapter);
+    private void onDataOrSizeChanged(RecyclerView.Recycler recycler) {
+        onDataOrSizeChanged(recycler, boundAdapter);
     }
 
     /**
      * This is just a way to make use of the generic types, don't use it directly.
      *
-     * @see #onDataOrSizeChanged(RecyclerView.Recycler, RecyclerView.State)
+     * @see #onDataOrSizeChanged(android.support.v7.widget.RecyclerView.Recycler)
      */
-    private <BOUND> void onDataOrSizeChanged(
-            RecyclerView.Recycler recycler, RecyclerView.State state, @Nullable TableAdapterAbs<?, ?, BOUND, ?> adapter) {
+    private void onDataOrSizeChanged(RecyclerView.Recycler recycler, @Nullable TableAdapterAbs adapter) {
         scrollX = 0;
         scrollY = 0;
         visibleUnits = (int) Math.ceil(unitsPerPixel * getWidth());
@@ -82,8 +84,8 @@ public class TableLayoutManager extends RecyclerView.LayoutManager {
         setViewCacheSize(recycler);
 
         if (adapter != null) {
-            BOUND minStart = adapter.getMinStart();
-            BOUND maxEnd = adapter.getMaxEnd();
+            ScheduleBound minStart = adapter.getMinStart();
+            ScheduleBound maxEnd = adapter.getMaxEnd();
             if (minStart != null && maxEnd != null) {
                 Collection<?> rows = adapter.getRows();
                 scrollXRange = (int) Math.ceil(adapter.getDataHandler().getLength(minStart, maxEnd) * pixelsPerUnit) + getTotalPaddingHorizontal();
@@ -107,21 +109,20 @@ public class TableLayoutManager extends RecyclerView.LayoutManager {
 
     @Override
     public void onLayoutChildren(RecyclerView.Recycler recycler, RecyclerView.State state) {
-        onDataOrSizeChanged(recycler, state);
-        fillVisibleItems(recycler, state);
+        onDataOrSizeChanged(recycler);
+        fillVisibleItems(recycler);
     }
 
-    private void fillVisibleItems(RecyclerView.Recycler recycler, RecyclerView.State state) {
-        fillVisibleItems(recycler, state, boundAdapter);
+    private void fillVisibleItems(RecyclerView.Recycler recycler) {
+        fillVisibleItems(recycler, boundAdapter);
     }
 
     /**
      * This is just a way to make use of the generic types, don't use it directly.
      *
-     * @see #fillVisibleItems(RecyclerView.Recycler, RecyclerView.State)
+     * @see #fillVisibleItems(android.support.v7.widget.RecyclerView.Recycler)
      */
-    private <ROW, BOUND> void fillVisibleItems(
-            RecyclerView.Recycler recycler, RecyclerView.State state, @Nullable TableAdapterAbs<?, ROW, BOUND, ?> adapter) {
+    private void fillVisibleItems(RecyclerView.Recycler recycler, @Nullable TableAdapterAbs adapter) {
         if (adapter == null) {
             throw new DeveloperError("Adapter must be set.");
         }
@@ -130,11 +131,11 @@ public class TableLayoutManager extends RecyclerView.LayoutManager {
         // and all those left detached will be scraped at the end.
         detachAndScrapAttachedViews(recycler);
 
-        BOUND minStart = adapter.getMinStart();
-        BOUND maxEnd = adapter.getMaxEnd();
+        ScheduleBound minStart = adapter.getMinStart();
+        ScheduleBound maxEnd = adapter.getMaxEnd();
         if (minStart != null && maxEnd != null) {
 
-            Collection<ROW> rows = adapter.getRows();
+            NavigableSet<? extends ScheduleRow> rows = adapter.getRows();
             if (!rows.isEmpty()) {
 
                 int parentHeight = getHeight();
@@ -142,10 +143,10 @@ public class TableLayoutManager extends RecyclerView.LayoutManager {
 
                 int scrollXUnits = (int) Math.floor(unitsPerPixel * scrollX);
 
-                TableDataHandler<?, ROW, BOUND> dataHandler = adapter.getDataHandler();
+                TableDataHandler dataHandler = adapter.getDataHandler();
 
-                BOUND start = dataHandler.sum(minStart, scrollXUnits);
-                BOUND end = dataHandler.sum(start, visibleUnits);
+                ScheduleBound start = dataHandler.sum(minStart, scrollXUnits);
+                ScheduleBound end = dataHandler.sum(start, visibleUnits);
 
                 // this is to account for any rounding error in the conversion from "units" to "pixels"
                 int shiftX = scrollX - getWidthFor(minStart, start, dataHandler);
@@ -158,7 +159,7 @@ public class TableLayoutManager extends RecyclerView.LayoutManager {
 
                 // iterate each row, starting from the first. this is efficient for our use case (few rows, known height)
                 // instead of keeping track of the first visible row and the offset.
-                for (ROW row : rows) {
+                for (ScheduleRow row : rows) {
 
                     // if y is past the visible vertical range, stop
                     if (y >= parentHeight) {
@@ -172,12 +173,11 @@ public class TableLayoutManager extends RecyclerView.LayoutManager {
                         isLastRow = rowIndex == lastRowIndex;
 
                         // get all the views in the horizontal visible range
-                        for (RangePosition<BOUND> rangePosition : adapter.getPositionsIn(row, start, end)) {
+                        for (RangePosition<ScheduleBound> rangePosition : adapter.getPositionsIn(row, start, end)) {
 
-                            int pos = rangePosition.getPosition();
                             View view = recycler.getViewForPosition(rangePosition.getPosition());
 
-                            TableViewHolder<?, ROW, BOUND> vh = adapter.getViewHolder(view);
+                            TableViewHolder<?, ScheduleRow, ScheduleBound> vh = adapter.getViewHolder(view);
                             TableLayoutParams lp = TableLayoutParams.getFor(view, true);
 
                             // update the LayoutParams based on the new view position
@@ -229,7 +229,7 @@ public class TableLayoutManager extends RecyclerView.LayoutManager {
         dx = clipScrollDelta(scrollX, dx, scrollXRange - getWidth());
         if (dx != 0) {
             scrollX += dx;
-            fillVisibleItems(recycler, state);
+            fillVisibleItems(recycler);
         }
         return dx;
     }
@@ -239,7 +239,7 @@ public class TableLayoutManager extends RecyclerView.LayoutManager {
         dy = clipScrollDelta(scrollY, dy, scrollYRange - getHeight());
         if (dy != 0) {
             scrollY += dy;
-            fillVisibleItems(recycler, state);
+            fillVisibleItems(recycler);
         }
         return dy;
     }
@@ -312,22 +312,18 @@ public class TableLayoutManager extends RecyclerView.LayoutManager {
         return scrollYRange;
     }
 
-    private <BOUND> int getWidthFor(@NonNull BOUND start, @NonNull BOUND end, @NonNull TableDataHandler<?, ?, BOUND> dataHandler) {
+    private int getWidthFor(@NonNull ScheduleBound start, @NonNull ScheduleBound end, @NonNull TableDataHandler dataHandler) {
         return (int) Math.round(dataHandler.getLength(start, end) * pixelsPerUnit);
     }
 
     @Override
     public void onAdapterChanged(RecyclerView.Adapter oldAdapter, RecyclerView.Adapter newAdapter) {
         super.onAdapterChanged(oldAdapter, newAdapter);
-        if (newAdapter != null) {
-            try {
-                boundAdapter = (TableAdapterAbs<?, ?, ?, ?>) newAdapter;
-            } catch (ClassCastException e) {
-                throw new DeveloperError(e, "Adapter must be a %s.", TableAdapterAbs.class.getSimpleName());
-            }
+        if (newAdapter instanceof TableAdapterAbs) {
+            boundAdapter = (TableAdapterAbs) newAdapter;
         }
         if (boundAdapter == null) {
-            onDataOrSizeChanged(null, null);
+            onDataOrSizeChanged(null);
         }
     }
 
