@@ -1,6 +1,6 @@
 package io.kazak.model
 
-import java.util.*
+import java.util.Date
 
 public data class TimeSlot(val start: DateBound, val end: DateBound) {
 
