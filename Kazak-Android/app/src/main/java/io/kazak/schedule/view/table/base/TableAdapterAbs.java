@@ -58,13 +58,18 @@ public abstract class TableAdapterAbs<ITEM, ROW, BOUND, VH extends TableViewHold
         if (vh == null) {
             throw new DeveloperError("No ViewHolder associated with this view.");
         }
+        TableViewHolder<ITEM, ROW, BOUND> tvh;
         try {
-            // suppressed as checking the correctness of the cast would be very hard and not worth it (blame type erasure)
             //noinspection unchecked
-            return (TableViewHolder<ITEM, ROW, BOUND>) vh;
+            tvh = (TableViewHolder<ITEM, ROW, BOUND>) vh;
         } catch (ClassCastException e) {
             throw new DeveloperError(e, "ViewHolder is not a %s.", TableViewHolder.class.getSimpleName());
         }
+        // this is a trick to make sure that the generic types of the viewholder match those of the adapter
+        if (tvh.getAdapter() != this) {
+            throw new DeveloperError("ViewHolder is not associated with this Adapter.");
+        }
+        return tvh;
     }
 
     @Override

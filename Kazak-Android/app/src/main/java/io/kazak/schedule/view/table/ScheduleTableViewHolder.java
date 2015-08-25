@@ -1,6 +1,7 @@
 package io.kazak.schedule.view.table;
 
 import android.support.annotation.NonNull;
+import android.support.v7.widget.RecyclerView;
 
 import java.util.Date;
 
@@ -13,8 +14,8 @@ public class ScheduleTableViewHolder extends TableViewHolder<Talk, Room, Date> {
 
     private TalkView talkView;
 
-    public ScheduleTableViewHolder(@NonNull TalkView talkView) {
-        super(talkView);
+    public ScheduleTableViewHolder(@NonNull TalkView talkView, @NonNull RecyclerView.Adapter adapter) {
+        super(talkView, adapter);
         this.talkView = talkView;
     }
 

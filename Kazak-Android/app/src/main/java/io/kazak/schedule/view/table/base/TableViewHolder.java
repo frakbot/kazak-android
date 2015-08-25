@@ -14,8 +14,11 @@ public class TableViewHolder<ITEM, ROW, BOUND> extends RecyclerView.ViewHolder {
 
     private boolean isPlaceholder;
 
-    public TableViewHolder(@NonNull View view) {
+    private final RecyclerView.Adapter adapter;
+
+    public TableViewHolder(@NonNull View view, RecyclerView.Adapter adapter) {
         super(view);
+        this.adapter = adapter;
     }
 
     @CallSuper
@@ -45,6 +48,11 @@ public class TableViewHolder<ITEM, ROW, BOUND> extends RecyclerView.ViewHolder {
 
     public boolean isPlaceholder() {
         return isPlaceholder;
+    }
+
+    @NonNull
+    public RecyclerView.Adapter getAdapter() {
+        return adapter;
     }
 
 }
