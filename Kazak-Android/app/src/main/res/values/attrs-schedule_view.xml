@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+  <declare-styleable name="ScheduleTableView">
+
+    <attr name="itemsPaddingHorizontal"
+      format="dimension|reference" />
+
+    <attr name="itemsPaddingVertical"
+      format="dimension|reference" />
+
+    <attr name="rowHeight"
+      format="dimension|reference" />
+
+    <attr name="timeSlotUnitWidth"
+      format="dimension|reference" />
+
+    <attr name="timeSlotUnitDurationMinutes"
+      format="integer|reference" />
+
+  </declare-styleable>
+
+  <attr name="scheduleViewDefaultStyle"
+    format="reference" />
+
+</resources>
