@@ -13,7 +13,6 @@ android {
     defaultConfig {
         versionName defaultProperties.getString('versionName')
         minSdkVersion 19
-        //noinspection OldTargetApi
         targetSdkVersion 22
 
         buildConfigField "String", "BUILD_TIME_FORMATTED", "\"${getBuildTimestamp()}\""
@@ -44,6 +43,10 @@ android {
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_7
         targetCompatibility JavaVersion.VERSION_1_7
+    }
+
+    lintOptions {
+        lintConfig file('config/lint.xml')
     }
 }
 
