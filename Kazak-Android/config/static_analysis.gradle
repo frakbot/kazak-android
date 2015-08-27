@@ -34,6 +34,10 @@ task findbugs(type: FindBugs, dependsOn: assembleDebug) {
     classpath = files()
     excludeFilter = file("${project(':').projectDir}/config/findbugs/excludeFilter.xml")
     effort = 'max'
+    reports {
+        xml.enabled = !project.hasProperty('humanReadable')
+        html.enabled = project.hasProperty('humanReadable')
+    }
 }
 
 
