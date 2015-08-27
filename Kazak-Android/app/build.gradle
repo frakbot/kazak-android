@@ -13,8 +13,7 @@ android {
     defaultConfig {
         versionName defaultProperties.getString('versionName')
         minSdkVersion 19
-        //noinspection OldTargetApi
-        targetSdkVersion 22
+        targetSdkVersion 23
 
         buildConfigField "String", "BUILD_TIME_FORMATTED", "\"${getBuildTimestamp()}\""
         project.ext.intermediateClasses = "$projectDir/build/intermediates/classes/debug/"
