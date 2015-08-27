@@ -15,7 +15,8 @@
     android:fullBackupContent="false"
     android:icon="@mipmap/ic_launcher"
     android:label="@string/app_name"
-    android:theme="@style/Theme.Kazak">
+    android:theme="@style/Theme.Kazak"
+    android:supportsRtl="false">
 
     <activity
       android:name="io.kazak.schedule.ScheduleActivity"

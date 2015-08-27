@@ -2,7 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
   package="io.kazak">
 
-  <application>
+  <application
+    android:allowBackup="false"
+    android:fullBackupContent="false">
 
     <activity
       android:name="io.kazak.DebugActivity"
