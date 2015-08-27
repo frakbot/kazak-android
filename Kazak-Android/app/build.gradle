@@ -46,7 +46,7 @@ android {
     }
 
     lintOptions {
-        lintConfig file('config/lint.xml')
+        lintConfig file('../config/lint.xml')
     }
 }
 
