@@ -46,7 +46,7 @@ task findbugsCheck(type: FindBugs, dependsOn: assembleDebug) {
     excludeFilter = file("${project(':').projectDir}/config/findbugs/excludeFilter.xml")
     effort = 'max'
     reports {
-        // Findbugs doesn't unfortunatly support more than one report at a time
+        // Findbugs doesn't unfortunately support more than one report at a time
         xml.enabled = !humanReadable
         html.enabled = humanReadable
     }
