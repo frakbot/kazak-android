@@ -2,9 +2,11 @@ apply plugin: 'checkstyle'
 apply plugin: 'findbugs'
 apply plugin: 'pmd'
 
-check.dependsOn 'checkstyle', 'pmd', 'findbugs'
+check.dependsOn 'checkstyleCheck', 'pmdCheck', 'findbugsCheck'
 
-task pmd(type: Pmd) {
+def humanReadable = project.hasProperty('humanReadable')
+
+task pmdCheck(type: Pmd) {
     ignoreFailures = true
 
     source 'src'
@@ -13,21 +15,30 @@ task pmd(type: Pmd) {
 
     reports {
         xml.enabled = true
-        html.enabled = false
+        html.enabled = humanReadable
     }
 }
 
-task checkstyle(type: Checkstyle) {
+task checkstyleCheck(type: Checkstyle) {
     ignoreFailures = true
     configFile file("${project(':').projectDir}/config/checkstyle/checkstyle.xml")
 
     source 'src'
     include '**/*.java'
-    exclude '**/packageName/**', '**/utils/MyFile.java'
     classpath = files()
 }
 
-task findbugs(type: FindBugs, dependsOn: assembleDebug) {
+task checkstyleHtml << {
+    ant.xslt(in: checkstyleCheck.reports.xml.destination,
+            style: file("${project(':').projectDir}/config/checkstyle/checkstyle-noframes-sorted.xsl"),
+            out: new File((String) checkstyleCheck.reports.xml.destination.parent, 'checkstyle.html'))
+}
+
+if (humanReadable) {
+    checkstyleCheck.finalizedBy checkstyleHtml
+}
+
+task findbugsCheck(type: FindBugs, dependsOn: assembleDebug) {
     ignoreFailures = true
     classes = fileTree("${project.ext.intermediateClasses}")
     source = fileTree("$projectDir/src/main/java/")
@@ -35,8 +46,9 @@ task findbugs(type: FindBugs, dependsOn: assembleDebug) {
     excludeFilter = file("${project(':').projectDir}/config/findbugs/excludeFilter.xml")
     effort = 'max'
     reports {
-        xml.enabled = !project.hasProperty('humanReadable')
-        html.enabled = project.hasProperty('humanReadable')
+        // Findbugs doesn't unfortunately support more than one report at a time
+        xml.enabled = !humanReadable
+        html.enabled = humanReadable
     }
 }
 

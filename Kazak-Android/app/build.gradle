@@ -46,7 +46,7 @@ android {
     }
 
     lintOptions {
-        lintConfig file('../config/lint.xml')
+        lintConfig file("${project(':').projectDir}/config/lint.xml")
     }
 }
 
@@ -74,4 +74,4 @@ def getBuildTimestamp() {
     return dateFormat.format(new Date());
 }
 
-apply from: '../config/static_analysis.gradle'
+apply from: "${project(':').projectDir}/config/static_analysis.gradle"
