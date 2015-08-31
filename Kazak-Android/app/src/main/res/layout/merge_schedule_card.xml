@@ -23,7 +23,7 @@
     android:layout_alignBottom="@id/track_label"
     android:layout_toEndOf="@id/track_label"
     android:layout_alignParentEnd="true"
-    tools:text="12:10—12.45" />
+    tools:text="12:10—12:45" />
 
   <TextView
     android:id="@+id/session_title"
