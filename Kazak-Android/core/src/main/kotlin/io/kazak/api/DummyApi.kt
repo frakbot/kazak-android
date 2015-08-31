@@ -58,7 +58,8 @@ public class DummyApi : KazakApi {
                     val timeSlot = TimeSlot(start.getTime(), end.getTime())
                     val speaker = Speaker("${it}", "Speaker ${it}")
                     val speakers = Speakers(arrayListOf(speaker))
-                    Talk("${it}", "Talk ${it} in room ${room.name}", timeSlot, room, speakers)
+                    val track = Track("dummy", "Track", 0xFFBF0D7B.toInt())
+                    Talk("${it}", "Talk ${it} in room ${room.name}", timeSlot, room, speakers, track)
                 }
     }
 }

@@ -17,6 +17,7 @@ import io.kazak.model.Speaker;
 import io.kazak.model.Speakers;
 import io.kazak.model.Talk;
 import io.kazak.model.TimeSlot;
+import io.kazak.model.Track;
 import io.kazak.notifications.NotificationCreator;
 import io.kazak.notifications.Notifier;
 
@@ -54,7 +55,8 @@ public class DebugActivity extends Activity {
                 "A very interesting talk",
                 createTalkTimeSlot(),
                 createTalkRoom(),
-                createTalkSpeakers()
+                createTalkSpeakers(),
+                createTalkTrack()
         );
     }
 
@@ -83,6 +85,11 @@ public class DebugActivity extends Activity {
         speakers.add(new Speaker("0", "Awesome Speaker"));
         speakers.add(new Speaker("1", "Meh Guy"));
         return new Speakers(speakers);
+    }
+
+    @NonNull
+    private Track createTalkTrack() {
+        return new Track("dummy", "Track", 0xFFBF0D7B);
     }
 
 }
