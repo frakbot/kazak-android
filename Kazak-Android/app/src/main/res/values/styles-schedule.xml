@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+  <style name="Schedule" parent="None">
+    <item name="rowHeight">@dimen/schedule_row_height</item>
+  </style>
+
   <style name="Session.Card.Track" parent="None">
     <item name="android:background">@drawable/shape_track_label_background</item>
     <item name="android:textAppearance">@style/TextAppearance.Session.Card.Track</item>

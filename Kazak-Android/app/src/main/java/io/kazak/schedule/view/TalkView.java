@@ -1,5 +1,6 @@
 package io.kazak.schedule.view;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
@@ -37,9 +38,10 @@ public class TalkView extends CardView {
         this(context, attrs, 0);
     }
 
+    @SuppressLint("SimpleDateFormat")       // At this time we want to always use 24h-format
     public TalkView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        dateFormat = SimpleDateFormat.getTimeInstance(SimpleDateFormat.SHORT);
+        dateFormat = new SimpleDateFormat(TIMESLOT_BOUND_PATTERN);
     }
 
     @Override
@@ -65,6 +67,7 @@ public class TalkView extends CardView {
 
     private void updateTrackWith(@NonNull Track track) {
         trackView.setText(track.getName().toUpperCase());
+        trackView.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.temp_circle_icon, 0, 0, 0);
         setBackgroundTintCompat(trackView, track.getColor());
     }
 
