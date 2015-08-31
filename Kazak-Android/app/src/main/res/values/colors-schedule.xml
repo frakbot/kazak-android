@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <color name="session_card_track_label_text">@color/text_primary_dark</color>
+
+  <color name="session_card_track_text">@color/text_primary_dark</color>
+
+  <color name="session_card_time_text">@color/text_secondary</color>
+
 </resources>

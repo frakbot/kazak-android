@@ -14,4 +14,12 @@
     tools:backgroundTint="#0000ee"
     tools:drawableLeft="@drawable/temp_circle_icon" />
 
+  <TextView
+    android:id="@+id/session_time"
+    style="@style/Session.Card.Time"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignParentEnd="true"
+    tools:text="12:10—12.45" />
+
 </RelativeLayout>
