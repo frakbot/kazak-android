@@ -6,6 +6,7 @@
   </style>
 
   <style name="Session.Card.Track" parent="None">
+    <item name="android:gravity">start|center_vertical</item>
     <item name="android:background">@drawable/shape_track_label_background</item>
     <item name="android:textAppearance">@style/TextAppearance.Session.Card.Track</item>
     <item name="android:drawablePadding">@dimen/session_card_track_drawable_padding</item>

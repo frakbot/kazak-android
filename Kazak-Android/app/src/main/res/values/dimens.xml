@@ -8,5 +8,6 @@
   <dimen name="text_body">14sp</dimen>
   <dimen name="text_button">14sp</dimen>
   <dimen name="text_caption">12sp</dimen>
+  <dimen name="text_track_label">8sp</dimen>
 
 </resources>

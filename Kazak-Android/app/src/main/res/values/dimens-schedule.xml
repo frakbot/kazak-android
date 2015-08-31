@@ -7,9 +7,8 @@
   <dimen name="track_label_padding_left">4dp</dimen>
   <dimen name="track_label_padding_right">6dp</dimen>
   <dimen name="track_label_padding_vertical">2dp</dimen>
-
   <dimen name="session_card_track_drawable_padding">4dp</dimen>
-  <dimen name="session_card_track_text">@dimen/text_caption</dimen>
+  <dimen name="session_card_track_text">@dimen/text_track_label</dimen>
 
   <dimen name="session_card_time_text">@dimen/text_body</dimen>
 
