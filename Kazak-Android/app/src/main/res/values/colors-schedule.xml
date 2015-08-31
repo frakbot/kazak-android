@@ -2,7 +2,8 @@
 <resources>
 
   <color name="session_card_track_text">@color/text_primary_dark</color>
-
   <color name="session_card_time_text">@color/text_secondary</color>
+  <color name="session_card_title_text">@color/text_primary</color>
+  <color name="session_card_speakers_text">@color/text_secondary</color>
 
 </resources>

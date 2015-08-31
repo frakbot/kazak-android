@@ -11,6 +11,10 @@
 
   <dimen name="session_card_time_text">@dimen/text_body</dimen>
 
+  <dimen name="session_card_title_text">@dimen/text_title</dimen>
   <dimen name="session_card_title_margin_top">8dp</dimen>
+
+  <dimen name="session_card_speakers_text">@dimen/text_body</dimen>
+  <dimen name="session_card_speakers_margin_top">8dp</dimen>
 
 </resources>

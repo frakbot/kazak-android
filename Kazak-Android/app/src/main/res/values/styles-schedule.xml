@@ -32,7 +32,20 @@
   </style>
 
   <style name="TextAppearance.Session.Card.Title" parent="TextAppearance.AppCompat.Title">
+    <item name="android:textColor">@color/session_card_title_text</item>
+    <item name="android:textSize">@dimen/session_card_title_text</item>
   </style>
 
+  <style name="Session.Card.Speakers" parent="None">
+    <item name="android:layout_marginTop">@dimen/session_card_speakers_margin_top</item>
+    <item name="android:textAppearance">@style/TextAppearance.Session.Card.Speakers</item>
+    <item name="android:ellipsize">end</item>
+    <item name="android:maxLines">3</item>
+  </style>
+
+  <style name="TextAppearance.Session.Card.Speakers" parent="TextAppearance.AppCompat.Body1">
+    <item name="android:textColor">@color/session_card_speakers_text</item>
+    <item name="android:textSize">@dimen/session_card_speakers_text</item>
+  </style>
 
 </resources>
