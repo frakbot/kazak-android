@@ -19,7 +19,18 @@
     style="@style/Session.Card.Time"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:layout_alignTop="@id/track_label"
+    android:layout_alignBottom="@id/track_label"
+    android:layout_toEndOf="@id/track_label"
     android:layout_alignParentEnd="true"
     tools:text="12:10—12.45" />
+
+  <TextView
+    android:id="@+id/session_title"
+    style="@style/Session.Card.Title"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_below="@id/track_label"
+    tools:text="Jump around, or how the animation system works in Android" />
 
 </RelativeLayout>

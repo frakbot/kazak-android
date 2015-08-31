@@ -5,6 +5,7 @@
     <item name="android:background">@drawable/shape_track_label_background</item>
     <item name="android:textAppearance">@style/TextAppearance.Session.Card.Track</item>
     <item name="android:drawablePadding">@dimen/session_card_track_drawable_padding</item>
+    <item name="android:lines">1</item>
   </style>
 
   <style name="TextAppearance.Session.Card.Track" parent="TextAppearance.AppCompat.Caption">
@@ -13,13 +14,24 @@
   </style>
 
   <style name="Session.Card.Time" parent="None">
+    <item name="android:gravity">center_vertical|end</item>
     <item name="android:textAppearance">@style/TextAppearance.Session.Card.Time</item>
-    <item name="android:drawablePadding">@dimen/session_card_track_drawable_padding</item>
+    <item name="android:lines">1</item>
   </style>
 
   <style name="TextAppearance.Session.Card.Time" parent="TextAppearance.AppCompat.Body1">
     <item name="android:textColor">@color/session_card_time_text</item>
     <item name="android:textSize">@dimen/session_card_time_text</item>
+  </style>
+
+  <style name="Session.Card.Title" parent="None">
+    <item name="android:layout_marginTop">@dimen/session_card_title_margin_top</item>
+    <item name="android:textAppearance">@style/TextAppearance.Session.Card.Title</item>
+    <item name="android:ellipsize">end</item>
+    <item name="android:maxLines">3</item>
+  </style>
+
+  <style name="TextAppearance.Session.Card.Title" parent="TextAppearance.AppCompat.Title">
   </style>
 
 
