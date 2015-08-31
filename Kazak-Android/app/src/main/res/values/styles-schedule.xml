@@ -14,7 +14,7 @@
   </style>
 
   <style name="Session.Card.Time" parent="None">
-    <item name="android:gravity">center_vertical|end</item>
+    <item name="android:gravity">end|center_vertical</item>
     <item name="android:textAppearance">@style/TextAppearance.Session.Card.Time</item>
     <item name="android:lines">1</item>
   </style>
@@ -38,14 +38,25 @@
 
   <style name="Session.Card.Speakers" parent="None">
     <item name="android:layout_marginTop">@dimen/session_card_speakers_margin_top</item>
+    <item name="android:gravity">start|center_vertical</item>
     <item name="android:textAppearance">@style/TextAppearance.Session.Card.Speakers</item>
     <item name="android:ellipsize">end</item>
-    <item name="android:maxLines">3</item>
+    <item name="android:lines">1</item>
   </style>
 
   <style name="TextAppearance.Session.Card.Speakers" parent="TextAppearance.AppCompat.Body1">
     <item name="android:textColor">@color/session_card_speakers_text</item>
     <item name="android:textSize">@dimen/session_card_speakers_text</item>
+  </style>
+
+  <style name="Session.Card.Favorite" parent="None">
+    <item name="android:layout_marginTop">@dimen/session_card_speakers_margin_top</item>
+    <item name="android:layout_marginStart">@dimen/session_card_favorite_margin_start</item>
+    <item name="android:padding">@dimen/session_card_favorite_padding</item>
+    <item name="android:src">@drawable/ic_star_border_black_18dp</item>
+    <item name="android:background">@drawable/selector_clickable_unbound</item>
+    <item name="android:textAppearance">?android:attr/textAppearanceButton</item>
+    <item name="android:gravity">center</item>
   </style>
 
 </resources>

@@ -36,9 +36,20 @@
   <TextView
     android:id="@+id/session_speakers"
     style="@style/Session.Card.Speakers"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_width="wrap_content"
+    android:layout_height="@dimen/session_card_speakers_height"
     android:layout_below="@id/session_title"
+    android:layout_alignParentStart="true"
+    android:layout_toStartOf="@+id/session_favorite"
     tools:text="Sterling Archer" />
+
+  <ImageButton
+    android:id="@+id/session_favorite"
+    style="@style/Session.Card.Favorite"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignParentEnd="true"
+    android:layout_below="@id/session_title"
+    android:contentDescription="@string/description_favorite_session" />
 
 </RelativeLayout>
