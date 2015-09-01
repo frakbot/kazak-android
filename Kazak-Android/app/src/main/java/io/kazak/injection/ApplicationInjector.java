@@ -4,6 +4,7 @@ import javax.inject.Singleton;
 
 import dagger.Component;
 import io.kazak.schedule.ScheduleActivity;
+import io.kazak.talk.TalkDetailsActivity;
 
 @Singleton
 @Component(modules = {
@@ -12,4 +13,5 @@ import io.kazak.schedule.ScheduleActivity;
 })
 public interface ApplicationInjector {
     void inject(ScheduleActivity injectable);
+    void inject(TalkDetailsActivity injectable);
 }
