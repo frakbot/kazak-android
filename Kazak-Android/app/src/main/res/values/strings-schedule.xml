@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+  <string name="description_favorite_session">Add session to my schedule</string>
+  <string name="description_remove_favorite_session">Remove session from my schedule</string>
+
+</resources>

@@ -4,12 +4,12 @@ import android.app.Notification;
 import android.content.Context;
 import android.support.v4.app.NotificationManagerCompat;
 
-public class Notifier {
+public final class Notifier {
 
     private static final int SINGLE_NOTIFICATION_ID = 42;
 
     private final NotificationManagerCompat notificationManagerCompat;
-    
+
     private Notifier(NotificationManagerCompat notificationManagerCompat) {
         this.notificationManagerCompat = notificationManagerCompat;
     }

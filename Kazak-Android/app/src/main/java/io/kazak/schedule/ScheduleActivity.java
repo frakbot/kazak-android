@@ -14,6 +14,7 @@ import javax.inject.Inject;
 
 import io.kazak.KazakApplication;
 import io.kazak.R;
+import io.kazak.base.DeveloperError;
 import io.kazak.repository.DataRepository;
 import io.kazak.repository.event.SyncEvent;
 import io.kazak.schedule.view.table.ScheduleTableAdapter;
@@ -162,6 +163,8 @@ public class ScheduleActivity extends AppCompatActivity {
                 case LOADING:
                     //Display loading screen
                     break;
+                default:
+                    throw new DeveloperError("Sync event '" + syncEvent.getState() + "' is not supported");
             }
         }
     }
