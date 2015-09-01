@@ -21,7 +21,6 @@ import io.kazak.model.Track;
 import io.kazak.notifications.NotificationCreator;
 import io.kazak.notifications.Notifier;
 
-
 public class DebugActivity extends Activity {
 
     @Override
