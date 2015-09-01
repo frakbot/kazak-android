@@ -46,7 +46,7 @@
     <item name="android:gravity">start|center_vertical</item>
     <item name="android:textAppearance">@style/TextAppearance.Session.Card.Speakers</item>
     <item name="android:ellipsize">end</item>
-    <item name="android:lines">1</item>
+    <item name="android:maxLines">2</item>
   </style>
 
   <style name="TextAppearance.Session.Card.Speakers" parent="TextAppearance.AppCompat.Body1">
