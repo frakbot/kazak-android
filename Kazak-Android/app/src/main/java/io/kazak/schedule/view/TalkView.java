@@ -47,7 +47,7 @@ public class TalkView extends CardView {
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
-        LayoutInflater.from(getContext()).inflate(R.layout.merge_talk_card_contents, this);
+        LayoutInflater.from(getContext()).inflate(R.layout.merge_schedule_talk_card, this);
 
         trackView = (TextView) findViewById(R.id.track_label);
         timeView = (TextView) findViewById(R.id.session_time);
