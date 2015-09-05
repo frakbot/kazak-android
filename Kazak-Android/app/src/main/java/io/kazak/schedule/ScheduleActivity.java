@@ -28,7 +28,6 @@ public class ScheduleActivity extends AppCompatActivity {
     private final CompositeSubscription subscriptions;
 
     @Inject
-    @SuppressWarnings("checkstyle:visibilitymodifier")
     DataRepository dataRepository;
 
     private FrameLayout contentRootView;
