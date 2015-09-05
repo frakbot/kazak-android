@@ -5,7 +5,6 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
-import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 
@@ -15,6 +14,7 @@ import java.util.List;
 import io.kazak.R;
 import io.kazak.model.Talk;
 import io.kazak.schedule.ScheduleActivity;
+import io.kazak.talk.TalkDetailsActivity;
 
 public class NotificationCreator {
 
@@ -98,11 +98,12 @@ public class NotificationCreator {
                 .extend(extender);
     }
 
-    private PendingIntent createPendingIntentForSingleSession(String sessionId) {
+    private PendingIntent createPendingIntentForSingleSession(String talkId) {
         TaskStackBuilder taskBuilder = createBaseTaskStackBuilder();
-//        TODO: add open the talk detail activity
-//        taskBuilder.addNextIntent(new Intent(Intent.ACTION_VIEW,
-//                ScheduleContract.Sessions.buildSessionUri(sessionId)));
+        Intent talkDetailIntent = new Intent(context, TalkDetailsActivity.class);
+        talkDetailIntent.putExtra(TalkDetailsActivity.EXTRA_TALK_ID, talkId);
+        taskBuilder.addNextIntent(talkDetailIntent);
+
         return taskBuilder.getPendingIntent(0, PendingIntent.FLAG_CANCEL_CURRENT);
     }
 
