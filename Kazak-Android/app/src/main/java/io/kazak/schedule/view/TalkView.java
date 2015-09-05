@@ -95,10 +95,10 @@ public class TalkView extends CardView {
 
     private void updateFavoriteWith(boolean favorite) {
         if (favorite) {
-            favoriteView.setImageResource(R.drawable.ic_star_black_18dp);
+            favoriteView.setImageResource(R.drawable.ic_star_filled_20dp);
             favoriteView.setContentDescription(getResources().getString(R.string.description_remove_favorite_session));
         } else {
-            favoriteView.setImageResource(R.drawable.ic_star_border_black_18dp);
+            favoriteView.setImageResource(R.drawable.ic_star_empty_20dp);
             favoriteView.setContentDescription(getResources().getString(R.string.description_favorite_session));
         }
     }
