@@ -2,6 +2,7 @@ package io.kazak.schedule.view.table;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
@@ -13,6 +14,7 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 
 import io.kazak.R;
+import io.kazak.base.DeveloperError;
 import io.kazak.model.Room;
 import io.kazak.model.Talk;
 import io.kazak.model.TimeSlot;
@@ -34,8 +36,30 @@ public class ScheduleTableAdapter extends TableTreeAdapter<Talk, Room, Date, Sch
     }
 
     @Override
-    public ScheduleTableViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ScheduleTableViewHolder onCreateViewHolder(@Nullable ViewGroup parent, int viewType) {
+        switch (viewType) {
+            case VIEW_TYPE_NORMAL:
+                return createNormalViewHolder(parent);
+            case VIEW_TYPE_PLACEHOLDER:
+                return createPlaceholderViewHolder(parent);
+            default:
+                throw new DeveloperError("Unknown view type: %d", viewType);
+        }
+    }
+
+    @NonNull
+    public ScheduleTableViewHolder createNormalViewHolder(@Nullable ViewGroup parent) {
         return new ScheduleTableViewHolder((TalkView) inflater.inflate(R.layout.view_talk_item, parent, false), this);
+    }
+
+    @NonNull
+    public ScheduleTableViewHolder createPlaceholderViewHolder(@Nullable ViewGroup parent) {
+        return createNormalViewHolder(parent); //TODO create the placeholder view for real
+    }
+
+    @NonNull
+    public ScheduleTableViewHolder createMaxHeightReferenceViewHolder() {
+        return createNormalViewHolder(null);
     }
 
     public void updateWith(@NonNull List<Talk> talks) {
