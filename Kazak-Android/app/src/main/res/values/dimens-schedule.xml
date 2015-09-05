@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-  <dimen name="session_card_padding">8dp</dimen>
+  <dimen name="session_card_padding_horizontal">12dp</dimen>
+  <dimen name="session_card_padding_vertical">8dp</dimen>
   <dimen name="schedule_row_height">120dp</dimen>
 
   <dimen name="track_label_background_corner_radius">8dp</dimen>
@@ -19,7 +20,7 @@
   <dimen name="session_card_speakers_text">@dimen/text_body</dimen>
   <dimen name="session_card_speakers_margin_top">8dp</dimen>
 
-  <dimen name="session_card_favorite_padding">3dp</dimen>
+  <dimen name="session_card_favorite_padding">14dp</dimen>
   <dimen name="session_card_favorite_margin_start">8dp</dimen>
 
 </resources>
