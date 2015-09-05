@@ -155,7 +155,8 @@ public class ScheduleActivity extends AppCompatActivity {
                                         public void onClick(View v) {
                                             subscribeToSchedule();
                                         }
-                                    })
+                                    }
+                            )
                             .show();
                     break;
                 case IDLE:

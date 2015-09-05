@@ -20,6 +20,7 @@ import io.kazak.model.TimeSlot;
 import io.kazak.notifications.NotificationCreator;
 import io.kazak.notifications.Notifier;
 
+@SuppressWarnings("checkstyle:magicnumber")
 public class DebugActivity extends Activity {
 
     private NotificationCreator notificationCreator;
