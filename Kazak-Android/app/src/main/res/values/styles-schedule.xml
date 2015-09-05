@@ -58,7 +58,7 @@
     <item name="android:layout_marginTop">@dimen/session_card_speakers_margin_top</item>
     <item name="android:layout_marginStart">@dimen/session_card_favorite_margin_start</item>
     <item name="android:padding">@dimen/session_card_favorite_padding</item>
-    <item name="android:src">@drawable/ic_star_border_black_18dp</item>
+    <item name="android:src">@drawable/ic_star_empty_20dp</item>
     <item name="android:background">@drawable/selector_clickable_unbound</item>
     <item name="android:textAppearance">?android:attr/textAppearanceButton</item>
     <item name="android:gravity">center</item>
