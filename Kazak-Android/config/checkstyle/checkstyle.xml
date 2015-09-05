@@ -37,6 +37,8 @@
     <property name="message" value="Line has trailing spaces." />
     <property name="severity" value="info" />
   </module>
+
+  <!-- This is needed to support @SuppressWarnings() parsing -->
   <module name="SuppressWarningsFilter" />
 
   <module name="TreeWalker">
@@ -159,7 +161,11 @@
     <module name="FinalClass" />
     <module name="HideUtilityClassConstructor" />
     <module name="InterfaceIsType" />
-    <module name="VisibilityModifier" />
+
+    <!--http://checkstyle.sourceforge.net/apidocs/com/puppycrawl/tools/checkstyle/checks/design/VisibilityModifierCheck.html-->
+    <module name="VisibilityModifier">
+      <property name="ignoreAnnotationCanonicalNames" value="Inject" />
+    </module>
 
 
     <!-- Miscellaneous other checks.                   -->
@@ -175,11 +181,11 @@
     <module name="FileContentsHolder" />
     <!-- Required by comment suppression filters -->
 
+    <!-- This is needed to support @SuppressWarnings() parsing -->
     <module name="SuppressWarningsHolder" />
-
   </module>
 
-  <module name="SuppressionFilter"></module>
+  <module name="SuppressionFilter" />
 
   <!-- Enable suppression comments -->
   <module name="SuppressionCommentFilter">
