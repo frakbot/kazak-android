@@ -79,7 +79,7 @@ public class DebugActivity extends Activity {
                 String.valueOf(id),
                 "A very interesting talk",
                 createTalkTimeSlot(),
-                createTalkRoom(),
+                createTalkRoom(id),
                 createTalkSpeakers(),
                 createTalkTrack()
         );
@@ -114,7 +114,7 @@ public class DebugActivity extends Activity {
 
     @NonNull
     private Track createTalkTrack() {
-        return new Track("dummy", "Track", 0xFFBF0D7B);
+        return new Track("dummy", "Track", 0xFF2C69CD);
     }
 
 }
