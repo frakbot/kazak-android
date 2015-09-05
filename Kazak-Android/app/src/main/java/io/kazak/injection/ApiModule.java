@@ -4,6 +4,7 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import io.kazak.BuildConfig;
 import io.kazak.api.KazakApi;
 import io.kazak.api.RemoteKazakApi;
 import io.kazak.api.json.JsonKazakApi;
@@ -37,7 +38,7 @@ public class ApiModule {
                         new Endpoint() {
                             @Override
                             public String getUrl() {
-                                return "https://kazak.herokuapp.com/api";
+                                return BuildConfig.ENDPOINT_URL;
                             }
 
                             @Override

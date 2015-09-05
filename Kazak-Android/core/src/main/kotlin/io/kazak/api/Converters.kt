@@ -15,7 +15,7 @@ fun asSchedule(jsonTalks: List<JsonEvent>) = asScheduleInternal(jsonTalks, ::asE
 
 fun asEvent(jsonEvent: JsonEvent) = asEventInternal(jsonEvent, ::asTalk, ::asCoffeeBreak, ::asCeremony, ::asPlaceholder)
 
-fun asTalk(jsonEvent: JsonEvent) = asTalkInternal(jsonEvent, ::asTimeSlot, ::asRoom, ::asSpearkers)
+fun asTalk(jsonEvent: JsonEvent) = asTalkInternal(jsonEvent, ::asTimeSlot, ::asRoom, ::asSpeakers)
 
 fun asCoffeeBreak(jsonEvent: JsonEvent) = asCoffeeBreakInternal(jsonEvent, ::asTimeSlot)
 
@@ -45,11 +45,11 @@ fun asRoom(jsonRoom: JsonRoom?): Room? {
     return Room(id, name)
 }
 
-fun asSpearkers(jsonPresenters: List<JsonPresenter>): Speakers {
-    return asSpearkersInternal(jsonPresenters, ::asSpearker)
+fun asSpeakers(jsonPresenters: List<JsonPresenter>): Speakers {
+    return asSpeakersInternal(jsonPresenters, ::asSpeaker)
 }
 
-fun asSpearker(jsonPresenter: JsonPresenter): Speaker? {
+fun asSpeaker(jsonPresenter: JsonPresenter): Speaker? {
     val id = jsonPresenter.id ?: return null
     val name = jsonPresenter.name ?: return null
     return Speaker(
@@ -148,6 +148,6 @@ private fun asTimeSlotInternal(start: String?, end: String?, asDate: (String?) -
     return TimeSlot(startDate, endDate)
 }
 
-fun asSpearkersInternal(jsonPresenters: List<JsonPresenter>, asSpeaker: (JsonPresenter) -> Speaker?): Speakers {
+fun asSpeakersInternal(jsonPresenters: List<JsonPresenter>, asSpeaker: (JsonPresenter) -> Speaker?): Speakers {
     return Speakers(jsonPresenters.map { asSpeaker(it) }.filterNotNull())
 }
