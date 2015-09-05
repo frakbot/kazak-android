@@ -8,6 +8,9 @@ import android.content.res.Resources;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import io.kazak.R;
 import io.kazak.model.Talk;
 import io.kazak.schedule.ScheduleActivity;
@@ -24,7 +27,15 @@ public class NotificationCreator {
         this.context = context;
     }
 
-    public Notification createFrom(Talk talk) {
+    public List<Notification> createFrom(List<Talk> talks) {
+        List<Notification> notifications = new ArrayList<>();
+        for (Talk talk : talks) {
+            notifications.add(createFrom(talk));
+        }
+        return notifications;
+    }
+
+    private Notification createFrom(Talk talk) {
         NotificationCompat.Builder summaryBuilder = createDefaultBuilder();
         summaryBuilder
                 .setContentIntent(createPendingIntentForSingleSession(talk.getId()))
@@ -50,7 +61,8 @@ public class NotificationCreator {
                 .setLights(
                         resources.getColor(R.color.notification_led_color),
                         NOTIFICATION_LED_ON_MS,
-                        NOTIFICATION_LED_OFF_MS)
+                        NOTIFICATION_LED_OFF_MS
+                )
                 .setSmallIcon(R.drawable.ic_stat_notification)
                 .setPriority(Notification.PRIORITY_MAX)
                 .setAutoCancel(true)
