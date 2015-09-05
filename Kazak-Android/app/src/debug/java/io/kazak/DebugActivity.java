@@ -20,8 +20,10 @@ import io.kazak.model.TimeSlot;
 import io.kazak.notifications.NotificationCreator;
 import io.kazak.notifications.Notifier;
 
-
+@SuppressWarnings("checkstyle:magicnumber")
 public class DebugActivity extends Activity {
+
+    private NotificationCreator notificationCreator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,25 +37,48 @@ public class DebugActivity extends Activity {
                     public void onClick(View view) {
                         testSingleNotification();
                     }
-                });
+                }
+        );
+
+        Button buttonMultipleNotifications = (Button) findViewById(R.id.button_test_multiple_notifications);
+        buttonMultipleNotifications.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        testMultipleNotifications();
+                    }
+                }
+        );
+
+        notificationCreator = new NotificationCreator(this);
     }
 
     private void testSingleNotification() {
-        NotificationCreator notificationCreator = new NotificationCreator(this);
-        Talk talk = createTestTalk();
-        Notification singleNotification = notificationCreator.createFrom(talk);
+        createAndNotifyTalksCount(1);
+    }
+
+    private void testMultipleNotifications() {
+        createAndNotifyTalksCount(3);
+    }
+
+    private void createAndNotifyTalksCount(int count) {
+        List<Talk> talks = new ArrayList<>();
+        for (int i = 0; i < count; i++) {
+            talks.add(createTestTalk(i));
+        }
+        List<Notification> notifications = notificationCreator.createFrom(talks);
 
         Notifier notifier = Notifier.from(this);
-        notifier.showNotification(singleNotification);
+        notifier.showNotifications(notifications);
     }
 
     @NonNull
-    private Talk createTestTalk() {
+    private Talk createTestTalk(int id) {
         return new Talk(
-                "12345",
+                String.valueOf(id),
                 "A very interesting talk",
                 createTalkTimeSlot(),
-                createTalkRoom(),
+                createTalkRoom(id),
                 createTalkSpeakers()
         );
     }
@@ -70,10 +95,10 @@ public class DebugActivity extends Activity {
     }
 
     @NonNull
-    private Room createTalkRoom() {
+    private Room createTalkRoom(int id) {
         return new Room(
-                "45678",
-                "Room 1"
+                "45678" + id,
+                "Room " + id
         );
     }
 
