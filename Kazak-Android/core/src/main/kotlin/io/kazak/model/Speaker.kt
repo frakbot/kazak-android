@@ -1,3 +1,12 @@
 package io.kazak.model
 
-public data class Speaker(val id: String, val name: String)
+import java.net.URI
+
+public data class Speaker(
+        val id: String,
+        val name: String,
+        val company: String?,
+        val bio: String?,
+        val pic: URI?,
+        val social: List<String>?
+)
