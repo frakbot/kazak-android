@@ -5,6 +5,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.graphics.BitmapFactory;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 
@@ -47,6 +48,7 @@ public class NotificationCreator {
                 .setContentIntent(createPendingIntentForSingleSession(talk.getId()))
                 .setContentTitle(talk.getName())
                 .setContentText(talk.getRoom().getName())
+                .setColor(talk.getTrack().getColor())
                 .setGroup(GROUP_KEY_NOTIFY_SESSION);
 
         NotificationCompat.BigTextStyle richNotification = createBigTextRichNotification(notificationBuilder, talk);
@@ -72,12 +74,9 @@ public class NotificationCreator {
         Resources resources = context.getResources();
 
         NotificationCompat.WearableExtender extender = new NotificationCompat.WearableExtender();
-        // TODO: define a default background for wear notifications
-        //extender.setBackground(BitmapFactory.decodeResource(resources, R.drawable.notification_background));
+        extender.setBackground(BitmapFactory.decodeResource(resources, R.drawable.notification_background));
 
         return new NotificationCompat.Builder(context)
-                // TODO: use topic color
-                //.setColor(resources.getColor(R.color.theme_primary))
                 .setTicker(
                         context.getResources().getQuantityString(
                                 R.plurals.session_notification_ticker,

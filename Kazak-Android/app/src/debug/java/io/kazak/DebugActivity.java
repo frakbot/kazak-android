@@ -79,7 +79,7 @@ public class DebugActivity extends Activity {
                 String.valueOf(id),
                 "A very interesting talk",
                 createTalkTimeSlot(),
-                createTalkRoom(),
+                createTalkRoom(id),
                 createTalkSpeakers(),
                 createTalkTrack()
         );
