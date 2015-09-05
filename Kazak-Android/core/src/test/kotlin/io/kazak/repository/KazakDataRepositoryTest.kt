@@ -46,13 +46,13 @@ public class KazakDataRepositoryTest {
 
     private fun testDay() = Day(testDate, listOf(testTalk()))
 
-    private fun testTalk() = Talk(talkId, "", TimeSlot(testDate, testDate), Room("", ""), testSpeakers())
+    private fun testTalk() = Talk(talkId, "", TimeSlot(testDate, testDate), listOf(Room("", "")), testSpeakers())
 
     private fun testSpeakers() = Speakers(testSpeakersList())
 
     private fun testSpeakersList(): List<Speaker> {
         val speakers = ArrayList<Speaker>(1)
-        speakers + Speaker("", "")
+        speakers + Speaker("", "", null, null, null, null)
         return speakers
     }
 

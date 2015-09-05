@@ -7,6 +7,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 
@@ -148,6 +149,7 @@ public class ScheduleActivity extends AppCompatActivity {
         public void onNext(SyncEvent syncEvent) {
             switch (syncEvent.getState()) {
                 case ERROR:
+                    Log.e("Kazak", "Failed to load schedule", syncEvent.getError());
                     Snackbar.make(contentRootView, R.string.error_loading_schedule, Snackbar.LENGTH_LONG)
                             .setAction(
                                     R.string.action_retry, new View.OnClickListener() {
