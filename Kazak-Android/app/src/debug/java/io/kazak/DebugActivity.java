@@ -21,6 +21,7 @@ import io.kazak.model.Track;
 import io.kazak.notifications.NotificationCreator;
 import io.kazak.notifications.Notifier;
 
+@SuppressWarnings("checkstyle:magicnumber")
 public class DebugActivity extends Activity {
 
     @Override
