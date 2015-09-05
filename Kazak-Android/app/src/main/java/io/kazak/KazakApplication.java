@@ -21,6 +21,9 @@ public class KazakApplication extends Application {
     }
 
     private void setupStetho() {
+        if (!BuildConfig.ENABLE_STETHO) {
+            return;
+        }
         // TODO configure OkHttp interception when we begin using it
         // See http://facebook.github.io/stetho/#integrations
         Stetho.initialize(
