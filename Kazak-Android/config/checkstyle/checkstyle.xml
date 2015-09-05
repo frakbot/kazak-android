@@ -37,6 +37,7 @@
     <property name="message" value="Line has trailing spaces." />
     <property name="severity" value="info" />
   </module>
+  <module name="SuppressWarningsFilter" />
 
   <module name="TreeWalker">
 
@@ -173,6 +174,8 @@
 
     <module name="FileContentsHolder" />
     <!-- Required by comment suppression filters -->
+
+    <module name="SuppressWarningsHolder" />
 
   </module>
 
