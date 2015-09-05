@@ -19,7 +19,6 @@ import io.kazak.talk.TalkDetailsActivity;
 public class NotificationCreator {
 
     private static final String GROUP_KEY_NOTIFY_SESSION = "group_key_notify_session";
-    private static final int STACKED_NOTIFICATIONS_ID_OFFSET = 1;
 
     // pulsate every 1 second, indicating a relatively high degree of urgency
     private static final int NOTIFICATION_LED_ON_MS = 100;
