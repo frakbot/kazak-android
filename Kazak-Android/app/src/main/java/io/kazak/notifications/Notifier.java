@@ -6,7 +6,7 @@ import android.support.v4.app.NotificationManagerCompat;
 
 import java.util.List;
 
-public class Notifier {
+public final class Notifier {
 
     private static final int SINGLE_NOTIFICATION_ID = 42;
 
@@ -22,8 +22,12 @@ public class Notifier {
     }
 
     public void showNotifications(List<Notification> notifications) {
-        for (Notification notification : notifications) {
-            int notificationId = (int) (SINGLE_NOTIFICATION_ID + (System.currentTimeMillis() % 1000));
+        notificationManagerCompat.cancelAll();
+
+        int notificationsSize = notifications.size();
+        for (int i = 0; i < notificationsSize; i++) {
+            Notification notification = notifications.get(i);
+            int notificationId = SINGLE_NOTIFICATION_ID + i;
             showNotification(notification, notificationId);
         }
     }
