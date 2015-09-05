@@ -35,7 +35,15 @@ public class ScheduleTableAdapter extends TableTreeAdapter<Talk, Room, Date, Sch
 
     @Override
     public ScheduleTableViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        return onCreateViewHolder(parent);
+    }
+
+    public ScheduleTableViewHolder onCreateViewHolder(ViewGroup parent) {
         return new ScheduleTableViewHolder((TalkView) inflater.inflate(R.layout.view_talk_item, parent, false), this);
+    }
+
+    public ScheduleTableViewHolder createMaxHeightReferenceViewHolder() {
+        return onCreateViewHolder(null);
     }
 
     public void updateWith(@NonNull List<Talk> talks) {
