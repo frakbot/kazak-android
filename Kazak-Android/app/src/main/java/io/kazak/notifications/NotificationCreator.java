@@ -29,7 +29,7 @@ public class NotificationCreator {
         summaryBuilder
                 .setContentIntent(createPendingIntentForSingleSession(talk.getId()))
                 .setContentTitle(talk.getName())
-                .setContentText(talk.getRoom().getName());
+                .setContentText(talk.getRooms().get(0).getName());
 
         NotificationCompat.BigTextStyle richNotification = createBigTextRichNotification(summaryBuilder, talk);
 
@@ -75,7 +75,7 @@ public class NotificationCreator {
     private NotificationCompat.BigTextStyle createBigTextRichNotification(
             NotificationCompat.Builder notifBuilder, Talk talk) {
         String speakers = talk.speakersNames(); // TODO: get the actual ones from the session
-        String roomName = talk.getRoom().getName();
+        String roomName = talk.getRooms().get(0).getName();
         StringBuilder bigTextBuilder = new StringBuilder()
                 .append(context.getString(R.string.session_notification_starting_by, speakers))
                 .append('\n')

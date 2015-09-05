@@ -4,6 +4,8 @@ public interface Event {
 
     fun type(): EventType
 
+    fun name(): String
+
     fun timeSlot(): TimeSlot
 
 }

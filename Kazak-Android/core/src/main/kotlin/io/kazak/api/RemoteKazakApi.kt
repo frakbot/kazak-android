@@ -1,7 +1,7 @@
 package io.kazak.api
 
 import io.kazak.api.json.JsonKazakApi
-import io.kazak.api.json.asSchedule
+import io.kazak.api.asSchedule
 import io.kazak.model.Schedule
 import rx.Observable
 import rx.schedulers.Schedulers

@@ -9,6 +9,7 @@ import android.widget.Button;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -19,7 +20,6 @@ import io.kazak.model.Talk;
 import io.kazak.model.TimeSlot;
 import io.kazak.notifications.NotificationCreator;
 import io.kazak.notifications.Notifier;
-
 
 public class DebugActivity extends Activity {
 
@@ -70,18 +70,20 @@ public class DebugActivity extends Activity {
     }
 
     @NonNull
-    private Room createTalkRoom() {
-        return new Room(
-                "45678",
-                "Room 1"
+    private List<Room> createTalkRoom() {
+        return Collections.singletonList(
+                new Room(
+                        "45678",
+                        "Room 1"
+                )
         );
     }
 
     @NonNull
     private Speakers createTalkSpeakers() {
         List<Speaker> speakers = new ArrayList<>(2);
-        speakers.add(new Speaker("0", "Awesome Speaker"));
-        speakers.add(new Speaker("1", "Meh Guy"));
+        speakers.add(new Speaker("0", "Awesome Speaker", null, null, null, null));
+        speakers.add(new Speaker("1", "Meh Guy", null, null, null, null));
         return new Speakers(speakers);
     }
 
