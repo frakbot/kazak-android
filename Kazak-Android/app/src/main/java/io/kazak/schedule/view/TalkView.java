@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Locale;
 
 import io.kazak.R;
 import io.kazak.model.Talk;
@@ -66,7 +67,7 @@ public class TalkView extends CardView {
     }
 
     private void updateTrackWith(@NonNull Track track) {
-        trackView.setText(track.getName().toUpperCase());
+        trackView.setText(track.getName().toUpperCase(Locale.getDefault()));
         trackView.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.temp_circle_icon, 0, 0, 0);
         setBackgroundTintCompat(trackView, track.getColor());
     }
