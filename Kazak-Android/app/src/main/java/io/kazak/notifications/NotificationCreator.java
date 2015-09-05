@@ -5,6 +5,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 
@@ -58,8 +59,7 @@ public class NotificationCreator {
         NotificationCompat.Builder summaryBuilder = createDefaultBuilder(talks.size());
         summaryBuilder
                 .setContentIntent(createPendingIntentForMultipleSessions())
-                .setContentTitle("AAAAAA")
-                .setContentText("BBBBBB")
+                .setContentTitle(createSummaryTitle(talks.size()))
                 .setGroup(GROUP_KEY_NOTIFY_SESSION)
                 .setGroupSummary(true)
                 .setLocalOnly(true);
@@ -133,7 +133,7 @@ public class NotificationCreator {
 
     private NotificationCompat.InboxStyle createInboxStyleRichNotification(
             NotificationCompat.Builder notificationBuilder, List<Talk> talks) {
-        String bigContentTitle = context.getString(R.string.session_notification_count_starting, talks.size());
+        String bigContentTitle = createSummaryTitle(talks.size());
         NotificationCompat.InboxStyle richNotification = new NotificationCompat.InboxStyle(notificationBuilder)
                 .setBigContentTitle(bigContentTitle);
         for (Talk talk : talks) {
@@ -147,5 +147,9 @@ public class NotificationCreator {
         }
 
         return richNotification;
+    }
+
+    private String createSummaryTitle(int talksCount) {
+        return context.getString(R.string.session_notification_count_starting, talksCount);
     }
 }
