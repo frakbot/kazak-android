@@ -73,7 +73,7 @@ public class ScheduleTableAdapter extends TableTreeAdapter<Talk, Room, Date, Sch
         Date maxTime = null;
         for (int i = 0, end = talks.size(); i < end; i++) {
             Talk talk = talks.get(i);
-            Room room = talk.getRoom();
+            Room room = talk.getRooms().get(0); //TODO: handle multiple rooms per talk
             TimeSlot timeSlot = talk.getTimeSlot();
             Date startTime = timeSlot.getStart();
             Date endTime = timeSlot.getEnd();
@@ -97,7 +97,7 @@ public class ScheduleTableAdapter extends TableTreeAdapter<Talk, Room, Date, Sch
 
         @Override
         public Room getRowFor(Talk item) {
-            return item.getRoom();
+            return item.getRooms().get(0);  //TODO: handle multiple rooms per talk
         }
 
         @Override

@@ -19,6 +19,10 @@ task pmdCheck(type: Pmd) {
     }
 }
 
+checkstyle {
+    toolVersion = "6.7"
+}
+
 task checkstyleCheck(type: Checkstyle) {
     ignoreFailures = true
     configFile file("${project(':').projectDir}/config/checkstyle/checkstyle.xml")

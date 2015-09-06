@@ -1,9 +1,9 @@
 package io.kazak.model
 
-public data class Talk(val id : String, val name : String, val timeSlot: TimeSlot, val rooms: List<Room>, val speakers: Speakers) : Session {
+public data class Placeholder(val id: String, val name: String, val timeSlot: TimeSlot, val rooms: List<Room>) : Session {
 
     override fun type(): EventType {
-        return EventType.TALK
+        return EventType.PLACEHOLDER
     }
 
     override fun name(): String {
@@ -16,10 +16,6 @@ public data class Talk(val id : String, val name : String, val timeSlot: TimeSlo
 
     override fun timeSlot(): TimeSlot {
         return timeSlot
-    }
-
-    fun speakersNames(): String {
-        return speakers.names()
     }
 
 }
