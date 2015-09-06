@@ -49,7 +49,6 @@ public class KazakDataRepository(val api: KazakApi, val favoritesRepository: Fav
                 }
     }
 
-
     private fun getFavoritesStatuses(): Observable<FavoriteSessions> {
         if (!favoritesCache.hasValue()) {
             updateFavorites()
