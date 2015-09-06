@@ -44,6 +44,12 @@ android {
     lintOptions {
         lintConfig file("${project(':').projectDir}/config/lint.xml")
     }
+
+    packagingOptions {
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/LICENSE-FIREBASE.txt'
+        exclude 'META-INF/NOTICE'
+    }
 }
 
 dependencies {
