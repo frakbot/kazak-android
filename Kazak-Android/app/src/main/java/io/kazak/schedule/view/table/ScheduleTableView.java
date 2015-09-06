@@ -2,6 +2,7 @@ package io.kazak.schedule.view.table;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Color;
 import android.support.annotation.AttrRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.StyleRes;
@@ -21,6 +22,7 @@ import io.kazak.model.Speaker;
 import io.kazak.model.Speakers;
 import io.kazak.model.Talk;
 import io.kazak.model.TimeSlot;
+import io.kazak.model.Track;
 import io.kazak.schedule.view.TalkView;
 import io.kazak.schedule.view.table.base.TableItemPaddingDecoration;
 import io.kazak.schedule.view.table.base.TableLayoutManager;
@@ -113,9 +115,7 @@ public class ScheduleTableView extends RecyclerView {
                 "1\n2\n3",
                 new TimeSlot(start, end),
                 Collections.singletonList(new Room(NO_ID, "Room")),
-                new Speakers(speakerList)
-        );
-
+                new Speakers(speakerList));
     }
 
     @NonNull
