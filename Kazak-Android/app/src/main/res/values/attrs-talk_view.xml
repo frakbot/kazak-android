@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+  <declare-styleable name="TalkView">
+    <attr name="talkSymbolSize" format="dimension|reference" />
+    <attr name="drawableOpticalBalanceOffset" format="dimension|reference" />
+    <attr name="android:drawablePadding" format="dimension|reference" />
+  </declare-styleable>
+
+  <attr name="talkViewDefaultStyle" format="reference" />
+
+</resources>
