@@ -46,7 +46,7 @@ public class KazakDataRepositoryTest {
 
     private fun testDay() = Day(testDate, listOf(testTalk()))
 
-    private fun testTalk() = Talk(talkId, "", TimeSlot(testDate, testDate), listOf(Room("", "")), testSpeakers())
+    private fun testTalk() = Talk(talkId, "", TimeSlot(testDate, testDate), listOf(Room("", "")), testSpeakers(), null)
 
     private fun testSpeakers() = Speakers(testSpeakersList())
 

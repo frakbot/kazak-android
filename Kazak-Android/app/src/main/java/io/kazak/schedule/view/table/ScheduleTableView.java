@@ -113,7 +113,8 @@ public class ScheduleTableView extends RecyclerView {
                 "1\n2\n3",
                 new TimeSlot(start, end),
                 Collections.singletonList(new Room(NO_ID, "Room")),
-                new Speakers(speakerList));
+                new Speakers(speakerList),
+                null);
     }
 
     @NonNull

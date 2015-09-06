@@ -1,6 +1,13 @@
 package io.kazak.model
 
-public data class Talk(val id : String, val name : String, val timeSlot: TimeSlot, val rooms: List<Room>, val speakers: Speakers) : Session {
+public data class Talk(
+        val id : String,
+        val name : String,
+        val timeSlot: TimeSlot,
+        val rooms: List<Room>,
+        val speakers: Speakers,
+        val track: Track?
+) : Session {
 
     override fun type(): EventType {
         return EventType.TALK
@@ -22,8 +29,8 @@ public data class Talk(val id : String, val name : String, val timeSlot: TimeSlo
         return speakers.names()
     }
 
-    fun track(): Track {
-        return Track("1234", "LOL", 0xFF2C69CD.toInt())
+    fun track(): Track? {
+        return track
     }
 
 }

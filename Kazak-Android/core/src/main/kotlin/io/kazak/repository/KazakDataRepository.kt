@@ -10,7 +10,7 @@ import rx.Observable
 import rx.Observer
 import rx.subjects.BehaviorSubject
 
-public class KazakDataRepository(val api : KazakApi) : DataRepository {
+public class KazakDataRepository(val api: KazakApi) : DataRepository {
 
     val scheduleCache: BehaviorSubject<Schedule> = BehaviorSubject.create()
     val scheduleSyncCache: BehaviorSubject<SyncEvent> = BehaviorSubject.create()
@@ -48,7 +48,6 @@ public class KazakDataRepository(val api : KazakApi) : DataRepository {
 
     private fun updateSchedule() {
         scheduleSyncCache.onNext(SyncEvent(SyncState.LOADING, null))
-        // TODO implement real data we get from the server
         api.fetchSchedule()
                 .subscribe(ScheduleObserver(scheduleCache, scheduleSyncCache))
     }
