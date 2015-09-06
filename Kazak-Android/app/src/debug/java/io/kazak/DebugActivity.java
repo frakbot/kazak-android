@@ -93,7 +93,8 @@ public class DebugActivity extends Activity {
                 "A very interesting talk",
                 createTalkTimeSlot(),
                 createTalkRooms(id),
-                createTalkSpeakers()
+                createTalkSpeakers(),
+                null
         );
     }
 

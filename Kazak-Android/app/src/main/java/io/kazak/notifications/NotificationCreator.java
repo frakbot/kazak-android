@@ -49,12 +49,19 @@ public class NotificationCreator {
                 .setContentIntent(createPendingIntentForSingleSession(talk.getId()))
                 .setContentTitle(talk.getName())
                 .setContentText(getDisplayedRooms(talk))
-                .setColor(talk.track().getColor())
                 .setGroup(GROUP_KEY_NOTIFY_SESSION);
+
+        if (hasValidTrackColor(talk)) {
+            notificationBuilder.setColor(talk.track().color().getIntValue());
+        }
 
         NotificationCompat.BigTextStyle richNotification = createBigTextRichNotification(notificationBuilder, talk);
 
         return richNotification.build();
+    }
+
+    private boolean hasValidTrackColor(Talk talk) {
+        return talk.track() != null && talk.track().color() != null;
     }
 
     private String getDisplayedRooms(Talk talk) {
