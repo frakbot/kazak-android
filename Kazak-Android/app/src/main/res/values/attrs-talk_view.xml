@@ -2,9 +2,9 @@
 <resources>
 
   <declare-styleable name="TalkView">
-    <attr name="talkSymbolSize" format="dimension|reference" />
+    <attr name="trackSymbolSize" format="dimension|reference" />
     <attr name="drawableOpticalBalanceOffset" format="dimension|reference" />
-    <attr name="android:drawablePadding" format="dimension|reference" />
+    <attr name="android:drawablePadding" />
   </declare-styleable>
 
   <attr name="talkViewDefaultStyle" format="reference" />
