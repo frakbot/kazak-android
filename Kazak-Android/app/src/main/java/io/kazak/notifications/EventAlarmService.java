@@ -28,7 +28,6 @@ public class EventAlarmService extends IntentService {
     private static final int NOTIFICATION_INTERVAL_MINUTES = 10;
 
     @Inject
-    @SuppressWarnings("checkstyle:visibilitymodifier")
     DataRepository dataRepository;
 
     public EventAlarmService() {
