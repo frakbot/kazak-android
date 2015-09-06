@@ -95,6 +95,7 @@ class BuildProperties {
         flavor.buildConfigField "double", "VENUE_LOCATION_LON", "${getDouble("venue.longitude")}"
         flavor.buildConfigField "int", "VENUE_LOCATION_MAP_ZOOM", "${getInt("venue.map.defaultZoom")}"
         flavor.buildConfigField "String", "ENDPOINT_URL", "${getString("app.endpoint")}"
+        flavor.buildConfigField "String", "AUTH_URL", "${getString("app.auth")}"
 
         flavor.buildConfigField "boolean", "ENABLE_STETHO", "BuildConfig.DEBUG"
 
