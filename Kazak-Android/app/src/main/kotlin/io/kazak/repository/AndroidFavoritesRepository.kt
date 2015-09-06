@@ -42,7 +42,7 @@ public class AndroidFavoritesRepository(val files: File, val gson: Gson) : Favor
     }
 
     private fun fileExists(fileName: String): Boolean {
-        return files.listFiles().map { it.name }.contains(fileName)
+        return files.listFiles().any { it.name == fileName }
     }
 
 }
