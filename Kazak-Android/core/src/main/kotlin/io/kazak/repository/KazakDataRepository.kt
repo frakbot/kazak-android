@@ -28,7 +28,7 @@ public class KazakDataRepository(val api: KazakApi, val favoritesRepository: Fav
         return scheduleSyncCache;
     }
 
-    override fun getFavorites(): Observable<List<Id>> {
+    override fun getFavoriteIds(): Observable<List<Id>> {
         return getFavoritesStatuses()
                 .flatMap {
                     Observable.from(it.satuses.entrySet())
@@ -37,6 +37,18 @@ public class KazakDataRepository(val api: KazakApi, val favoritesRepository: Fav
                             .toList()
                 }
     }
+
+    override fun getFavorites(): Observable<List<Session>> {
+        return getFavoriteIds()
+                .flatMap {
+                    Observable.from(it)
+                        .flatMap { getEvent(it) }
+                        .filter { it.type().canBeFavorite() }
+                        .cast(javaClass<Session>())
+                        .toList()
+                }
+    }
+
 
     private fun getFavoritesStatuses(): Observable<FavoriteSessions> {
         if (!favoritesCache.hasValue()) {
@@ -72,17 +84,13 @@ public class KazakDataRepository(val api: KazakApi, val favoritesRepository: Fav
                 .subscribe(SyncObserver(favoritesCache, favoritesSyncCache))
     }
 
-    override fun getTalk(id: Id): Observable<Talk> {
+    override fun getEvent(id: Id): Observable<Event> {
         return getSchedule().flatMap {
             Observable.from(it.days)
         }.flatMap {
             Observable.from(it.events)
         }.filter {
-            it.type() == EventType.TALK
-        }.map {
-            it as Talk
-        }.filter {
-            it.id == id
+            it.id() == id
         }
     }
 

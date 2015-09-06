@@ -99,7 +99,7 @@ public class ScheduleActivity extends AppCompatActivity {
                         .subscribe(new ScheduleObserver())
         );
         subscriptions.add(
-                dataRepository.getFavorites()
+                dataRepository.getFavoriteIds()
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(new FavoritesObserver())
         );
