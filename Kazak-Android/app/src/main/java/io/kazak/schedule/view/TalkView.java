@@ -3,7 +3,9 @@ package io.kazak.schedule.view;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Canvas;
 import android.graphics.PorterDuff;
+import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.AttrRes;
 import android.support.annotation.ColorInt;
@@ -36,14 +38,15 @@ public class TalkView extends ViewGroup {
     private final int trackDrawablePaddingPx;
     private final int trackDrawableSizePx;
     private final int drawableOpticalBalanceOffsetPx;
+    private final Rect trackDrawableBounds;
+
+    private boolean showTrackDrawable = true;
 
     private TextView timeView;
     private TextView trackView;
     private TextView titleView;
     private TextView speakersView;
     private ImageButton favoriteView;
-
-    private boolean showTrackDrawable = true;
 
     public TalkView(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
@@ -57,10 +60,11 @@ public class TalkView extends ViewGroup {
     public TalkView(Context context, AttributeSet attrs, @AttrRes int defStyleAttr, @StyleRes int defStyleRes) {
         super(context, attrs, defStyleAttr);
         dateFormat = new SimpleDateFormat(TIMESLOT_BOUND_PATTERN);
+        trackDrawableBounds = new Rect();
 
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.TalkView, defStyleAttr, defStyleRes);
         trackDrawablePaddingPx = a.getDimensionPixelSize(R.styleable.TalkView_android_drawablePadding, 0);
-        trackDrawableSizePx = a.getDimensionPixelSize(R.styleable.TalkView_talkSymbolSize, 0);
+        trackDrawableSizePx = a.getDimensionPixelSize(R.styleable.TalkView_trackSymbolSize, 0);
         drawableOpticalBalanceOffsetPx = a.getDimensionPixelSize(R.styleable.TalkView_drawableOpticalBalanceOffset, 0);
         a.recycle();
     }
@@ -78,6 +82,21 @@ public class TalkView extends ViewGroup {
     }
 
     @Override
+    protected LayoutParams generateLayoutParams(LayoutParams lp) {
+        return new MarginLayoutParams(lp);
+    }
+
+    @Override
+    public LayoutParams generateLayoutParams(AttributeSet attrs) {
+        return new MarginLayoutParams(getContext(), attrs);
+    }
+
+    @Override
+    protected LayoutParams generateDefaultLayoutParams() {
+        return new MarginLayoutParams(super.generateDefaultLayoutParams());
+    }
+
+    @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 
@@ -85,43 +104,43 @@ public class TalkView extends ViewGroup {
         if (MeasureSpec.getMode(widthMeasureSpec) != MeasureSpec.EXACTLY) {
             throw new DeveloperError("This view only supports EXACTLY for the widthMeasureSpec");
         }
-        if (MeasureSpec.getMode(heightMeasureSpec) == MeasureSpec.EXACTLY) {
-            setMeasuredDimension(MeasureSpec.getSize(widthMeasureSpec), MeasureSpec.getSize(heightMeasureSpec));
-            return;
-        }
 
         int availableWidth = MeasureSpec.getSize(widthMeasureSpec) - getPaddingStart() - getPaddingEnd();
 
         // Measure the first row of content: [TIME] --- [TRACK LABEL]? - [TRACK DRAWABLE]?
         measureAndUpdateFirstRowContent(widthMeasureSpec, heightMeasureSpec, availableWidth);
-        int totalHeight = getPaddingTop() + timeView.getMaxHeight() + getVerticalMarginsFor(trackView);
+        int totalHeight = getPaddingTop() + timeView.getMeasuredHeight() + getVerticalMarginsFor(trackView);
 
         // Measure the second row of content: [TITLE]
         measureChildWithMargins(titleView, widthMeasureSpec, 0, heightMeasureSpec, 0);
-        totalHeight += titleView.getMaxHeight() + getVerticalMarginsFor(titleView);
+        totalHeight += titleView.getMeasuredHeight() + getVerticalMarginsFor(titleView);
 
         // Measure the third row of content: [SPEAKERS] - [FAVORITE] (assuming not wrapping favorite to fourth row)
         measureAndUpdateThirdRowContent(widthMeasureSpec, heightMeasureSpec, availableWidth);
-        totalHeight += speakersView.getMaxHeight() + getVerticalMarginsFor(speakersView);
+        totalHeight += speakersView.getMeasuredHeight() + getVerticalMarginsFor(speakersView);
 
         setMeasuredDimension(MeasureSpec.getSize(widthMeasureSpec), totalHeight + getPaddingBottom());
     }
 
     private void measureAndUpdateFirstRowContent(int widthMeasureSpec, int heightMeasureSpec, int availableWidth) {
-        int usedWidth = 0;
-        measureChildWithMargins(timeView, widthMeasureSpec, usedWidth, heightMeasureSpec, 0);
+        measureChildWithMargins(timeView, widthMeasureSpec, 0, heightMeasureSpec, 0);
 
         int totalTimeWidth = timeView.getMeasuredWidth() + getHorizontalMarginsFor(timeView);
-        usedWidth = totalTimeWidth;
-        measureChildWithMargins(trackView, widthMeasureSpec, usedWidth, heightMeasureSpec, 0);
-        int totalTrackLabelWidth = trackView.getMeasuredWidth() - trackDrawablePaddingPx - getHorizontalMarginsFor(trackView);
+        measureChildWithMargins(trackView, widthMeasureSpec, 0, heightMeasureSpec, 0);
+        int totalTrackLabelWidth =
+                Math.max(
+                        trackView.getMeasuredWidth() - trackDrawablePaddingPx - getHorizontalMarginsFor(trackView),
+                        0
+                );
 
         int maxTimeWidthWithoutTrackLabel = availableWidth - trackDrawableSizePx + drawableOpticalBalanceOffsetPx;
         int maxTimeWidthWithTrackLabel = maxTimeWidthWithoutTrackLabel - totalTrackLabelWidth;
         updateTrackLabelAndDrawableVisibility(totalTimeWidth, maxTimeWidthWithoutTrackLabel, maxTimeWidthWithTrackLabel);
     }
 
-    private void updateTrackLabelAndDrawableVisibility(int totalTimeWidth, int maxTimeViewWidthWithoutTrackLabel, int maxTimeViewWidthWithTrackLabel) {
+    private void updateTrackLabelAndDrawableVisibility(int totalTimeWidth,
+                                                       int maxTimeViewWidthWithoutTrackLabel,
+                                                       int maxTimeViewWidthWithTrackLabel) {
         if (totalTimeWidth <= maxTimeViewWidthWithTrackLabel) {
             // We can have the track drawable AND the track label
             trackView.setVisibility(VISIBLE);
@@ -163,8 +182,165 @@ public class TalkView extends ViewGroup {
     }
 
     @Override
-    protected void onLayout(boolean changed, int l, int t, int r, int b) {
-        // TODO measure & layout stuff
+    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
+        boolean isLtr = isLayoutLtr();
+        int clientLeft = left + getPaddingLeft();
+        int clientTop = top + getPaddingTop();
+        int clientRight = right + getPaddingRight();
+        int clientBottom = bottom - getPaddingBottom();
+
+        // Layout first row: [TIME] --- [TRACK LABEL]? - [TRACK DRAWABLE]?
+        int firstRowBottom = layoutFirstRow(clientLeft, clientTop, clientRight, isLtr);
+
+        // Measure the second row of content: [TITLE]
+        int secondRowBottom = layoutSecondRow(clientLeft, clientRight, firstRowBottom);
+
+        // Measure the third row of content: [SPEAKERS] - [FAVORITE] (assuming not wrapping favorite to fourth row)
+        layoutThirdRow(clientLeft, clientRight, clientBottom, secondRowBottom, isLtr);
+    }
+
+    private int layoutFirstRow(int clientLeft, int clientTop, int clientRight, boolean isLtr) {
+        int timeLeft;
+        int timeTop = clientTop + getTopMarginFor(timeView);
+        int timeRight;
+        int timeMeasuredWidth = timeView.getMeasuredWidth();
+        int timeHeight = timeView.getMeasuredHeight();
+
+        int trackLeft = 0;
+        int trackWidth = trackView.getMeasuredWidth();
+
+        int trackDrawableLeft = 0;
+
+        if (isLtr) {
+            // [TIME]---[TRACK LABEL]?-[TRACK DRAWABLE]?
+            int lastLeft = clientRight;
+            if (showTrackDrawable) {
+                trackDrawableLeft = lastLeft + drawableOpticalBalanceOffsetPx - trackDrawableSizePx;
+                lastLeft = trackDrawableLeft - trackDrawablePaddingPx;
+
+                if (isVisible(trackView)) {
+                    trackLeft = lastLeft - getRightMarginFor(trackView) - trackWidth;
+                    lastLeft = trackLeft - getLeftMarginFor(trackView);
+                }
+            }
+            timeLeft = clientLeft + getLeftMarginFor(timeView);
+            timeRight = Math.min(timeLeft + timeMeasuredWidth, lastLeft - getRightMarginFor(timeView));
+        } else {
+            // [TRACK DRAWABLE]?-[TRACK LABEL]?---[TIME]
+            int lastRight = clientLeft;
+            if (showTrackDrawable) {
+                trackDrawableLeft = lastRight - drawableOpticalBalanceOffsetPx;
+                lastRight = trackDrawableLeft + trackDrawableSizePx + trackDrawablePaddingPx;
+
+                if (isVisible(trackView)) {
+                    trackLeft = lastRight + getLeftMarginFor(trackView);
+                    lastRight = trackLeft + trackWidth + getLeftMarginFor(trackView);
+                }
+            }
+            timeRight = clientRight + getRightMarginFor(timeView);
+            timeLeft = Math.max(timeRight - timeMeasuredWidth, lastRight + getLeftMarginFor(timeView));
+        }
+
+        timeView.layout(timeLeft, timeTop, timeRight, timeTop + timeHeight);
+
+        if (showTrackDrawable) {
+            int drawableTop = clientTop - drawableOpticalBalanceOffsetPx;
+            trackDrawableBounds.set(
+                    trackDrawableLeft,
+                    drawableTop,
+                    trackDrawableLeft + trackDrawableSizePx,
+                    drawableTop + trackDrawableSizePx
+            );
+
+            if (isVisible(trackView)) {
+                int trackTop = clientTop + getTopMarginFor(trackView);
+                int trackHeight = trackView.getMeasuredHeight();
+                trackView.layout(trackLeft, trackTop, trackLeft + trackWidth, trackTop + trackHeight);
+            }
+        }
+        return timeView.getBottom() + getBottomMarginFor(timeView);
+    }
+
+    private static boolean isVisible(View view) {
+        return view.getVisibility() != GONE;
+    }
+
+    private int layoutSecondRow(int clientLeft, int clientRight, int firstRowBottom) {
+        int titleTop = firstRowBottom + getTopMarginFor(titleView);
+        int titleHeight = titleTop + titleView.getMeasuredHeight();
+        titleView.layout(clientLeft, titleTop, clientRight, titleTop + titleHeight);
+        return titleView.getBottom() + getBottomMarginFor(titleView);
+    }
+
+    private void layoutThirdRow(int clientLeft, int clientRight, int clientBottom, int secondRowBottom, boolean isLtr) {
+        int speakersLeft;
+        int speakersWidth = speakersView.getMeasuredWidth();
+        int speakersHeight = speakersView.getMeasuredHeight();
+        int speakersTop = secondRowBottom + getTopMarginFor(speakersView);
+
+        int favoriteLeft;
+        int favoriteWidth = favoriteView.getMeasuredWidth();
+        int favoriteHeight = favoriteView.getMeasuredHeight();
+        int favoriteTop = clientBottom - favoriteHeight - getBottomMarginFor(favoriteView);
+
+        if (isLtr) {
+            // [SPEAKERS] - [FAVORITE]
+            speakersLeft = clientLeft + getLeftMarginFor(speakersView);
+            favoriteLeft = clientRight + drawableOpticalBalanceOffsetPx - favoriteWidth - getRightMarginFor(favoriteView);
+        } else {
+            // [FAVORITE] - [SPEAKERS]  
+            speakersLeft = clientRight - speakersWidth + getRightMarginFor(speakersView);
+            favoriteLeft = clientLeft - drawableOpticalBalanceOffsetPx + getLeftMarginFor(favoriteView);
+        }
+        speakersView.layout(speakersLeft, speakersTop, speakersLeft + speakersWidth, speakersTop + speakersHeight);
+        favoriteView.layout(favoriteLeft, favoriteTop, favoriteLeft + favoriteWidth, favoriteTop + favoriteHeight);
+    }
+
+    private int getLeftMarginFor(@NonNull View view) {
+        if (!(view.getLayoutParams() instanceof MarginLayoutParams)) {
+            return 0;
+        }
+        MarginLayoutParams lp = (MarginLayoutParams) view.getLayoutParams();
+        return lp.leftMargin;
+    }
+
+    private int getTopMarginFor(@NonNull View view) {
+        if (!(view.getLayoutParams() instanceof MarginLayoutParams)) {
+            return 0;
+        }
+        MarginLayoutParams lp = (MarginLayoutParams) view.getLayoutParams();
+        return lp.topMargin;
+    }
+
+    private int getRightMarginFor(@NonNull View view) {
+        if (!(view.getLayoutParams() instanceof MarginLayoutParams)) {
+            return 0;
+        }
+        MarginLayoutParams lp = (MarginLayoutParams) view.getLayoutParams();
+        return lp.rightMargin;
+    }
+
+    private int getBottomMarginFor(@NonNull View view) {
+        if (!(view.getLayoutParams() instanceof MarginLayoutParams)) {
+            return 0;
+        }
+        MarginLayoutParams lp = (MarginLayoutParams) view.getLayoutParams();
+        return lp.bottomMargin;
+    }
+
+    private boolean isLayoutLtr() {
+        return getLayoutDirection() == LAYOUT_DIRECTION_LTR;
+    }
+
+    @Override
+    protected void onDraw(Canvas canvas) {
+        // TODO draw track line on top of the card
+
+        super.onDraw(canvas);
+
+        if (showTrackDrawable) {
+            // TODO draw track drawable
+        }
     }
 
     public void updateWith(Talk talk) {
@@ -174,6 +350,8 @@ public class TalkView extends ViewGroup {
         updateTitleWith(talk.name());
         updateSpeakersWith(talk.speakersNames());
         updateFavoriteWith(false);
+
+        // TODO set maxLines for title and speakers
     }
 
     private void updateTrackWith(@NonNull Track track) {
