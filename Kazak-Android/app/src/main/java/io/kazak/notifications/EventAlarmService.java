@@ -1,12 +1,13 @@
 package io.kazak.notifications;
 
+import android.app.AlarmManager;
 import android.app.IntentService;
 import android.app.Notification;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 
 import javax.inject.Inject;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
@@ -53,6 +54,9 @@ public class EventAlarmService extends IntentService {
                 .map(createNotifications(notificationCreator))
                 .subscribe(displayNotifications(notifier));
 
+        talks.filter(startingAfter(notificationInterval))
+                .take(1)
+                .subscribe(scheduleNextAlarm());
     }
 
     private Observable<Talk> loadTalks() {
@@ -125,6 +129,33 @@ public class EventAlarmService extends IntentService {
             @Override
             public void call(List<Notification> notifications) {
                 notifier.showNotifications(notifications);
+            }
+        };
+    }
+
+    private Func1<Talk, Boolean> startingAfter(final Date notificationInterval) {
+        return new Func1<Talk, Boolean>() {
+            @Override
+            public Boolean call(Talk talk) {
+                Date talkStart = talk.getTimeSlot().getStart();
+                return talkStart.after(notificationInterval);
+            }
+        };
+    }
+
+    private Action1<Talk> scheduleNextAlarm() {
+        return new Action1<Talk>() {
+            @Override
+            public void call(Talk talk) {
+                Date talkStart = talk.getTimeSlot().getStart();
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(talkStart);
+                calendar.add(Calendar.MINUTE, -NOTIFICATION_INTERVAL_MINUTES);
+
+                Intent serviceIntent = new Intent(EventAlarmService.this, EventAlarmService.class);
+                PendingIntent pendingIntent = PendingIntent.getService(EventAlarmService.this, 0, serviceIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+                AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+                alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
             }
         };
     }
