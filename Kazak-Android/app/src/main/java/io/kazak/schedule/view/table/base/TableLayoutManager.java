@@ -389,13 +389,13 @@ public class TableLayoutManager extends RecyclerView.LayoutManager {
 
             int firstRowIndex = -1;
             int firstRowPositionY = 0;
-            int visibleRowsCount = (getHeight() / rowHeightPx) + 1;
+            int visibleRowsCount = getHeight() / rowHeightPx + 1;
             List<String> rowsLabels = new ArrayList<>(visibleRowsCount);
 
             int firstBoundIndex = getLengthUnits(totalDataStartBound, visibleStartBound) / minSpanLengthUnits;
             BOUND firstBoundTick = sum(totalDataStartBound, firstBoundIndex * minSpanLengthUnits);
             int firstBoundPositionX = getLengthPx(visibleStartBound, firstBoundTick) + extraHorizontalPadding;
-            int visibleBoundsCount = (getWidth() / minSpanWidthPx) + 2;
+            int visibleBoundsCount = getWidth() / minSpanWidthPx + 2;
             List<String> boundsLabels = new ArrayList<>(visibleBoundsCount);
             computeBoundsLabels(firstBoundTick, visibleBoundsCount, boundsLabels);
 
