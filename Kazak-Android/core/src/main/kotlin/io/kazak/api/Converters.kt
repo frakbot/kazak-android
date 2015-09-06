@@ -51,7 +51,7 @@ fun asRoom(jsonRoom: JsonRoom?): Room? {
     }
     val id = jsonRoom.id ?: return null
     val name = jsonRoom.name ?: return null
-    return Room(id, name)
+    return Room(Id(id), name)
 }
 
 fun asSpeakers(jsonPresenters: List<JsonPresenter>): Speakers = asSpeakersInternal(jsonPresenters, ::asSpeaker)
@@ -60,7 +60,7 @@ fun asSpeaker(jsonPresenter: JsonPresenter): Speaker? {
     val id = jsonPresenter.id ?: return null
     val name = jsonPresenter.name ?: return null
     return Speaker(
-            id,
+            Id(id),
             name,
             jsonPresenter.company,
             jsonPresenter.bio,
@@ -111,7 +111,7 @@ private fun asTalkInternal(
     val timeSlot = asTimeSlot(jsonEvent.startDate, jsonEvent.endDate) ?: return null
     val rooms = jsonEvent.rooms?.map { asRoom(it) }?.filterNotNull() ?: return null
     val jsonPresenters = jsonEvent.presenters ?: return null
-    return Talk(id, name, timeSlot, rooms, asSpeakers(jsonPresenters), asTrack(jsonEvent.track))
+    return Talk(Id(id), name, timeSlot, rooms, asSpeakers(jsonPresenters), asTrack(jsonEvent.track))
 }
 
 private fun asCoffeeBreakInternal(
@@ -121,7 +121,7 @@ private fun asCoffeeBreakInternal(
     val id = jsonEvent.id ?: return null
     val name = jsonEvent.name ?: return null
     val timeSlot = asTimeSlot(jsonEvent.startDate, jsonEvent.endDate) ?: return null
-    return CoffeeBreak(id, name, timeSlot)
+    return CoffeeBreak(Id(id), name, timeSlot)
 }
 
 private fun asPlaceholderInternal(
@@ -132,7 +132,7 @@ private fun asPlaceholderInternal(
     val name = jsonEvent.name ?: return null
     val timeSlot = asTimeSlot(jsonEvent.startDate, jsonEvent.endDate) ?: return null
     val rooms = jsonEvent.rooms?.map { asRoom(it) }?.filterNotNull() ?: return null
-    return Placeholder(id, name, timeSlot, rooms)
+    return Placeholder(Id(id), name, timeSlot, rooms)
 }
 
 private fun asCeremonyInternal(
@@ -144,7 +144,7 @@ private fun asCeremonyInternal(
     val name = jsonEvent.name ?: return null
     val timeSlot = asTimeSlot(jsonEvent.startDate, jsonEvent.endDate) ?: return null
     val rooms = jsonEvent.rooms?.map { asRoom(it) }?.filterNotNull() ?: return null
-    return Ceremony(id, name, timeSlot, rooms)
+    return Ceremony(Id(id), name, timeSlot, rooms)
 }
 
 private fun asTimeSlotInternal(start: String?, end: String?, asDate: (String?) -> Date?): TimeSlot? {
@@ -166,7 +166,7 @@ fun asTrackInternal(jsonTrack: JsonTrack?, asColor: (String?) -> Color?): Track?
     }
     val id = jsonTrack.id ?: return null
     val name = jsonTrack.name ?: return null
-    return Track(id, name, asColor(jsonTrack.color))
+    return Track(Id(id), name, asColor(jsonTrack.color))
 }
 
 fun asColor(hexColorString: String?): Color? {
