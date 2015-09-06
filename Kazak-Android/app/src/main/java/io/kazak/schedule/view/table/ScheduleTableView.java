@@ -73,6 +73,10 @@ public class ScheduleTableView extends RecyclerView {
         adapter.updateWith(data);
     }
 
+    public void updateWith(@NonNull List<? extends Id> favorites) {
+        adapter.updateWith(favorites);
+    }
+
     @NonNull
     public ScheduleTableAdapter.Data createAdapterData(@NonNull Schedule schedule) {
         return createAdapterData(getTalksFrom(schedule));
