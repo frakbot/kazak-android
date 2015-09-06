@@ -15,6 +15,7 @@ import java.util.List;
 import io.kazak.R;
 import io.kazak.model.Id;
 import io.kazak.model.Room;
+import io.kazak.model.Session;
 import io.kazak.model.Talk;
 import io.kazak.schedule.ScheduleActivity;
 import io.kazak.talk.TalkDetailsActivity;
@@ -33,40 +34,44 @@ public class NotificationCreator {
         this.context = context;
     }
 
-    public List<Notification> createFrom(List<Talk> talks) {
+    public List<Notification> createFrom(List<? extends Session> sessions) {
         List<Notification> notifications = new ArrayList<>();
-        for (Talk talk : talks) {
-            notifications.add(createFrom(talk));
+        for (Session session : sessions) {
+            notifications.add(createFrom(session));
         }
-        if (talks.size() > 1) {
-            notifications.add(createSummaryNotification(talks));
+        if (sessions.size() > 1) {
+            notifications.add(createSummaryNotification(sessions));
         }
         return notifications;
     }
 
-    private Notification createFrom(Talk talk) {
+    private Notification createFrom(Session session) {
         NotificationCompat.Builder notificationBuilder = createDefaultBuilder(1);
         notificationBuilder
-                .setContentIntent(createPendingIntentForSingleSession(talk.getId()))
-                .setContentTitle(talk.getName())
-                .setContentText(getDisplayedRooms(talk))
+                .setContentIntent(createPendingIntentForSingleSession(session.id()))
+                .setContentTitle(session.name())
+                .setContentText(getDisplayedRooms(session))
                 .setGroup(GROUP_KEY_NOTIFY_SESSION);
 
-        if (hasValidTrackColor(talk)) {
-            notificationBuilder.setColor(talk.track().color().getIntValue());
-        }
+        setTrackColor(notificationBuilder, session);
 
-        NotificationCompat.BigTextStyle richNotification = createBigTextRichNotification(notificationBuilder, talk);
+        NotificationCompat.BigTextStyle richNotification = createBigTextRichNotification(notificationBuilder, session);
 
         return richNotification.build();
     }
 
-    private boolean hasValidTrackColor(Talk talk) {
-        return talk.track() != null && talk.track().color() != null;
+    private void setTrackColor(NotificationCompat.Builder notificationBuilder, Session session) {
+        if (!(session instanceof Talk)) {
+            return;
+        }
+        Talk talk = (Talk) session;
+        if (talk.track() != null && talk.track().color() != null) {
+            notificationBuilder.setColor(talk.track().color().getIntValue());
+        }
     }
 
-    private String getDisplayedRooms(Talk talk) {
-        List<Room> rooms = talk.getRooms();
+    private String getDisplayedRooms(Session session) {
+        List<Room> rooms = session.rooms();
         StringBuilder sb = new StringBuilder();
         for (Room room : rooms) {
             sb.append(room.getName()).append(", ");
@@ -78,16 +83,16 @@ public class NotificationCreator {
         return rooms.get(0).getName();
     }
 
-    private Notification createSummaryNotification(List<Talk> talks) {
-        NotificationCompat.Builder summaryBuilder = createDefaultBuilder(talks.size());
+    private Notification createSummaryNotification(List<? extends Session> sessions) {
+        NotificationCompat.Builder summaryBuilder = createDefaultBuilder(sessions.size());
         summaryBuilder
                 .setContentIntent(createPendingIntentForMultipleSessions())
-                .setContentTitle(createSummaryTitle(talks.size()))
+                .setContentTitle(createSummaryTitle(sessions.size()))
                 .setGroup(GROUP_KEY_NOTIFY_SESSION)
                 .setGroupSummary(true)
                 .setLocalOnly(true);
 
-        NotificationCompat.InboxStyle richNotification = createInboxStyleRichNotification(summaryBuilder, talks);
+        NotificationCompat.InboxStyle richNotification = createInboxStyleRichNotification(summaryBuilder, sessions);
 
         return richNotification.build();
     }
@@ -140,29 +145,35 @@ public class NotificationCreator {
     }
 
     private NotificationCompat.BigTextStyle createBigTextRichNotification(
-            NotificationCompat.Builder notificationBuilder, Talk talk) {
-        String speakers = talk.speakersNames();
-        String roomName = getDisplayedRooms(talk);
+            NotificationCompat.Builder notificationBuilder, Session session) {
+        String roomName = getDisplayedRooms(session);
         StringBuilder bigTextBuilder = new StringBuilder()
-                .append(context.getString(R.string.session_notification_starting_by, speakers))
-                .append('\n')
+                .append(getDisplayedSpeakers(session))
                 .append(context.getString(R.string.session_notification_starting_in, roomName));
         return new NotificationCompat.BigTextStyle(notificationBuilder)
-                .setBigContentTitle(talk.getName())
+                .setBigContentTitle(session.name())
                 .bigText(bigTextBuilder.toString());
     }
 
+    private String getDisplayedSpeakers(Session session) {
+        if (!(session instanceof Talk)) {
+            return "";
+        }
+        Talk talk = (Talk) session;
+        return context.getString(R.string.session_notification_starting_by, talk.speakersNames()) + "\n";
+    }
+
     private NotificationCompat.InboxStyle createInboxStyleRichNotification(
-            NotificationCompat.Builder notificationBuilder, List<Talk> talks) {
-        String bigContentTitle = createSummaryTitle(talks.size());
+            NotificationCompat.Builder notificationBuilder, List<? extends Session> sessions) {
+        String bigContentTitle = createSummaryTitle(sessions.size());
         NotificationCompat.InboxStyle richNotification = new NotificationCompat.InboxStyle(notificationBuilder)
                 .setBigContentTitle(bigContentTitle);
-        for (Talk talk : talks) {
+        for (Session session : sessions) {
             richNotification.addLine(
                     context.getString(
                             R.string.room_session_notification,
-                            getDisplayedRooms(talk),
-                            talk.getName()
+                            getDisplayedRooms(session),
+                            session.name()
                     )
             );
         }

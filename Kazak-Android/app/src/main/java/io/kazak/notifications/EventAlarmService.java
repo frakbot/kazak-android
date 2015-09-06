@@ -15,9 +15,7 @@ import java.util.Date;
 import java.util.List;
 
 import io.kazak.KazakApplication;
-import io.kazak.model.Day;
-import io.kazak.model.Schedule;
-import io.kazak.model.Talk;
+import io.kazak.model.Session;
 import io.kazak.repository.DataRepository;
 import rx.Observable;
 import rx.functions.Action1;
@@ -46,90 +44,63 @@ public class EventAlarmService extends IntentService {
         calendar.add(Calendar.MINUTE, NOTIFICATION_INTERVAL_MINUTES);
         final Date notificationInterval = calendar.getTime();
 
-        Observable<Talk> talks = loadFavouriteTalks();
+        Observable<? extends Session> sessions = dataRepository
+                .getFavorites()
+                .take(1)
+                .map(sortByStartingTime())
+                .flatMap(
+                        new Func1<List<? extends Session>, Observable<? extends Session>>() {
+                            @Override
+                            public Observable<? extends Session> call(List<? extends Session> sessions) {
+                                return Observable.from(sessions);
+                            }
+                        }
+                );
 
-        talks.filter(startingIn(now, notificationInterval))
+        sessions.filter(startingIn(now, notificationInterval))
                 .toList()
                 .map(createNotifications(notificationCreator))
                 .subscribe(displayNotifications(notifier));
 
-        talks.filter(startingAfter(notificationInterval))
+        sessions.filter(startingAfter(notificationInterval))
                 .take(1)
                 .subscribe(scheduleNextAlarm());
     }
 
-    private Observable<Talk> loadFavouriteTalks() {
-        return dataRepository
-                .getSchedule()
-                .take(1)
-                .flatMap(getSortedDays())
-                .flatMap(getSortedTalks())
-                .filter(favouriteTalksOnly());
-    }
-
-    private Func1<Schedule, Observable<Day>> getSortedDays() {
-        return new Func1<Schedule, Observable<Day>>() {
+    private Func1<List<? extends Session>, List<? extends Session>> sortByStartingTime() {
+        return new Func1<List<? extends Session>, List<? extends Session>>() {
             @Override
-            public Observable<Day> call(Schedule schedule) {
-                List<Day> days = schedule.getDays();
+            public List<? extends Session> call(List<? extends Session> sessions) {
                 Collections.sort(
-                        days, new Comparator<Day>() {
+                        sessions, new Comparator<Session>() {
                             @Override
-                            public int compare(Day firstDay, Day secondDay) {
-                                return firstDay.getDay().compareTo(secondDay.getDay());
-                            }
-                        }
-                );
-                return Observable.from(days);
-            }
-        };
-    }
-
-    private Func1<Day, Observable<Talk>> getSortedTalks() {
-        return new Func1<Day, Observable<Talk>>() {
-            @Override
-            public Observable<Talk> call(Day day) {
-                List<Talk> talks = day.getTalks();
-                Collections.sort(
-                        talks, new Comparator<Talk>() {
-                            @Override
-                            public int compare(Talk firstTalk, Talk secondTalk) {
-                                Date firstTalkStart = firstTalk.getTimeSlot().getStart();
-                                Date secondTalkStart = secondTalk.getTimeSlot().getStart();
+                            public int compare(Session firstTalk, Session secondTalk) {
+                                Date firstTalkStart = firstTalk.timeSlot().getStart();
+                                Date secondTalkStart = secondTalk.timeSlot().getStart();
                                 return firstTalkStart.compareTo(secondTalkStart);
                             }
                         }
                 );
-                return Observable.from(talks);
+                return sessions;
             }
         };
     }
 
-    private Func1<? super Talk, Boolean> favouriteTalksOnly() {
-        return new Func1<Talk, Boolean>() {
+    private Func1<Session, Boolean> startingIn(final Date now, final Date notificationInterval) {
+        return new Func1<Session, Boolean>() {
             @Override
-            public Boolean call(Talk talk) {
-                // TODO: Select favourite talks only
-                return true;
+            public Boolean call(Session session) {
+                Date sessionStart = session.timeSlot().getStart();
+                return now.before(sessionStart) && (sessionStart.before(notificationInterval) || sessionStart.equals(notificationInterval));
             }
         };
     }
 
-    private Func1<Talk, Boolean> startingIn(final Date now, final Date notificationInterval) {
-        return new Func1<Talk, Boolean>() {
+    private Func1<List<? extends Session>, List<Notification>> createNotifications(final NotificationCreator notificationCreator) {
+        return new Func1<List<? extends Session>, List<Notification>>() {
             @Override
-            public Boolean call(Talk talk) {
-                Date talkStart = talk.getTimeSlot().getStart();
-                return now.before(talkStart) && (talkStart.before(notificationInterval) || talkStart.equals(notificationInterval));
-            }
-        };
-    }
-
-    private Func1<List<Talk>, List<Notification>> createNotifications(final NotificationCreator notificationCreator) {
-        return new Func1<List<Talk>, List<Notification>>() {
-            @Override
-            public List<Notification> call(List<Talk> talks) {
-                return notificationCreator.createFrom(talks);
+            public List<Notification> call(List<? extends Session> sessions) {
+                return notificationCreator.createFrom(sessions);
             }
         };
     }
@@ -143,21 +114,21 @@ public class EventAlarmService extends IntentService {
         };
     }
 
-    private Func1<Talk, Boolean> startingAfter(final Date notificationInterval) {
-        return new Func1<Talk, Boolean>() {
+    private Func1<Session, Boolean> startingAfter(final Date notificationInterval) {
+        return new Func1<Session, Boolean>() {
             @Override
-            public Boolean call(Talk talk) {
-                Date talkStart = talk.getTimeSlot().getStart();
-                return talkStart.after(notificationInterval);
+            public Boolean call(Session session) {
+                Date sessionStart = session.timeSlot().getStart();
+                return sessionStart.after(notificationInterval);
             }
         };
     }
 
-    private Action1<Talk> scheduleNextAlarm() {
-        return new Action1<Talk>() {
+    private Action1<Session> scheduleNextAlarm() {
+        return new Action1<Session>() {
             @Override
-            public void call(Talk talk) {
-                Date talkStart = talk.getTimeSlot().getStart();
+            public void call(Session session) {
+                Date talkStart = session.timeSlot().getStart();
                 Calendar calendar = Calendar.getInstance();
                 calendar.setTime(talkStart);
                 calendar.add(Calendar.MINUTE, -NOTIFICATION_INTERVAL_MINUTES);
