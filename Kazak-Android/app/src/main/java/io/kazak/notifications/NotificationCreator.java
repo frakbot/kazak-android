@@ -5,6 +5,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.support.annotation.NonNull;
 import android.graphics.BitmapFactory;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
@@ -47,13 +48,18 @@ public class NotificationCreator {
         notificationBuilder
                 .setContentIntent(createPendingIntentForSingleSession(talk.getId()))
                 .setContentTitle(talk.getName())
-                .setContentText(talk.getRoom().getName())
-                .setColor(talk.getTrack().getColor())
+                .setContentText(getRoomName(talk))
+                .setColor(talk.track().getColor())
                 .setGroup(GROUP_KEY_NOTIFY_SESSION);
 
         NotificationCompat.BigTextStyle richNotification = createBigTextRichNotification(notificationBuilder, talk);
 
         return richNotification.build();
+    }
+
+    @NonNull
+    private String getRoomName(Talk talk) {
+        return talk.getRooms().get(0).getName(); //TODO: Replace by proper rooms string generation
     }
 
     private Notification createSummaryNotification(List<Talk> talks) {
@@ -118,9 +124,9 @@ public class NotificationCreator {
     }
 
     private NotificationCompat.BigTextStyle createBigTextRichNotification(
-            NotificationCompat.Builder notificationBuilder, Talk talk) {
-        String speakers = talk.getSpeakersNames();
-        String roomName = talk.getRoom().getName();
+        NotificationCompat.Builder notificationBuilder, Talk talk) {
+        String speakers = talk.speakersNames();
+        String roomName = getRoomName(talk);
         StringBuilder bigTextBuilder = new StringBuilder()
                 .append(context.getString(R.string.session_notification_starting_by, speakers))
                 .append('\n')
@@ -139,7 +145,7 @@ public class NotificationCreator {
             richNotification.addLine(
                     context.getString(
                             R.string.room_session_notification,
-                            talk.getRoom().getName(),
+                            getRoomName(talk),
                             talk.getName()
                     )
             );

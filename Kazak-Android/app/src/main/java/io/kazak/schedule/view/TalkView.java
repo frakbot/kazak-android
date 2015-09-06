@@ -59,10 +59,10 @@ public class TalkView extends CardView {
 
     public void updateWith(@NonNull Talk talk) {
         // TODO properly bind to data
-        updateTrackWith(talk.getTrack());
-        updateTimeWith(talk.getTimeSlot());
-        updateTitleWith(talk.getName());
-        updateSpeakersWith(talk.getSpeakersNames());
+        updateTrackWith(talk.track());
+        updateTimeWith(talk.timeSlot());
+        updateTitleWith(talk.name());
+        updateSpeakersWith(talk.speakersNames());
         updateFavoriteWith(false);
     }
 

@@ -1,6 +1,7 @@
 package io.kazak.repository
 
 import io.kazak.api.KazakApi
+import io.kazak.model.EventType
 import io.kazak.model.Schedule
 import io.kazak.model.Talk
 import io.kazak.repository.event.SyncEvent
@@ -29,7 +30,11 @@ public class KazakDataRepository(val api : KazakApi) : DataRepository {
         return getSchedule().flatMap {
             Observable.from(it.days)
         }.flatMap {
-            Observable.from(it.talks)
+            Observable.from(it.events)
+        }.filter {
+            it.type() == EventType.TALK
+        }.map{
+            it as Talk
         }.filter {
             it.id == id
         }

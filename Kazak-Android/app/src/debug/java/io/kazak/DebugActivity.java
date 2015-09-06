@@ -10,6 +10,7 @@ import android.widget.Button;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -92,9 +93,8 @@ public class DebugActivity extends Activity {
                 String.valueOf(id),
                 "A very interesting talk",
                 createTalkTimeSlot(),
-                createTalkRoom(id),
-                createTalkSpeakers(),
-                createTalkTrack()
+                createTalkRooms(id),
+                createTalkSpeakers()
         );
     }
 
@@ -110,18 +110,17 @@ public class DebugActivity extends Activity {
     }
 
     @NonNull
-    private Room createTalkRoom(int id) {
-        return new Room(
-                "45678" + id,
-                "Room " + id
+    private List<Room> createTalkRooms(int id) {
+        return Collections.singletonList(
+                new Room("45678" + id, "Room " + id)
         );
     }
 
     @NonNull
     private Speakers createTalkSpeakers() {
         List<Speaker> speakers = new ArrayList<>(2);
-        speakers.add(new Speaker("0", "Awesome Speaker"));
-        speakers.add(new Speaker("1", "Meh Guy"));
+        speakers.add(new Speaker("0", "Awesome Speaker", null, null, null, null));
+        speakers.add(new Speaker("1", "Meh Guy", null, null, null, null));
         return new Speakers(speakers);
     }
 

@@ -2,7 +2,6 @@ package io.kazak.schedule.view.table;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.graphics.Color;
 import android.support.annotation.AttrRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.StyleRes;
@@ -22,7 +21,6 @@ import io.kazak.model.Speaker;
 import io.kazak.model.Speakers;
 import io.kazak.model.Talk;
 import io.kazak.model.TimeSlot;
-import io.kazak.model.Track;
 import io.kazak.schedule.view.TalkView;
 import io.kazak.schedule.view.table.base.TableItemPaddingDecoration;
 import io.kazak.schedule.view.table.base.TableLayoutManager;
@@ -109,13 +107,20 @@ public class ScheduleTableView extends RecyclerView {
     private Talk createMaxHeightReferenceTalk(int timeSlotDurationMinutes) {
         Date start = new Date();
         Date end = new Date(start.getTime() + TimeUnit.MINUTES.toMillis(timeSlotDurationMinutes));
+        List<Speaker> speakerList = Arrays.asList(createDummySpeaker("Speaker1"), createDummySpeaker("Speaker2"));
         return new Talk(
                 NO_ID,
                 "1\n2\n3",
                 new TimeSlot(start, end),
-                new Room(NO_ID, "Room"),
-                new Speakers(Arrays.asList(new Speaker(NO_ID, "Speaker1"), new Speaker(NO_ID, "Speaker2"))),
-                new Track(NO_ID, "Track", Color.TRANSPARENT));
+                Collections.singletonList(new Room(NO_ID, "Room")),
+                new Speakers(speakerList)
+        );
+
+    }
+
+    @NonNull
+    private static Speaker createDummySpeaker(String speakerName) {
+        return new Speaker(NO_ID, speakerName, null, null, null, null);
     }
 
 }
