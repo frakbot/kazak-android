@@ -31,7 +31,7 @@ public class KazakDataRepository(val api: KazakApi, val favoritesRepository: Fav
     override fun getFavoriteIds(): Observable<List<Id>> {
         return getFavoritesStatuses()
                 .flatMap {
-                    Observable.from(it.satuses.entrySet())
+                    Observable.from(it.statuses.entrySet())
                             .filter { it.getValue() == FavoriteStatus.FAVORITE }
                             .map { it.getKey() }
                             .toList()
@@ -69,7 +69,7 @@ public class KazakDataRepository(val api: KazakApi, val favoritesRepository: Fav
 
     override fun addToFavorites(id: Id) {
         getFavoritesStatuses()
-                .map { it.satuses.plus(Pair(id, FavoriteStatus.FAVORITE)) }
+                .map { it.statuses.plus(Pair(id, FavoriteStatus.FAVORITE)) }
                 .map { FavoriteSessions(it) }
                 .doOnNext { favoritesRepository.store(it).subscribe() }
                 .subscribe(SyncObserver(favoritesCache, favoritesSyncCache))
@@ -77,7 +77,7 @@ public class KazakDataRepository(val api: KazakApi, val favoritesRepository: Fav
 
     override fun removeFromFavorites(id: Id) {
         getFavoritesStatuses()
-                .map { it.satuses.minus(id) }
+                .map { it.statuses.minus(id) }
                 .map { FavoriteSessions(it) }
                 .doOnNext { favoritesRepository.store(it).subscribe() }
                 .subscribe(SyncObserver(favoritesCache, favoritesSyncCache))
