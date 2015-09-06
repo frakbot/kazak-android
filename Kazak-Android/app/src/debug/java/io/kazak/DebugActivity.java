@@ -9,9 +9,11 @@ import android.widget.Button;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import io.kazak.model.Id;
 import io.kazak.model.Room;
 import io.kazak.model.Speaker;
 import io.kazak.model.Speakers;
@@ -22,6 +24,8 @@ import io.kazak.notifications.Notifier;
 
 @SuppressWarnings("checkstyle:magicnumber")
 public class DebugActivity extends Activity {
+
+    private NotificationCreator notificationCreator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,26 +39,50 @@ public class DebugActivity extends Activity {
                     public void onClick(View view) {
                         testSingleNotification();
                     }
-                });
+                }
+        );
+
+        Button buttonMultipleNotifications = (Button) findViewById(R.id.button_test_multiple_notifications);
+        buttonMultipleNotifications.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        testMultipleNotifications();
+                    }
+                }
+        );
+
+        notificationCreator = new NotificationCreator(this);
     }
 
     private void testSingleNotification() {
-        NotificationCreator notificationCreator = new NotificationCreator(this);
-        Talk talk = createTestTalk();
-        Notification singleNotification = notificationCreator.createFrom(talk);
+        createAndNotifyTalksCount(1);
+    }
+
+    private void testMultipleNotifications() {
+        createAndNotifyTalksCount(3);
+    }
+
+    private void createAndNotifyTalksCount(int count) {
+        List<Talk> talks = new ArrayList<>();
+        for (int i = 0; i < count; i++) {
+            talks.add(createTestTalk(i));
+        }
+        List<Notification> notifications = notificationCreator.createFrom(talks);
 
         Notifier notifier = Notifier.from(this);
-        notifier.showNotification(singleNotification);
+        notifier.showNotifications(notifications);
     }
 
     @NonNull
-    private Talk createTestTalk() {
+    private Talk createTestTalk(int id) {
         return new Talk(
-                "12345",
+                new Id(String.valueOf(id)),
                 "A very interesting talk",
                 createTalkTimeSlot(),
-                createTalkRoom(),
-                createTalkSpeakers()
+                createTalkRooms(id),
+                createTalkSpeakers(),
+                null
         );
     }
 
@@ -70,18 +98,17 @@ public class DebugActivity extends Activity {
     }
 
     @NonNull
-    private Room createTalkRoom() {
-        return new Room(
-                "45678",
-                "Room 1"
+    private List<Room> createTalkRooms(int id) {
+        return Collections.singletonList(
+                new Room(new Id("45678" + id), "Room " + id)
         );
     }
 
     @NonNull
     private Speakers createTalkSpeakers() {
         List<Speaker> speakers = new ArrayList<>(2);
-        speakers.add(new Speaker("0", "Awesome Speaker"));
-        speakers.add(new Speaker("1", "Meh Guy"));
+        speakers.add(new Speaker(new Id("0"), "Awesome Speaker", null, null, null, null));
+        speakers.add(new Speaker(new Id("1"), "Meh Guy", null, null, null, null));
         return new Speakers(speakers);
     }
 

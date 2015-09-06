@@ -2,4 +2,12 @@
 
   <dimen name="nav_drawer_header_height">192dp</dimen>
 
+  <dimen name="text_display">34sp</dimen>
+  <dimen name="text_headline">24sp</dimen>
+  <dimen name="text_title">16sp</dimen>
+  <dimen name="text_body">14sp</dimen>
+  <dimen name="text_button">14sp</dimen>
+  <dimen name="text_caption">12sp</dimen>
+  <dimen name="text_track_label">@dimen/text_caption</dimen>
+
 </resources>

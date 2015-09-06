@@ -38,7 +38,8 @@
     <LinearLayout
       android:id="@+id/content_root"
       android:layout_width="match_parent"
-      android:layout_height="match_parent">
+      android:layout_height="match_parent"
+      android:orientation="horizontal">
 
       <io.kazak.schedule.view.table.base.RowsRuler
         android:id="@+id/rooms_ruler"
@@ -50,6 +51,7 @@
 
       <io.kazak.schedule.view.table.ScheduleTableView
         android:id="@+id/schedule"
+        style="@style/Schedule"
         android:layout_weight="1"
         android:layout_width="0dp"
         android:layout_height="match_parent" />

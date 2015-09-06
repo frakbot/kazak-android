@@ -7,13 +7,16 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 
 import javax.inject.Inject;
+import java.util.List;
 
 import io.kazak.KazakApplication;
 import io.kazak.R;
 import io.kazak.base.DeveloperError;
+import io.kazak.model.Id;
 import io.kazak.repository.DataRepository;
 import io.kazak.repository.event.SyncEvent;
 import io.kazak.schedule.view.table.ScheduleTableAdapter;
@@ -28,7 +31,6 @@ public class ScheduleActivity extends AppCompatActivity {
     private final CompositeSubscription subscriptions;
 
     @Inject
-    @SuppressWarnings("checkstyle:visibilitymodifier")
     DataRepository dataRepository;
 
     private View contentRootView;
@@ -103,6 +105,11 @@ public class ScheduleActivity extends AppCompatActivity {
                         .subscribe(new ScheduleObserver())
         );
         subscriptions.add(
+                dataRepository.getFavoriteIds()
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new FavoritesObserver())
+        );
+        subscriptions.add(
                 dataRepository.getScheduleSyncEvents()
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(new SyncEventObserver())
@@ -117,6 +124,10 @@ public class ScheduleActivity extends AppCompatActivity {
 
     private void updateWith(@NonNull ScheduleTableAdapter.Data data) {
         scheduleView.updateWith(data);
+    }
+
+    private void updateWith(@NonNull List<? extends Id> favorites) {
+        scheduleView.updateWith(favorites);
     }
 
     private class ScheduleObserver implements Observer<ScheduleTableAdapter.Data> {
@@ -138,6 +149,25 @@ public class ScheduleActivity extends AppCompatActivity {
 
     }
 
+    private class FavoritesObserver implements Observer<List<? extends Id>> {
+
+        @Override
+        public void onCompleted() {
+            // No-op
+        }
+
+        @Override
+        public void onError(Throwable e) {
+            throw new IllegalStateException(e);
+        }
+
+        @Override
+        public void onNext(List<? extends Id> favorites) {
+            updateWith(favorites);
+        }
+
+    }
+
     private class SyncEventObserver implements Observer<SyncEvent> {
 
         @Override
@@ -154,6 +184,7 @@ public class ScheduleActivity extends AppCompatActivity {
         public void onNext(SyncEvent syncEvent) {
             switch (syncEvent.getState()) {
                 case ERROR:
+                    Log.e("Kazak", "Failed to load schedule", syncEvent.getError());
                     Snackbar.make(contentRootView, R.string.error_loading_schedule, Snackbar.LENGTH_LONG)
                             .setAction(
                                     R.string.action_retry, new View.OnClickListener() {
