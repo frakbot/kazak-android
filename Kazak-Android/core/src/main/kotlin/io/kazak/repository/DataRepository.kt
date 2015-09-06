@@ -1,5 +1,7 @@
 package io.kazak.repository
 
+import io.kazak.model.FavoriteSessions
+import io.kazak.model.Id
 import io.kazak.model.Schedule
 import io.kazak.model.Talk
 import io.kazak.repository.event.SyncEvent
@@ -11,10 +13,16 @@ public interface DataRepository {
 
     fun getScheduleSyncEvents(): Observable<SyncEvent>
 
-    fun getTalk(id : String): Observable<Talk>
+    fun getFavorites(): Observable<List<Id>>
+
+    fun addToFavorites(id: Id)
+
+    fun removeFromFavorites(id: Id)
+
+    fun getFavoritesSyncEvents(): Observable<SyncEvent>
+
+    fun getTalk(id : Id): Observable<Talk>
 
     fun getTalkSyncEvents(): Observable<SyncEvent>
-
-    fun bar(param : String)
 
 }

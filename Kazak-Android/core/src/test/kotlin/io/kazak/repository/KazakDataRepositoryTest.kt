@@ -13,13 +13,14 @@ import org.junit.Test as test
 
 public class KazakDataRepositoryTest {
 
-    val talkId = "TestId"
+    val talkId = Id("TestId")
     val testDate = Date()
 
     val mockApi: KazakApi = Mockito.mock(javaClass())
+    val mockFavoritesRepo: FavoriteSessionsRepository = Mockito.mock(javaClass())
     val scheduleObservable: BehaviorSubject<Schedule> = BehaviorSubject.create()
 
-    val repository: DataRepository = KazakDataRepository(mockApi)
+    val repository: DataRepository = KazakDataRepository(mockApi, mockFavoritesRepo)
 
     before
     fun setup() {
@@ -46,13 +47,13 @@ public class KazakDataRepositoryTest {
 
     private fun testDay() = Day(testDate, listOf(testTalk()))
 
-    private fun testTalk() = Talk(talkId, "", TimeSlot(testDate, testDate), listOf(Room("", "")), testSpeakers(), null)
+    private fun testTalk() = Talk(talkId, "", TimeSlot(testDate, testDate), listOf(Room(Id(""), "")), testSpeakers(), null)
 
     private fun testSpeakers() = Speakers(testSpeakersList())
 
     private fun testSpeakersList(): List<Speaker> {
         val speakers = ArrayList<Speaker>(1)
-        speakers + Speaker("", "", null, null, null, null)
+        speakers + Speaker(Id(""), "", null, null, null, null)
         return speakers
     }
 
