@@ -7,7 +7,7 @@ import rx.Observable;
 
 public interface JsonKazakApi {
 
-    @GET("/events?expand=rooms&expand=presenters")
+    @GET("/events?expand=rooms&expand=presenters&expand=track")
     Observable<JsonArray> fetchSchedule();
 
 }

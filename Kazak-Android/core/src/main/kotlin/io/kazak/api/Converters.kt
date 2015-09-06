@@ -3,6 +3,7 @@ package io.kazak.api
 import io.kazak.api.json.model.JsonEvent
 import io.kazak.api.json.model.JsonPresenter
 import io.kazak.api.json.model.JsonRoom
+import io.kazak.api.json.model.JsonTrack
 import io.kazak.model.*
 import io.kazak.utils.SimpleDateFormatThreadSafe
 import java.text.ParseException
@@ -11,11 +12,17 @@ import java.util.Date
 
 private val ISO_DATE_FORMATTER = SimpleDateFormatThreadSafe("yyyy-MM-dd'T'HH:mm:ss")
 
+private val HEX_COLOR_PREFIX = '#';
+private val RGB_HEX_LENGTH = 7;
+private val ARGB_HEX_LENGTH = 9;
+private val FULL_ALPHA_BITMASK = 0x00000000ff000000;
+private val HEX_BASE_16_RADIX = 16;
+
 fun asSchedule(jsonTalks: List<JsonEvent>) = asScheduleInternal(jsonTalks, ::asEvent)
 
 fun asEvent(jsonEvent: JsonEvent) = asEventInternal(jsonEvent, ::asTalk, ::asCoffeeBreak, ::asCeremony, ::asPlaceholder)
 
-fun asTalk(jsonEvent: JsonEvent) = asTalkInternal(jsonEvent, ::asTimeSlot, ::asRoom, ::asSpeakers)
+fun asTalk(jsonEvent: JsonEvent) = asTalkInternal(jsonEvent, ::asTimeSlot, ::asRoom, ::asSpeakers, ::asTrack)
 
 fun asCoffeeBreak(jsonEvent: JsonEvent) = asCoffeeBreakInternal(jsonEvent, ::asTimeSlot)
 
@@ -24,6 +31,8 @@ fun asPlaceholder(jsonEvent: JsonEvent) = asPlaceholderInternal(jsonEvent, ::asT
 fun asCeremony(jsonEvent: JsonEvent) = asCeremonyInternal(jsonEvent, ::asTimeSlot, ::asRoom)
 
 fun asTimeSlot(start: String?, end: String?) = asTimeSlotInternal(start, end, ::asDate)
+
+fun asTrack(jsonTrack: JsonTrack?) = asTrackInternal(jsonTrack, ::asColor)
 
 fun asDate(isoDate: String?): Date? {
     if (isoDate == null) {
@@ -45,9 +54,7 @@ fun asRoom(jsonRoom: JsonRoom?): Room? {
     return Room(id, name)
 }
 
-fun asSpeakers(jsonPresenters: List<JsonPresenter>): Speakers {
-    return asSpeakersInternal(jsonPresenters, ::asSpeaker)
-}
+fun asSpeakers(jsonPresenters: List<JsonPresenter>): Speakers = asSpeakersInternal(jsonPresenters, ::asSpeaker)
 
 fun asSpeaker(jsonPresenter: JsonPresenter): Speaker? {
     val id = jsonPresenter.id ?: return null
@@ -96,14 +103,15 @@ private fun asTalkInternal(
         jsonEvent: JsonEvent,
         asTimeSlot: (String?, String?) -> TimeSlot?,
         asRoom: (JsonRoom?) -> Room?,
-        asSpeakers: (List<JsonPresenter>) -> Speakers
+        asSpeakers: (List<JsonPresenter>) -> Speakers,
+        asTrack: (JsonTrack?) -> Track?
 ): Talk? {
     val id = jsonEvent.id ?: return null
     val name = jsonEvent.name ?: return null
     val timeSlot = asTimeSlot(jsonEvent.startDate, jsonEvent.endDate) ?: return null
     val rooms = jsonEvent.rooms?.map { asRoom(it) }?.filterNotNull() ?: return null
     val jsonPresenters = jsonEvent.presenters ?: return null
-    return Talk(id, name, timeSlot, rooms, asSpeakers(jsonPresenters))
+    return Talk(id, name, timeSlot, rooms, asSpeakers(jsonPresenters), asTrack(jsonEvent.track))
 }
 
 private fun asCoffeeBreakInternal(
@@ -150,4 +158,46 @@ private fun asTimeSlotInternal(start: String?, end: String?, asDate: (String?) -
 
 fun asSpeakersInternal(jsonPresenters: List<JsonPresenter>, asSpeaker: (JsonPresenter) -> Speaker?): Speakers {
     return Speakers(jsonPresenters.map { asSpeaker(it) }.filterNotNull())
+}
+
+fun asTrackInternal(jsonTrack: JsonTrack?, asColor: (String?) -> Color?): Track? {
+    if (jsonTrack == null) {
+        return null
+    }
+    val id = jsonTrack.id ?: return null
+    val name = jsonTrack.name ?: return null
+    return Track(id, name, asColor(jsonTrack.color))
+}
+
+fun asColor(hexColorString: String?): Color? {
+    if (hexColorString == null) {
+        return null;
+    }
+
+    val trimmedHexColorString = hexColorString.trim();
+    if (notValid(trimmedHexColorString) || unsupportedFormat(trimmedHexColorString)) {
+        return null;
+    }
+
+    if (trimmedHexColorString.length() == RGB_HEX_LENGTH) {
+        return Color(parseRgbHex(trimmedHexColorString).toInt());
+    } else {
+        return Color(parseArgbHex(trimmedHexColorString).toInt());
+    }
+}
+
+private fun notValid(hexColorString: String): Boolean {
+    return hexColorString.isEmpty() || hexColorString.charAt(0) != HEX_COLOR_PREFIX;
+}
+
+private fun unsupportedFormat(hexColorString: String): Boolean {
+    return hexColorString.length() != RGB_HEX_LENGTH && hexColorString.length() != ARGB_HEX_LENGTH;
+}
+
+private fun parseRgbHex(rgbHex: String): Long {
+    return parseArgbHex(rgbHex).or(FULL_ALPHA_BITMASK);
+}
+
+private fun parseArgbHex(argbHex: String): Long {
+    return java.lang.Long.parseLong(argbHex.substring(1), HEX_BASE_16_RADIX);
 }
