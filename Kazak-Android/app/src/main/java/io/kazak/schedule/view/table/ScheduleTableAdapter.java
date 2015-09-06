@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import java.io.Serializable;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
@@ -31,7 +30,6 @@ public class ScheduleTableAdapter extends TableTreeAdapter<Talk, Room, Date, Sch
     private static final Comparator<Room> ROOM_COMPARATOR = new RoomComparator();
 
     private final LayoutInflater inflater;
-    private @NonNull List<? extends Id> favorites = Collections.emptyList();
 
     public ScheduleTableAdapter(@NonNull Context context) {
         super(TALK_DATA_HANDLER);
@@ -66,7 +64,6 @@ public class ScheduleTableAdapter extends TableTreeAdapter<Talk, Room, Date, Sch
     }
 
     public void updateWith(@NonNull List<? extends Id> favorites) {
-        this.favorites = favorites;
         //TODO: use favorites data to render cells.
     }
 
