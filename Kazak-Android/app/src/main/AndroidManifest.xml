@@ -38,12 +38,13 @@
       android:name="io.kazak.map.VenueMapActivity"
       android:label="@string/activity_title_venue_map" />
 
-    <receiver android:name=".notifications.EventAlarmReceiver">
+    <receiver android:name="io.kazak.notifications.EventAlarmReceiver">
       <intent-filter>
         <action android:name="android.intent.action.BOOT_COMPLETED" />
       </intent-filter>
     </receiver>
-    <service android:name=".notifications.EventAlarmService" />
+
+    <service android:name="io.kazak.notifications.EventAlarmService" />
 
     <meta-data
       android:name="com.google.android.gms.version"
