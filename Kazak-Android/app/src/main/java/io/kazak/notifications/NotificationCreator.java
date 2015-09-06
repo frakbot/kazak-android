@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.kazak.R;
+import io.kazak.model.Id;
 import io.kazak.model.Room;
 import io.kazak.model.Talk;
 import io.kazak.schedule.ScheduleActivity;
@@ -117,10 +118,10 @@ public class NotificationCreator {
                 .extend(extender);
     }
 
-    private PendingIntent createPendingIntentForSingleSession(String talkId) {
+    private PendingIntent createPendingIntentForSingleSession(Id talkId) {
         TaskStackBuilder taskBuilder = createBaseTaskStackBuilder();
         Intent talkDetailIntent = new Intent(context, TalkDetailsActivity.class);
-        talkDetailIntent.putExtra(TalkDetailsActivity.EXTRA_TALK_ID, talkId);
+        talkDetailIntent.putExtra(TalkDetailsActivity.EXTRA_TALK_ID, talkId.toString());
         taskBuilder.addNextIntent(talkDetailIntent);
 
         return taskBuilder.getPendingIntent(0, PendingIntent.FLAG_CANCEL_CURRENT);

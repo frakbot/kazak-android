@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import io.kazak.R;
+import io.kazak.model.Id;
 import io.kazak.model.Room;
 import io.kazak.model.Schedule;
 import io.kazak.model.Speaker;
@@ -28,7 +29,7 @@ import io.kazak.schedule.view.table.base.TableLayoutManager;
 public class ScheduleTableView extends RecyclerView {
 
     private static final int UNSPECIFIED_MEASURE_SPEC = MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED);
-    private static final String NO_ID = "";
+    private static final Id NO_ID = new Id("");
 
     private final ScheduleTableAdapter adapter;
 
@@ -72,6 +73,10 @@ public class ScheduleTableView extends RecyclerView {
 
     public void updateWith(@NonNull ScheduleTableAdapter.Data data) {
         adapter.updateWith(data);
+    }
+
+    public void updateWith(@NonNull List<? extends Id> favorites) {
+        adapter.updateWith(favorites);
     }
 
     @NonNull

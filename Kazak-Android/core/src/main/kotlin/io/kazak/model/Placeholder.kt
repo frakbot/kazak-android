@@ -1,6 +1,10 @@
 package io.kazak.model
 
-public data class Placeholder(val id: String, val name: String, val timeSlot: TimeSlot, val rooms: List<Room>) : Session {
+public data class Placeholder(val id: Id, val name: String, val timeSlot: TimeSlot, val rooms: List<Room>) : Session {
+
+    override fun id(): Id {
+        return id
+    }
 
     override fun type(): EventType {
         return EventType.PLACEHOLDER

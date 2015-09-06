@@ -15,6 +15,7 @@ import java.util.TreeSet;
 
 import io.kazak.R;
 import io.kazak.base.DeveloperError;
+import io.kazak.model.Id;
 import io.kazak.model.Room;
 import io.kazak.model.Talk;
 import io.kazak.model.TimeSlot;
@@ -62,8 +63,8 @@ public class ScheduleTableAdapter extends TableTreeAdapter<Talk, Room, Date, Sch
         return createNormalViewHolder(null);
     }
 
-    public void updateWith(@NonNull List<Talk> talks) {
-        updateWith(createSortedData(talks));
+    public void updateWith(@NonNull List<? extends Id> favorites) {
+        //TODO: use favorites data to render cells.
     }
 
     @NonNull
