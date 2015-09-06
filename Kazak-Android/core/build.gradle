@@ -25,5 +25,6 @@ dependencies {
         exclude module: 'hamcrest-core'
     }
     testCompile 'org.hamcrest:hamcrest-library:1.3'
+    compile 'com.firebase:firebase-client-android:2.3.1'
 }
 

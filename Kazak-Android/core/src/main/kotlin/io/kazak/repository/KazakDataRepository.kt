@@ -5,6 +5,7 @@ import io.kazak.model.EventType
 import io.kazak.model.Schedule
 import io.kazak.model.Talk
 import io.kazak.repository.event.SyncEvent
+import io.kazak.repository.event.SyncEventObserver
 import io.kazak.repository.event.SyncState
 import rx.Observable
 import rx.Observer
@@ -50,28 +51,11 @@ public class KazakDataRepository(val api : KazakApi) : DataRepository {
         scheduleSyncCache.onNext(SyncEvent(SyncState.LOADING, null))
         // TODO implement real data we get from the server
         api.fetchSchedule()
-                .subscribe(ScheduleObserver(scheduleCache, scheduleSyncCache))
+                .subscribe(SyncEventObserver(scheduleCache, scheduleSyncCache))
     }
 
     override fun bar(param: String) {
         throw UnsupportedOperationException()
-    }
-
-    class ScheduleObserver(val subject: BehaviorSubject<Schedule>, val syncSubject: BehaviorSubject<SyncEvent>) : Observer<Schedule> {
-
-        override fun onCompleted() {
-            syncSubject.onNext(SyncEvent(SyncState.IDLE, null))
-        }
-
-        override fun onError(e: Throwable) {
-            syncSubject.onNext(SyncEvent(SyncState.ERROR, e))
-        }
-
-        override fun onNext(t: Schedule) {
-            subject.onNext(t)
-            syncSubject.onNext(SyncEvent(SyncState.IDLE, null))
-        }
-
     }
 
 }
