@@ -38,7 +38,7 @@ public class KazakDataRepositoryTest {
 
     test
     fun itFindsATalkGivenAnId() {
-        val talk = repository.getTalk(talkId).toBlocking().first()
+        val talk = repository.getEvent(talkId).toBlocking().first()
 
         assertThat(talk).isEqualTo(testTalk())
     }
