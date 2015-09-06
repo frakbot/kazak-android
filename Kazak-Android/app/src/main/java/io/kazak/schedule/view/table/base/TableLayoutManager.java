@@ -9,8 +9,11 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+
+import org.jetbrains.annotations.NotNull;
 
 import io.kazak.base.DeveloperError;
 
@@ -36,6 +39,9 @@ public class TableLayoutManager extends RecyclerView.LayoutManager {
     private int scrollX, scrollY;
     private int scrollXRange, scrollYRange;
 
+    @NotNull
+    private final List<TableLabelsChangedListener> labelsChangedListeners = new ArrayList<>(2);
+
     private final Rect tmpRect = new Rect();
 
     @NonNull
@@ -52,6 +58,20 @@ public class TableLayoutManager extends RecyclerView.LayoutManager {
 
         pixelsPerUnit = (double) minSpanWidthPx / minSpanLengthUnits;
         unitsPerPixel = (double) minSpanLengthUnits / minSpanWidthPx;
+    }
+
+    @NonNull
+    public static TableLayoutManager getFromRecyclerViewOrThrow(@NonNull RecyclerView recyclerView) {
+        TableLayoutManager layoutManager;
+        try {
+            layoutManager = (TableLayoutManager) recyclerView.getLayoutManager();
+        } catch (ClassCastException e) {
+            throw new DeveloperError(e, "LayoutManager must be a %s.", TableLayoutManager.class.getSimpleName());
+        }
+        if (layoutManager == null) {
+            throw new DeveloperError("LayoutManager must not be null.");
+        }
+        return layoutManager;
     }
 
     private void validateState() {
@@ -232,15 +252,34 @@ public class TableLayoutManager extends RecyclerView.LayoutManager {
         return lp instanceof TableLayoutParams;
     }
 
+    public boolean addLabelsChangedListener(@NotNull TableLabelsChangedListener labelsChangedListener) {
+        return labelsChangedListeners.add(labelsChangedListener);
+    }
+
+    public boolean removeLabelsChangedListener(@NotNull TableLabelsChangedListener labelsChangedListener) {
+        return labelsChangedListeners.remove(labelsChangedListener);
+    }
+
+    // flat model, can't be changed
+    @SuppressWarnings("checkstyle:parameternumber")
+    private void notifyLabelsChanged(
+            @NonNull List<String> rowsLabels, int firstRowIndex, int firstRowPositionY, int rowHeight,
+            @NonNull List<String> boundsLabels, int firstBoundIndex, int firstBoundPositionX, int boundsSpacing) {
+
+        for (TableLabelsChangedListener labelsChangedListener : labelsChangedListeners) {
+            labelsChangedListener.onTableLabelsChanged(
+                    rowsLabels, firstRowIndex, firstRowPositionY, rowHeight,
+                    boundsLabels, firstBoundIndex, firstBoundPositionX, boundsSpacing);
+        }
+    }
+
     @Override
     public void onAdapterChanged(RecyclerView.Adapter oldAdapter, RecyclerView.Adapter newAdapter) {
         super.onAdapterChanged(oldAdapter, newAdapter);
-        if (newAdapter != null) {
-            try {
-                adapterWrapper = new AdapterWrapper<>((TableAdapterAbs<?, ?, ?, ?>) newAdapter);
-            } catch (ClassCastException e) {
-                throw new DeveloperError(e, "Adapter must be a %s.", TableAdapterAbs.class.getSimpleName());
-            }
+        try {
+            adapterWrapper = new AdapterWrapper<>((TableAdapterAbs<?, ?, ?, ?>) newAdapter);
+        } catch (ClassCastException e) {
+            throw new DeveloperError(e, "Adapter must be a %s.", TableAdapterAbs.class.getSimpleName());
         }
 
         if (adapterWrapper.adapter == null) {
@@ -339,13 +378,26 @@ public class TableLayoutManager extends RecyclerView.LayoutManager {
             }
 
             // this is to account for any rounding error in the conversion from "units" to "pixels"
-            int roundingErrorX = scrollX - getLength(totalDataStartBound, visibleStartBound);
+            int roundingErrorX = scrollX - getLengthPx(totalDataStartBound, visibleStartBound);
 
             int y = -scrollY;
             boolean isFirstRow, isLastRow;
             int rowIndex = 0;
             int lastRowIndex = rows.size() - 1;
             int placeholdersCount = 0;
+            boolean visibleVerticalRange = false;
+
+            int firstRowIndex = -1;
+            int firstRowPositionY = 0;
+            int visibleRowsCount = (getHeight() / rowHeightPx) + 1;
+            List<String> rowsLabels = new ArrayList<>(visibleRowsCount);
+
+            int firstBoundIndex = getLengthUnits(totalDataStartBound, visibleStartBound) / minSpanLengthUnits;
+            BOUND firstBoundTick = sum(totalDataStartBound, firstBoundIndex * minSpanLengthUnits);
+            int firstBoundPositionX = getLengthPx(visibleStartBound, firstBoundTick) + extraHorizontalPadding;
+            int visibleBoundsCount = (getWidth() / minSpanWidthPx) + 2;
+            List<String> boundsLabels = new ArrayList<>(visibleBoundsCount);
+            computeBoundsLabels(firstBoundTick, visibleBoundsCount, boundsLabels);
 
             // iterate each row, starting from the first. this is efficient for our use case (few rows, known height),
             // instead of keeping track of the first visible row plus its offset.
@@ -356,10 +408,17 @@ public class TableLayoutManager extends RecyclerView.LayoutManager {
                 }
 
                 // only do something if it's in the visible vertical range
-                if (y + rowHeightPx > visibleTop) {
+                if (!visibleVerticalRange && y + rowHeightPx > visibleTop) {
+                    visibleVerticalRange = true;
+                    firstRowIndex = rowIndex;
+                    firstRowPositionY = y;
+                }
+                if (visibleVerticalRange) {
 
                     isFirstRow = rowIndex == 0;
                     isLastRow = rowIndex == lastRowIndex;
+
+                    rowsLabels.add(getRowLabel(row));
 
                     // get all the views in the horizontal visible range
                     for (RangePosition<BOUND> rangePosition : adapter.getPositionsIn(row, visibleStartBound, visibleEndBound)) {
@@ -373,8 +432,8 @@ public class TableLayoutManager extends RecyclerView.LayoutManager {
                         int viewIndex = viewHolder.isPlaceholder() ? placeholdersCount++ : VIEW_INDEX_END;
                         addView(view, viewIndex);
 
-                        int width = getLength(viewHolder.getStart(), viewHolder.getEnd());
-                        int x = getLength(visibleStartBound, viewHolder.getStart()) + roundingErrorX;
+                        int width = getLengthPx(viewHolder.getStart(), viewHolder.getEnd());
+                        int x = getLengthPx(visibleStartBound, viewHolder.getStart()) + roundingErrorX;
                         measureAndLayoutChildWithDecorations(view, width, rowHeightPx, x, y);
                     }
                 }
@@ -382,7 +441,19 @@ public class TableLayoutManager extends RecyclerView.LayoutManager {
                 rowIndex++;
             }
 
+            notifyLabelsChanged(
+                    rowsLabels, firstRowIndex, firstRowPositionY, rowHeightPx,
+                    boundsLabels, firstBoundIndex, firstBoundPositionX, minSpanWidthPx);
+
             adapter.onReleaseRowsPositionsResources();
+        }
+
+        private void computeBoundsLabels(@NonNull BOUND firstBoundTick, int visibleBoundsCount, @NonNull List<String> boundsLabels) {
+            BOUND boundTick = firstBoundTick;
+            for (int i = 0; i < visibleBoundsCount; i++) {
+                boundsLabels.add(getBoundLabel(boundTick));
+                boundTick = sum(boundTick, minSpanLengthUnits);
+            }
         }
 
         private void updateLayoutParamsForView(
@@ -400,11 +471,18 @@ public class TableLayoutManager extends RecyclerView.LayoutManager {
             view.setLayoutParams(layoutParams);
         }
 
-        private int getLength(@NonNull BOUND start, @NonNull BOUND end) {
+        private int getLengthUnits(@NonNull BOUND start, @NonNull BOUND end) {
             if (adapter == null) {
                 throwAdapterNotSetException();
             }
-            return (int) Math.round(adapter.getDataHandler().getLength(start, end) * pixelsPerUnit);
+            return adapter.getDataHandler().getLength(start, end);
+        }
+
+        private int getLengthPx(@NonNull BOUND start, @NonNull BOUND end) {
+            if (adapter == null) {
+                throwAdapterNotSetException();
+            }
+            return (int) Math.round(getLengthUnits(start, end) * pixelsPerUnit);
         }
 
         @NonNull
@@ -413,6 +491,20 @@ public class TableLayoutManager extends RecyclerView.LayoutManager {
                 throwAdapterNotSetException();
             }
             return adapter.getDataHandler().sum(start, units);
+        }
+
+        private String getRowLabel(@NonNull ROW row) {
+            if (adapter == null) {
+                throwAdapterNotSetException();
+            }
+            return adapter.getDataHandler().getRowLabel(row);
+        }
+
+        private String getBoundLabel(@NonNull BOUND bound) {
+            if (adapter == null) {
+                throwAdapterNotSetException();
+            }
+            return adapter.getDataHandler().getBoundLabel(bound);
         }
 
         private void throwAdapterNotSetException() {

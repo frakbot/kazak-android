@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+  <dimen name="ruler_default_size">36dp</dimen>
+
+  <dimen name="ruler_default_text_size">14sp</dimen>
+  <dimen name="ruler_default_tick_size">2dp</dimen>
+  <dimen name="ruler_default_tick_stroke_width">1dp</dimen>
+  <integer name="ruler_default_skip_labels">0</integer>
+
+</resources>
