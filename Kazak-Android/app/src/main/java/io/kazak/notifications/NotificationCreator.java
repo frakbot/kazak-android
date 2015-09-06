@@ -5,7 +5,6 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
-import android.support.annotation.NonNull;
 import android.graphics.BitmapFactory;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
@@ -14,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.kazak.R;
+import io.kazak.model.Room;
 import io.kazak.model.Talk;
 import io.kazak.schedule.ScheduleActivity;
 import io.kazak.talk.TalkDetailsActivity;
@@ -48,7 +48,7 @@ public class NotificationCreator {
         notificationBuilder
                 .setContentIntent(createPendingIntentForSingleSession(talk.getId()))
                 .setContentTitle(talk.getName())
-                .setContentText(getRoomName(talk))
+                .setContentText(getDisplayedRooms(talk))
                 .setColor(talk.track().getColor())
                 .setGroup(GROUP_KEY_NOTIFY_SESSION);
 
@@ -57,9 +57,17 @@ public class NotificationCreator {
         return richNotification.build();
     }
 
-    @NonNull
-    private String getRoomName(Talk talk) {
-        return talk.getRooms().get(0).getName(); //TODO: Replace by proper rooms string generation
+    private String getDisplayedRooms(Talk talk) {
+        List<Room> rooms = talk.getRooms();
+        StringBuilder sb = new StringBuilder();
+        for (Room room : rooms) {
+            sb.append(room.getName()).append(", ");
+        }
+        if (sb.length() > 2) {
+            sb.delete(sb.length() - 2, sb.length() - 1);
+        }
+
+        return rooms.get(0).getName();
     }
 
     private Notification createSummaryNotification(List<Talk> talks) {
@@ -124,9 +132,9 @@ public class NotificationCreator {
     }
 
     private NotificationCompat.BigTextStyle createBigTextRichNotification(
-        NotificationCompat.Builder notificationBuilder, Talk talk) {
+            NotificationCompat.Builder notificationBuilder, Talk talk) {
         String speakers = talk.speakersNames();
-        String roomName = getRoomName(talk);
+        String roomName = getDisplayedRooms(talk);
         StringBuilder bigTextBuilder = new StringBuilder()
                 .append(context.getString(R.string.session_notification_starting_by, speakers))
                 .append('\n')
@@ -145,7 +153,7 @@ public class NotificationCreator {
             richNotification.addLine(
                     context.getString(
                             R.string.room_session_notification,
-                            getRoomName(talk),
+                            getDisplayedRooms(talk),
                             talk.getName()
                     )
             );
