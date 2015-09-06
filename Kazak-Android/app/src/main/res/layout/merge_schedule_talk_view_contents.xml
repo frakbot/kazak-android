@@ -6,7 +6,7 @@
 
   <TextView
     android:id="@+id/track_label"
-    style="@style/Session.Card.Track"
+    style="@style/Schedule.Card.Talk.Track"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     tools:text="CODE QUALITY"
@@ -15,7 +15,7 @@
 
   <TextView
     android:id="@+id/session_time"
-    style="@style/Session.Card.Time"
+    style="@style/Schedule.Card.Talk.Time"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_toEndOf="@id/track_label"
@@ -24,7 +24,7 @@
 
   <TextView
     android:id="@+id/session_title"
-    style="@style/Session.Card.Title"
+    style="@style/Schedule.Card.Talk.Title"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_below="@id/track_label"
@@ -32,7 +32,7 @@
 
   <TextView
     android:id="@+id/session_speakers"
-    style="@style/Session.Card.Speakers"
+    style="@style/Schedule.Card.Talk.Speakers"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_below="@id/session_title"
@@ -41,7 +41,7 @@
 
   <ImageButton
     android:id="@+id/session_favorite"
-    style="@style/Session.Card.Favorite"
+    style="@style/Schedule.Card.Talk.Favorite"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_alignParentEnd="true"
