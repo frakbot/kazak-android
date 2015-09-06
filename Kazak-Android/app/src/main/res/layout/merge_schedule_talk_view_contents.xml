@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
-  android:layout_height="match_parent"
-  xmlns:tools="http://schemas.android.com/tools">
+  android:layout_height="match_parent">
 
   <TextView
     android:id="@+id/track_label"
@@ -10,7 +10,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     tools:text="CODE QUALITY"
-    tools:backgroundTint="#0000ee"
+    tools:backgroundTint="#2C69CD"
     tools:drawableLeft="@drawable/temp_circle_icon" />
 
   <TextView
@@ -49,3 +49,4 @@
     android:contentDescription="@string/description_favorite_session" />
 
 </RelativeLayout>
+

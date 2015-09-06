@@ -49,7 +49,7 @@ public class ScheduleTableAdapter extends TableTreeAdapter<Talk, Room, Date, Sch
 
     @NonNull
     public ScheduleTableViewHolder createNormalViewHolder(@Nullable ViewGroup parent) {
-        return new ScheduleTableViewHolder((TalkCardView) inflater.inflate(R.layout.view_talk_item, parent, false), this);
+        return new ScheduleTableViewHolder((TalkCardView) inflater.inflate(R.layout.view_schedule_talk_card, parent, false), this);
     }
 
     @NonNull

@@ -28,4 +28,5 @@ public class ScheduleTableViewHolder extends TableViewHolder<Talk, Room, Date> {
     TalkCardView getCardView() {
         return cardView;
     }
+
 }
