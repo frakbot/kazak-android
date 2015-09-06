@@ -18,11 +18,12 @@ import java.text.SimpleDateFormat;
 import java.util.Locale;
 
 import io.kazak.R;
+import io.kazak.model.Event;
 import io.kazak.model.Talk;
 import io.kazak.model.TimeSlot;
 import io.kazak.model.Track;
 
-public class TalkCardView extends CardView {
+public class TalkCardView extends CardView implements ScheduleEventView {
 
     private static final String TIMESLOT_BOUND_PATTERN = "HH:mm";
     private static final String TIMESLOT_TEMPLATE = "%1$s—%2$s";
@@ -57,7 +58,10 @@ public class TalkCardView extends CardView {
         favoriteView = (ImageButton) findViewById(R.id.session_favorite);
     }
 
-    public void updateWith(@NonNull Talk talk) {
+    @Override
+    public void updateWith(@NonNull Event event) {
+        Talk talk = (Talk) event;
+
         // TODO properly bind to data
         updateTrackWith(talk.track());
         updateTimeWith(talk.timeSlot());
