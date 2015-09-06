@@ -37,11 +37,11 @@ public class ScheduleTableView extends RecyclerView {
     }
 
     public ScheduleTableView(Context context, AttributeSet attrs) {
-        this(context, attrs, R.attr.scheduleViewDefaultStyle);
+        this(context, attrs, R.attr.scheduleTableViewDefaultStyle);
     }
 
     public ScheduleTableView(Context context, AttributeSet attrs, @AttrRes int defStyleAttr) {
-        this(context, attrs, defStyleAttr, R.style.ScheduleViewDefaultStyle);
+        this(context, attrs, defStyleAttr, R.style.ScheduleTableViewDefaultStyle);
     }
 
     public ScheduleTableView(Context context, AttributeSet attrs, @AttrRes int defStyleAttr, @StyleRes int defStyleRes) {
