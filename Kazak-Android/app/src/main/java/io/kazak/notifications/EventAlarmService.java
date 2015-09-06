@@ -3,9 +3,13 @@ package io.kazak.notifications;
 import android.app.IntentService;
 import android.app.Notification;
 import android.content.Intent;
+import android.util.Log;
 
 import javax.inject.Inject;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -37,37 +41,62 @@ public class EventAlarmService extends IntentService {
         final NotificationCreator notificationCreator = new NotificationCreator(this);
         final Notifier notifier = Notifier.from(this);
 
-        final Date now = new Date();
         Calendar calendar = Calendar.getInstance();
+        final Date now = calendar.getTime();
         calendar.add(Calendar.MINUTE, NOTIFICATION_INTERVAL_MINUTES);
         final Date notificationInterval = calendar.getTime();
 
-        dataRepository
-                .getSchedule()
-                .take(1)
-                .flatMap(getDays())
-                .flatMap(getTalks())
-                .filter(startingIn(now, notificationInterval))
+        Observable<Talk> talks = loadTalks();
+
+        talks.filter(startingIn(now, notificationInterval))
                 .toList()
-                .map(createNotifiactions(notificationCreator))
+                .map(createNotifications(notificationCreator))
                 .subscribe(displayNotifications(notifier));
 
     }
 
-    private Func1<Schedule, Observable<Day>> getDays() {
+    private Observable<Talk> loadTalks() {
+        return dataRepository
+                .getSchedule()
+                .take(1)
+                .flatMap(getSortedDays())
+                .flatMap(getSortedTalks());
+    }
+
+    private Func1<Schedule, Observable<Day>> getSortedDays() {
         return new Func1<Schedule, Observable<Day>>() {
             @Override
             public Observable<Day> call(Schedule schedule) {
-                return Observable.from(schedule.getDays());
+                List<Day> days = schedule.getDays();
+                Collections.sort(
+                        days, new Comparator<Day>() {
+                            @Override
+                            public int compare(Day firstDay, Day secondDay) {
+                                return firstDay.getDay().compareTo(secondDay.getDay());
+                            }
+                        }
+                );
+                return Observable.from(days);
             }
         };
     }
 
-    private Func1<Day, Observable<Talk>> getTalks() {
+    private Func1<Day, Observable<Talk>> getSortedTalks() {
         return new Func1<Day, Observable<Talk>>() {
             @Override
             public Observable<Talk> call(Day day) {
-                return Observable.from(day.getTalks());
+                List<Talk> talks = day.getTalks();
+                Collections.sort(
+                        talks, new Comparator<Talk>() {
+                            @Override
+                            public int compare(Talk firstTalk, Talk secondTalk) {
+                                Date firstTalkStart = firstTalk.getTimeSlot().getStart();
+                                Date secondTalkStart = secondTalk.getTimeSlot().getStart();
+                                return firstTalkStart.compareTo(secondTalkStart);
+                            }
+                        }
+                );
+                return Observable.from(talks);
             }
         };
     }
@@ -77,12 +106,12 @@ public class EventAlarmService extends IntentService {
             @Override
             public Boolean call(Talk talk) {
                 Date talkStart = talk.getTimeSlot().getStart();
-                return now.before(talkStart) && talkStart.before(notificationInterval);
+                return now.before(talkStart) && (talkStart.before(notificationInterval) || talkStart.equals(notificationInterval));
             }
         };
     }
 
-    private Func1<List<Talk>, List<Notification>> createNotifiactions(final NotificationCreator notificationCreator) {
+    private Func1<List<Talk>, List<Notification>> createNotifications(final NotificationCreator notificationCreator) {
         return new Func1<List<Talk>, List<Notification>>() {
             @Override
             public List<Notification> call(List<Talk> talks) {
