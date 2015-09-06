@@ -25,4 +25,7 @@ public class ScheduleTableViewHolder extends TableViewHolder<Talk, Room, Date> {
         talkView.updateWith(item);
     }
 
+    TalkView getTalkView() {
+        return talkView;
+    }
 }

@@ -22,4 +22,8 @@ public data class Talk(val id : String, val name : String, val timeSlot: TimeSlo
         return speakers.names()
     }
 
+    fun track(): Track {
+        return Track("1234", "LOL", 0xFF2C69CD.toInt())
+    }
+
 }

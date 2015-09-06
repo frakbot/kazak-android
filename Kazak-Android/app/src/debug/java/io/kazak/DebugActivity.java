@@ -79,7 +79,7 @@ public class DebugActivity extends Activity {
                 String.valueOf(id),
                 "A very interesting talk",
                 createTalkTimeSlot(),
-                createTalkRoom(id),
+                createTalkRooms(id),
                 createTalkSpeakers()
         );
     }
@@ -96,7 +96,7 @@ public class DebugActivity extends Activity {
     }
 
     @NonNull
-    private List<Room> createTalkRoom(int id) {
+    private List<Room> createTalkRooms(int id) {
         return Collections.singletonList(
                 new Room("45678" + id, "Room " + id)
         );

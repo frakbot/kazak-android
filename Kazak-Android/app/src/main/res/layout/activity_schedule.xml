@@ -28,6 +28,7 @@
 
       <io.kazak.schedule.view.table.ScheduleTableView
         android:id="@+id/schedule"
+        style="@style/Schedule"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
