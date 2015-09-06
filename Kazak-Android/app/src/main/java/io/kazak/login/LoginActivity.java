@@ -59,7 +59,7 @@ public class LoginActivity extends Activity {
 
     @Inject
     AuthRepository authRepository;
-    CompositeSubscription loginSubscriptions;
+    private CompositeSubscription loginSubscriptions;
 
     // UI references.
     private AutoCompleteTextView mEmailView;
