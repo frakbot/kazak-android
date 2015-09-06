@@ -59,17 +59,17 @@ public class TalkView extends CardView {
 
     public void updateWith(@NonNull Talk talk) {
         // TODO properly bind to data
-        updateTrackWith(talk.getTrack());
-        updateTimeWith(talk.getTimeSlot());
-        updateTitleWith(talk.getName());
-        updateSpeakersWith(talk.getSpeakersNames());
+        updateTrackWith(talk.track());
+        updateTimeWith(talk.timeSlot());
+        updateTitleWith(talk.name());
+        updateSpeakersWith(talk.speakersNames());
         updateFavoriteWith(false);
     }
 
     private void updateTrackWith(@NonNull Track track) {
-        trackView.setText(track.getName().toUpperCase(Locale.getDefault()));
+        trackView.setText(track.name().toUpperCase(Locale.getDefault()));
         trackView.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.temp_circle_icon, 0, 0, 0);
-        setBackgroundTintCompat(trackView, track.getColor());
+        setBackgroundTintCompat(trackView, track.color());
     }
 
     private static void setBackgroundTintCompat(View view, @ColorInt int color) {

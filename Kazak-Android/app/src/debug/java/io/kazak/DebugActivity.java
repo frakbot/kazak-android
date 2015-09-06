@@ -18,7 +18,6 @@ import io.kazak.model.Speaker;
 import io.kazak.model.Speakers;
 import io.kazak.model.Talk;
 import io.kazak.model.TimeSlot;
-import io.kazak.model.Track;
 import io.kazak.notifications.NotificationCreator;
 import io.kazak.notifications.Notifier;
 
@@ -80,9 +79,8 @@ public class DebugActivity extends Activity {
                 String.valueOf(id),
                 "A very interesting talk",
                 createTalkTimeSlot(),
-                createTalkRoom(id),
-                createTalkSpeakers(),
-                createTalkTrack()
+                createTalkRooms(id),
+                createTalkSpeakers()
         );
     }
 
@@ -98,7 +96,7 @@ public class DebugActivity extends Activity {
     }
 
     @NonNull
-    private List<Room> createTalkRoom(int id) {
+    private List<Room> createTalkRooms(int id) {
         return Collections.singletonList(
                 new Room("45678" + id, "Room " + id)
         );
@@ -110,11 +108,6 @@ public class DebugActivity extends Activity {
         speakers.add(new Speaker("0", "Awesome Speaker", null, null, null, null));
         speakers.add(new Speaker("1", "Meh Guy", null, null, null, null));
         return new Speakers(speakers);
-    }
-
-    @NonNull
-    private Track createTalkTrack() {
-        return new Track("dummy", "Track", 0xFF2C69CD);
     }
 
 }
