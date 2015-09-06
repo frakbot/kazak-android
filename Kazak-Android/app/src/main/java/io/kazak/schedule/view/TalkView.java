@@ -4,11 +4,9 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
-import android.graphics.PorterDuff;
+import android.graphics.Paint;
 import android.graphics.Rect;
-import android.graphics.drawable.Drawable;
 import android.support.annotation.AttrRes;
-import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
 import android.support.annotation.StyleRes;
 import android.util.AttributeSet;
@@ -39,6 +37,7 @@ public class TalkView extends ViewGroup {
     private final int trackDrawableSizePx;
     private final int drawableOpticalBalanceOffsetPx;
     private final Rect trackDrawableBounds;
+    private final Paint trackBgPaint;
 
     private boolean showTrackDrawable = true;
 
@@ -61,12 +60,20 @@ public class TalkView extends ViewGroup {
         super(context, attrs, defStyleAttr);
         dateFormat = new SimpleDateFormat(TIMESLOT_BOUND_PATTERN);
         trackDrawableBounds = new Rect();
+        trackBgPaint = createTrackBgPaint();
 
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.TalkView, defStyleAttr, defStyleRes);
         trackDrawablePaddingPx = a.getDimensionPixelSize(R.styleable.TalkView_android_drawablePadding, 0);
         trackDrawableSizePx = a.getDimensionPixelSize(R.styleable.TalkView_trackSymbolSize, 0);
         drawableOpticalBalanceOffsetPx = a.getDimensionPixelSize(R.styleable.TalkView_drawableOpticalBalanceOffset, 0);
         a.recycle();
+    }
+
+    @NonNull
+    private Paint createTrackBgPaint() {
+        Paint paint = new Paint();
+        paint.setAntiAlias(true);
+        return paint;
     }
 
     @Override
@@ -340,6 +347,7 @@ public class TalkView extends ViewGroup {
 
         if (showTrackDrawable) {
             // TODO draw track drawable
+            canvas.drawCircle(trackDrawableBounds.centerX(), trackDrawableBounds.centerY(), trackDrawableBounds.width() / 2f, trackBgPaint);
         }
     }
 
@@ -356,15 +364,8 @@ public class TalkView extends ViewGroup {
 
     private void updateTrackWith(@NonNull Track track) {
         trackView.setText(track.name().toUpperCase(Locale.getDefault()));
-        trackView.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.temp_circle_icon, 0, 0, 0);
-        setBackgroundTintCompat(trackView, track.color());
-    }
-
-    private static void setBackgroundTintCompat(View view, @ColorInt int color) {
-        Drawable background = view.getBackground();
-        if (background != null) {
-            background.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
-        }
+        trackView.setTextColor(track.color());
+        trackBgPaint.setColor(track.color());
     }
 
     private void updateTimeWith(TimeSlot timeSlot) {

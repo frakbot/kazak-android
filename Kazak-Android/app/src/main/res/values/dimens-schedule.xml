@@ -5,7 +5,6 @@
   <dimen name="session_card_padding_vertical">8dp</dimen>
   <dimen name="session_card_element_margin_single">8dp</dimen>
 
-  <dimen name="track_label_background_corner_radius">10dp</dimen>
   <dimen name="track_label_padding_left">4dp</dimen>
   <dimen name="track_label_padding_right">6dp</dimen>
   <dimen name="track_label_padding_vertical">2dp</dimen>

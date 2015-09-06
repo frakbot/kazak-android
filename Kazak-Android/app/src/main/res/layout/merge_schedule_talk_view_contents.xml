@@ -5,29 +5,24 @@
   android:layout_height="match_parent">
 
   <TextView
-    android:id="@+id/track_label"
-    style="@style/Schedule.Card.Talk.Track"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    tools:text="CODE QUALITY"
-    tools:backgroundTint="#2C69CD"
-    tools:drawableLeft="@drawable/temp_circle_icon" />
-
-  <TextView
     android:id="@+id/session_time"
     style="@style/Schedule.Card.Talk.Time"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_toEndOf="@id/track_label"
-    android:layout_alignParentEnd="true"
     tools:text="12:10—12:45" />
+
+  <TextView
+    android:id="@+id/track_label"
+    style="@style/Schedule.Card.Talk.Track"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    tools:text="CODE QUALITY" />
 
   <TextView
     android:id="@+id/session_title"
     style="@style/Schedule.Card.Talk.Title"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_below="@id/track_label"
     tools:text="Jump around, or how the animation system works in Android" />
 
   <TextView
@@ -35,8 +30,6 @@
     style="@style/Schedule.Card.Talk.Speakers"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_below="@id/session_title"
-    android:layout_alignParentStart="true"
     tools:text="Sterling Archer" />
 
   <ImageButton
@@ -44,8 +37,6 @@
     style="@style/Schedule.Card.Talk.Favorite"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_alignParentEnd="true"
-    android:layout_alignParentBottom="true"
     android:contentDescription="@string/description_favorite_session" />
 
 </merge>
