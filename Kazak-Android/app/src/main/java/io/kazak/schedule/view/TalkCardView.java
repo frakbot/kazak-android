@@ -22,7 +22,7 @@ import io.kazak.model.Talk;
 import io.kazak.model.TimeSlot;
 import io.kazak.model.Track;
 
-public class TalkView extends CardView {
+public class TalkCardView extends CardView {
 
     private static final String TIMESLOT_BOUND_PATTERN = "HH:mm";
     private static final String TIMESLOT_TEMPLATE = "%1$s—%2$s";
@@ -35,12 +35,12 @@ public class TalkView extends CardView {
     private TextView speakersView;
     private ImageButton favoriteView;
 
-    public TalkView(Context context, AttributeSet attrs) {
+    public TalkCardView(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
     @SuppressLint("SimpleDateFormat")       // At this time we want to always use 24h-format
-    public TalkView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public TalkCardView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         dateFormat = new SimpleDateFormat(TIMESLOT_BOUND_PATTERN);
     }
