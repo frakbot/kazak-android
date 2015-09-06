@@ -47,7 +47,7 @@ public class EventAlarmService extends IntentService {
         calendar.add(Calendar.MINUTE, NOTIFICATION_INTERVAL_MINUTES);
         final Date notificationInterval = calendar.getTime();
 
-        Observable<Talk> talks = loadTalks();
+        Observable<Talk> talks = loadFavouriteTalks();
 
         talks.filter(startingIn(now, notificationInterval))
                 .toList()
@@ -59,12 +59,13 @@ public class EventAlarmService extends IntentService {
                 .subscribe(scheduleNextAlarm());
     }
 
-    private Observable<Talk> loadTalks() {
+    private Observable<Talk> loadFavouriteTalks() {
         return dataRepository
                 .getSchedule()
                 .take(1)
                 .flatMap(getSortedDays())
-                .flatMap(getSortedTalks());
+                .flatMap(getSortedTalks())
+                .filter(favouriteTalksOnly());
     }
 
     private Func1<Schedule, Observable<Day>> getSortedDays() {
@@ -101,6 +102,16 @@ public class EventAlarmService extends IntentService {
                         }
                 );
                 return Observable.from(talks);
+            }
+        };
+    }
+
+    private Func1<? super Talk, Boolean> favouriteTalksOnly() {
+        return new Func1<Talk, Boolean>() {
+            @Override
+            public Boolean call(Talk talk) {
+                // TODO: Select favourite talks only
+                return true;
             }
         };
     }
