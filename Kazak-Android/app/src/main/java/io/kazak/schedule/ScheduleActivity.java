@@ -12,10 +12,12 @@ import android.view.View;
 import android.widget.FrameLayout;
 
 import javax.inject.Inject;
+import java.util.List;
 
 import io.kazak.KazakApplication;
 import io.kazak.R;
 import io.kazak.base.DeveloperError;
+import io.kazak.model.Id;
 import io.kazak.repository.DataRepository;
 import io.kazak.repository.event.SyncEvent;
 import io.kazak.schedule.view.table.ScheduleTableAdapter;
@@ -97,6 +99,11 @@ public class ScheduleActivity extends AppCompatActivity {
                         .subscribe(new ScheduleObserver())
         );
         subscriptions.add(
+                dataRepository.getFavoriteIds()
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new FavoritesObserver())
+        );
+        subscriptions.add(
                 dataRepository.getScheduleSyncEvents()
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(new SyncEventObserver())
@@ -111,6 +118,10 @@ public class ScheduleActivity extends AppCompatActivity {
 
     private void updateWith(@NonNull ScheduleTableAdapter.Data data) {
         scheduleView.updateWith(data);
+    }
+
+    private void updateWith(@NonNull List<? extends Id> favorites) {
+        scheduleView.updateWith(favorites);
     }
 
     private class ScheduleObserver implements Observer<ScheduleTableAdapter.Data> {
@@ -128,6 +139,25 @@ public class ScheduleActivity extends AppCompatActivity {
         @Override
         public void onNext(ScheduleTableAdapter.Data data) {
             updateWith(data);
+        }
+
+    }
+
+    private class FavoritesObserver implements Observer<List<? extends Id>> {
+
+        @Override
+        public void onCompleted() {
+            // No-op
+        }
+
+        @Override
+        public void onError(Throwable e) {
+            throw new IllegalStateException(e);
+        }
+
+        @Override
+        public void onNext(List<? extends Id> favorites) {
+            updateWith(favorites);
         }
 
     }

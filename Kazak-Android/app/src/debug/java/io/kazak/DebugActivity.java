@@ -13,6 +13,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import io.kazak.model.Id;
 import io.kazak.model.Room;
 import io.kazak.model.Speaker;
 import io.kazak.model.Speakers;
@@ -76,7 +77,7 @@ public class DebugActivity extends Activity {
     @NonNull
     private Talk createTestTalk(int id) {
         return new Talk(
-                String.valueOf(id),
+                new Id(String.valueOf(id)),
                 "A very interesting talk",
                 createTalkTimeSlot(),
                 createTalkRooms(id),
@@ -99,15 +100,15 @@ public class DebugActivity extends Activity {
     @NonNull
     private List<Room> createTalkRooms(int id) {
         return Collections.singletonList(
-                new Room("45678" + id, "Room " + id)
+                new Room(new Id("45678" + id), "Room " + id)
         );
     }
 
     @NonNull
     private Speakers createTalkSpeakers() {
         List<Speaker> speakers = new ArrayList<>(2);
-        speakers.add(new Speaker("0", "Awesome Speaker", null, null, null, null));
-        speakers.add(new Speaker("1", "Meh Guy", null, null, null, null));
+        speakers.add(new Speaker(new Id("0"), "Awesome Speaker", null, null, null, null));
+        speakers.add(new Speaker(new Id("1"), "Meh Guy", null, null, null, null));
         return new Speakers(speakers);
     }
 
