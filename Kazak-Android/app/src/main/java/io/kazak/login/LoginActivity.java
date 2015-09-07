@@ -313,7 +313,6 @@ public class LoginActivity extends Activity {
         @Override
         public void call(String authToken) {
             Log.v(TAG, "Got new auth token, saving the credentials in the AccountManager...");
-            showProgress(false);
             Intent originalIntent = getIntent();
             String accountName = mEmailView.getText().toString();
             final Account account = new Account(accountName, originalIntent.getStringExtra(AccountManager.KEY_ACCOUNT_TYPE));
