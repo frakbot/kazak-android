@@ -43,7 +43,7 @@
       android:name="io.kazak.login.LoginActivity"
       android:label="@string/activity_title_login" />
 
-    <service android:name="io.kazak.login.KazakAuthenticationService">
+    <service android:name="io.kazak.login.KazakAuthenticationService" android:exported="false">
       <intent-filter>
         <action android:name="android.accounts.AccountAuthenticator" />
       </intent-filter>

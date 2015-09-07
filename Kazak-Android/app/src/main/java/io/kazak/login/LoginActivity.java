@@ -289,7 +289,7 @@ public class LoginActivity extends Activity {
         mEmailView.setAdapter(adapter);
     }
 
-    private class MapAccountToName implements Func1<Account, String> {
+    private static class MapAccountToName implements Func1<Account, String> {
         @Override
         public String call(Account account) {
             return account.name;
