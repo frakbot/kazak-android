@@ -61,8 +61,8 @@ public class ScheduleActivity extends AppCompatActivity {
     }
 
     private void setupRulers() {
-        ((Ruler) findViewById(R.id.rooms_ruler)).bind(scheduleView);
-        ((Ruler) findViewById(R.id.time_ruler)).bind(scheduleView);
+        scheduleView.setRoomsRuler((Ruler)findViewById(R.id.rooms_ruler));
+        scheduleView.setTimeRuler((Ruler) findViewById(R.id.time_ruler));
     }
 
     private void hackToHideNavDrawerHeaderRipple() {

@@ -8,31 +8,70 @@ import android.graphics.Paint;
 import android.support.annotation.AttrRes;
 import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.annotation.StyleRes;
-import android.support.v7.widget.RecyclerView;
 import android.text.TextPaint;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
 
+import java.lang.annotation.Documented;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.intellij.lang.annotations.MagicConstant;
+import org.jetbrains.annotations.NotNull;
+
 import io.kazak.R;
+import io.kazak.base.DeveloperError;
 
-public abstract class Ruler extends View {
+public class Ruler extends View {
 
-    private static final int[] POSITION = new int[2];
-    private static final int X = 0;
-    private static final int Y = 1;
+    private static final float VERTICALLY_COUNTER_CLOCKWISE = -90f;
+    private static final int BACKWARD = -1;
+    private static final int FORWARD = 1;
 
-    @Nullable
-    private RecyclerViewWrapper recyclerViewWrapper;
+    // keep in sync with attrs-ruler.xml
+    @Documented
+    @Retention(RetentionPolicy.SOURCE)
+    @MagicConstant(valuesFromClass = Orientation.class)
+    public @interface Orientation {
+        int HORIZONTAL = 0;
+        int VERTICAL = 1;
+    }
+
+    // keep in sync with attrs-ruler.xml
+    @Documented
+    @Retention(RetentionPolicy.SOURCE)
+    @MagicConstant(valuesFromClass = AlignLabel.class)
+    public @interface AlignLabel {
+        int ON_TICK = 0;
+        int BETWEEN_TICKS = 1;
+    }
 
     @NonNull
-    private final TextPaint textPaint = new TextPaint(Paint.ANTI_ALIAS_FLAG);
+    private final TextPaint textPaint;
+
+    @NonNull
+    private final Paint tickPaint;
 
     private float centeredBaselineShift;
+
+    private float tickSize;
+
+    @Ruler.Orientation
+    private int orientation;
+
+    @Ruler.AlignLabel
+    private int alignLabel;
+
+    @NonNull
+    private List<String> labels = Collections.emptyList();
+    private int firstIndex;
+    private int firstPositionPx;
+    private int ticksSpacingPx;
 
     public Ruler(Context context) {
         this(context, null);
@@ -48,19 +87,100 @@ public abstract class Ruler extends View {
 
     public Ruler(Context context, AttributeSet attrs, @AttrRes int defStyleAttr, @StyleRes int defStyleRes) {
         super(context, attrs, defStyleAttr);
-        setWillNotDraw(false);
+        super.setWillNotDraw(false);
 
-        textPaint.setTextAlign(Paint.Align.CENTER);
+        textPaint = createTextPaint();
+        tickPaint = createTickPaint();
 
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.Ruler, defStyleAttr, defStyleRes);
         setTextColor(a.getColor(R.styleable.Ruler_android_textColor, Color.BLACK));
         setTextSize(a.getDimension(R.styleable.Ruler_android_textSize, 0f));
+        setTickSize(a.getDimension(R.styleable.Ruler_tickSize, 0f));
+        setTickStrokeWidth(a.getDimension(R.styleable.Ruler_tickStrokeWidth, 0f));
+        setTickColor(a.getColor(R.styleable.Ruler_tickColor, Color.BLACK));
+        //noinspection MagicConstant
+        setOrientation(a.getInt(R.styleable.Ruler_orientation, Orientation.HORIZONTAL));
+        //noinspection MagicConstant
+        setAlignLabel(a.getInt(R.styleable.Ruler_alignLabel, AlignLabel.ON_TICK));
         a.recycle();
     }
 
-    @Nullable
-    protected RecyclerViewWrapper getRecyclerViewWrapper() {
-        return recyclerViewWrapper;
+    @Override
+    protected void onDraw(@NonNull Canvas canvas) {
+        super.onDraw(canvas);
+
+        canvas.save();
+
+        int height;
+        int directionX;
+
+        if (orientation == Orientation.VERTICAL) {
+            canvas.rotate(VERTICALLY_COUNTER_CLOCKWISE);
+            height = getWidth();
+            directionX = BACKWARD;
+        } else {
+            height = getHeight();
+            directionX = FORWARD;
+        }
+
+        float halfHeight = (float) height / 2f;
+
+        canvas.translate(directionX * firstPositionPx, halfHeight);
+        if (alignLabel == AlignLabel.BETWEEN_TICKS) {
+            canvas.translate(directionX * (float) ticksSpacingPx / 2f, 0f);
+        }
+
+        for (String label : labels) {
+            drawVerticallyCenteredLabel(canvas, label);
+            drawTick(canvas, 0f, halfHeight, 0f, halfHeight - getTickSize());
+            canvas.translate(directionX * ticksSpacingPx, 0);
+        }
+
+        canvas.restore();
+    }
+
+    public void onLabelsChanged(@NonNull List<String> newLabels, int newFirstIndex, int newFirstPositionPx, int newTicksSpacingPx) {
+        labels = getEllipsizedLabels(newLabels, newTicksSpacingPx);
+        firstIndex = newFirstIndex;
+        firstPositionPx = newFirstPositionPx;
+        ticksSpacingPx = newTicksSpacingPx;
+        invalidate();
+    }
+
+    private void computeBaselineShift() {
+        Paint.FontMetrics fm = textPaint.getFontMetrics();
+        centeredBaselineShift = -(fm.descent + fm.ascent) / 2f;
+    }
+
+    private void drawTick(@NonNull Canvas canvas, float startX, float startY, float stopX, float stopY) {
+        canvas.drawLine(startX, startY, stopX, stopY, tickPaint);
+    }
+
+    private void drawVerticallyCenteredLabel(@NonNull Canvas canvas, @NonNull String label) {
+        canvas.drawText(label, 0f, centeredBaselineShift, textPaint);
+    }
+
+    private List<String> getEllipsizedLabels(@NotNull List<String> newLabels, float newTicksSpacingPx) {
+        List<String> ellipsizedLabels = new ArrayList<>(newLabels.size());
+        for (String label : newLabels) {
+            CharSequence ellipsizedLabel = TextUtils.ellipsize(label, textPaint, newTicksSpacingPx, TextUtils.TruncateAt.MIDDLE);
+            ellipsizedLabels.add(ellipsizedLabel.toString());
+        }
+        return ellipsizedLabels;
+    }
+
+    @NonNull
+    private TextPaint createTextPaint() {
+        TextPaint paint = new TextPaint(Paint.ANTI_ALIAS_FLAG);
+        paint.setTextAlign(Paint.Align.CENTER);
+        return paint;
+    }
+
+    @NonNull
+    private Paint createTickPaint() {
+        Paint paint = new Paint();
+        paint.setStyle(Paint.Style.STROKE);
+        return paint;
     }
 
     @ColorInt
@@ -87,134 +207,77 @@ public abstract class Ruler extends View {
         }
     }
 
-    protected void computeBaselineShift() {
-        Paint.FontMetrics fm = textPaint.getFontMetrics();
-        centeredBaselineShift = -(fm.descent + fm.ascent) / 2f;
+    public float getTickSize() {
+        return tickSize;
     }
 
-    protected void drawVerticallyCenteredLabel(@NonNull Canvas canvas, @NonNull String label) {
-        canvas.drawText(label, 0f, centeredBaselineShift, textPaint);
+    public void setTickSize(float size) {
+        if (tickSize != size) {
+            tickSize = size;
+            invalidate();
+        }
     }
 
-    public void bind(@NonNull RecyclerView recyclerView) {
-        if (recyclerViewWrapper != null) {
-            recyclerViewWrapper.layoutManager.removeLabelsChangedListener(recyclerViewWrapper);
-        }
-        recyclerViewWrapper = new RecyclerViewWrapper(
-                recyclerView,
-                TableLayoutManager.getFromRecyclerViewOrThrow(recyclerView));
-        recyclerViewWrapper.layoutManager.addLabelsChangedListener(recyclerViewWrapper);
-        invalidate();
+    public float getTickStrokeWidth() {
+        return tickPaint.getStrokeWidth();
     }
 
-    protected void onLabelsChanged() {
-        invalidate();
+    public void setTickStrokeWidth(float width) {
+        if (getTickStrokeWidth() != width) {
+            tickPaint.setStrokeWidth(width);
+            invalidate();
+        }
     }
 
-    protected int getTopOnScreen() {
-        getLocationOnScreen(POSITION);
-        return POSITION[Y];
+    @ColorInt
+    public int getTickColor() {
+        return tickPaint.getColor();
     }
 
-    protected int getLeftOnScreen() {
-        getLocationOnScreen(POSITION);
-        return POSITION[X];
+    public void setTickColor(@ColorInt int color) {
+        if (getTickColor() != color) {
+            tickPaint.setColor(color);
+            invalidate();
+        }
     }
 
-    protected class RecyclerViewWrapper implements TableLabelsChangedListener {
+    @Ruler.Orientation
+    public int getOrientation() {
+        return orientation;
+    }
 
-        private final RecyclerView recyclerView;
-        private final TableLayoutManager layoutManager;
+    public void setOrientation(@Ruler.Orientation int newOrientation) {
+        if (orientation != newOrientation) {
+            switch (orientation) {
+                default:
+                    throw new DeveloperError("Unsupported orientation value.");
 
-        @NonNull
-        private List<String> rowsLabels = Collections.emptyList();
-        private int firstRowIndex;
-        private int firstRowPositionY;
-        private int rowHeight;
-
-        @NonNull
-        private List<String> boundsLabels = Collections.emptyList();
-        private int firstBoundIndex;
-        private int firstBoundPositionX;
-        private int boundsSpacing;
-
-        public RecyclerViewWrapper(
-                @NonNull RecyclerView recyclerView,
-                @NonNull TableLayoutManager layoutManager) {
-            this.recyclerView = recyclerView;
-            this.layoutManager = layoutManager;
+                case Orientation.HORIZONTAL:
+                case Orientation.VERTICAL:
+                    orientation = newOrientation;
+                    invalidate();
+                    break;
+            }
         }
+    }
 
-        public int getVerticalDistanceFromRecyclerView() {
-            return getRecyclerViewTopOnScreen() - getTopOnScreen();
-        }
+    @Ruler.AlignLabel
+    public int getAlignLabel() {
+        return alignLabel;
+    }
 
-        protected int getHorizontalDistanceFromRecyclerView() {
-            return getRecyclerViewLeftOnScreen() - getLeftOnScreen();
-        }
+    public void setAlignLabel(@Ruler.AlignLabel int newAlignLabel) {
+        if (alignLabel != newAlignLabel) {
+            switch (alignLabel) {
+                default:
+                    throw new DeveloperError("Unsupported align label value.");
 
-        public int getRecyclerViewTopOnScreen() {
-            recyclerView.getLocationOnScreen(POSITION);
-            return POSITION[Y];
-        }
-
-        public int getRecyclerViewLeftOnScreen() {
-            recyclerView.getLocationOnScreen(POSITION);
-            return POSITION[X];
-        }
-
-        // flat model, can't be changed
-        @SuppressWarnings("checkstyle:parameternumber")
-        @Override
-        public void onTableLabelsChanged(
-                @NonNull List<String> newRowsLabels, int newFirstRowIndex, int newFirstRowPositionY, int newRowHeight,
-                @NonNull List<String> newBoundsLabels, int newFirstBoundIndex, int newFirstBoundPositionX, int newBoundsSpacing) {
-
-            this.rowsLabels = newRowsLabels;
-            this.firstRowIndex = newFirstRowIndex;
-            this.firstRowPositionY = newFirstRowPositionY;
-            this.rowHeight = newRowHeight;
-
-            this.boundsLabels = newBoundsLabels;
-            this.firstBoundIndex = newFirstBoundIndex;
-            this.firstBoundPositionX = newFirstBoundPositionX;
-            this.boundsSpacing = newBoundsSpacing;
-
-            onLabelsChanged();
-        }
-
-        @NonNull
-        public List<String> getRowsLabels() {
-            return rowsLabels;
-        }
-
-        public int getFirstRowIndex() {
-            return firstRowIndex;
-        }
-
-        public int getFirstRowPositionY() {
-            return firstRowPositionY + getVerticalDistanceFromRecyclerView();
-        }
-
-        public int getRowHeight() {
-            return rowHeight;
-        }
-
-        @NonNull
-        public List<String> getBoundsLabels() {
-            return boundsLabels;
-        }
-
-        public int getFirstBoundIndex() {
-            return firstBoundIndex;
-        }
-
-        public int getFirstBoundPositionX() {
-            return firstBoundPositionX + getHorizontalDistanceFromRecyclerView();
-        }
-
-        public int getBoundsSpacing() {
-            return boundsSpacing;
+                case AlignLabel.ON_TICK:
+                case AlignLabel.BETWEEN_TICKS:
+                    alignLabel = newAlignLabel;
+                    invalidate();
+                    break;
+            }
         }
     }
 

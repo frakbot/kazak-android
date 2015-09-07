@@ -71,4 +71,13 @@
     <item name="android:gravity">center</item>
   </style>
 
+  <style name="Schedule.Ruler.Time" parent="None" />
+
+  <style name="Schedule.Ruler.Rooms" parent="None">
+    <item name="tickSize">0dp</item>
+    <item name="orientation">vertical</item>
+    <item name="alignLabel">betweenTicks</item>
+    <item name="android:background">@color/rooms_ruler_color</item>
+  </style>
+
 </resources>

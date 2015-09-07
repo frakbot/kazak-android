@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Rect;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.Size;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.View;
@@ -13,14 +14,20 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import org.jetbrains.annotations.NotNull;
-
 import io.kazak.base.DeveloperError;
 
 import static android.view.View.MeasureSpec.EXACTLY;
 import static android.view.View.MeasureSpec.makeMeasureSpec;
 
 public class TableLayoutManager extends RecyclerView.LayoutManager {
+
+    private static final int[] TMP_LOCATION = new int[2];
+    private static final int LOCATION_X = 0;
+    private static final int LOCATION_Y = 1;
+
+    private static final int[] TMP_DISTANCE = TMP_LOCATION;
+    private static final int DISTANCE_HORIZONTAL = 0;
+    private static final int DISTANCE_VERTICAL = 1;
 
     private static final int VIEW_INDEX_END = -1;
 
@@ -39,8 +46,10 @@ public class TableLayoutManager extends RecyclerView.LayoutManager {
     private int scrollX, scrollY;
     private int scrollXRange, scrollYRange;
 
-    @NotNull
-    private final List<TableLabelsChangedListener> labelsChangedListeners = new ArrayList<>(2);
+    @Nullable
+    private Ruler rowsRuler;
+    @Nullable
+    private Ruler boundsRuler;
 
     private final Rect tmpRect = new Rect();
 
@@ -252,24 +261,17 @@ public class TableLayoutManager extends RecyclerView.LayoutManager {
         return lp instanceof TableLayoutParams;
     }
 
-    public boolean addLabelsChangedListener(@NotNull TableLabelsChangedListener labelsChangedListener) {
-        return labelsChangedListeners.add(labelsChangedListener);
+    public void setRowsRuler(@Nullable Ruler newRowsRuler) {
+        if (rowsRuler != newRowsRuler) {
+            rowsRuler = newRowsRuler;
+            requestLayout();
+        }
     }
 
-    public boolean removeLabelsChangedListener(@NotNull TableLabelsChangedListener labelsChangedListener) {
-        return labelsChangedListeners.remove(labelsChangedListener);
-    }
-
-    // flat model, can't be changed
-    @SuppressWarnings("checkstyle:parameternumber")
-    private void notifyLabelsChanged(
-            @NonNull List<String> rowsLabels, int firstRowIndex, int firstRowPositionY, int rowHeight,
-            @NonNull List<String> boundsLabels, int firstBoundIndex, int firstBoundPositionX, int boundsSpacing) {
-
-        for (TableLabelsChangedListener labelsChangedListener : labelsChangedListeners) {
-            labelsChangedListener.onTableLabelsChanged(
-                    rowsLabels, firstRowIndex, firstRowPositionY, rowHeight,
-                    boundsLabels, firstBoundIndex, firstBoundPositionX, boundsSpacing);
+    public void setBoundsRuler(@Nullable Ruler newBoundsRuler) {
+        if (boundsRuler != newBoundsRuler) {
+            boundsRuler = newBoundsRuler;
+            requestLayout();
         }
     }
 
@@ -286,6 +288,34 @@ public class TableLayoutManager extends RecyclerView.LayoutManager {
             onDataOrSizeChanged(null, null);
         }
         // else -> onDataOrSizeChanged will be called through onLayoutChildren
+    }
+
+    private void getDistanceOnScreen(@NonNull @Size(2) int[] distance, @NonNull View view) {
+        RecyclerView recyclerView = adapterWrapper.getRecyclerView();
+        if (recyclerView == null) {
+            throw new DeveloperError("Must be bound to a RecyclerView.");
+        }
+
+        recyclerView.getLocationOnScreen(TMP_LOCATION);
+        int recyclerViewX = TMP_LOCATION[LOCATION_X];
+        int recyclerViewY = TMP_LOCATION[LOCATION_Y];
+
+        view.getLocationOnScreen(TMP_LOCATION);
+        int viewX = TMP_LOCATION[LOCATION_X];
+        int viewY = TMP_LOCATION[LOCATION_Y];
+
+        distance[DISTANCE_HORIZONTAL] = recyclerViewX - viewX;
+        distance[DISTANCE_VERTICAL] = recyclerViewY - viewY;
+    }
+
+    private int getVerticalDistanceOnScreen(@NonNull View view) {
+        getDistanceOnScreen(TMP_DISTANCE, view);
+        return TMP_DISTANCE[DISTANCE_VERTICAL];
+    }
+
+    private int getHorizontalDistanceOnScreen(@NonNull View view) {
+        getDistanceOnScreen(TMP_DISTANCE, view);
+        return TMP_DISTANCE[DISTANCE_HORIZONTAL];
     }
 
     private class AdapterWrapper<ROW, BOUND> {
@@ -389,15 +419,7 @@ public class TableLayoutManager extends RecyclerView.LayoutManager {
 
             int firstRowIndex = -1;
             int firstRowPositionY = 0;
-            int visibleRowsCount = getHeight() / rowHeightPx + 1;
-            List<String> rowsLabels = new ArrayList<>(visibleRowsCount);
-
-            int firstBoundIndex = getLengthUnits(totalDataStartBound, visibleStartBound) / minSpanLengthUnits;
-            BOUND firstBoundTick = sum(totalDataStartBound, firstBoundIndex * minSpanLengthUnits);
-            int firstBoundPositionX = getLengthPx(visibleStartBound, firstBoundTick) + extraHorizontalPadding;
-            int visibleBoundsCount = getWidth() / minSpanWidthPx + 2;
-            List<String> boundsLabels = new ArrayList<>(visibleBoundsCount);
-            computeBoundsLabels(firstBoundTick, visibleBoundsCount, boundsLabels);
+            List<String> rowsLabels = initializeRowsLabels();
 
             // iterate each row, starting from the first. this is efficient for our use case (few rows, known height),
             // instead of keeping track of the first visible row plus its offset.
@@ -418,7 +440,7 @@ public class TableLayoutManager extends RecyclerView.LayoutManager {
                     isFirstRow = rowIndex == 0;
                     isLastRow = rowIndex == lastRowIndex;
 
-                    rowsLabels.add(getRowLabel(row));
+                    addRowLabel(rowsLabels, row);
 
                     // get all the views in the horizontal visible range
                     for (RangePosition<BOUND> rangePosition : adapter.getPositionsIn(row, visibleStartBound, visibleEndBound)) {
@@ -441,11 +463,45 @@ public class TableLayoutManager extends RecyclerView.LayoutManager {
                 rowIndex++;
             }
 
-            notifyLabelsChanged(
-                    rowsLabels, firstRowIndex, firstRowPositionY, rowHeightPx,
-                    boundsLabels, firstBoundIndex, firstBoundPositionX, minSpanWidthPx);
+            updateBoundsRuler(totalDataStartBound, visibleStartBound);
+            updateRowsRuler(firstRowIndex, firstRowPositionY, rowsLabels);
 
             adapter.onReleaseRowsPositionsResources();
+        }
+
+        private void addRowLabel(@Nullable List<String> rowsLabels, @NonNull ROW row) {
+            if (rowsRuler != null && rowsLabels != null) {
+                rowsLabels.add(getRowLabel(row));
+            }
+        }
+
+        @Nullable
+        private List<String> initializeRowsLabels() {
+            if (rowsRuler != null) {
+                int visibleRowsCount = getHeight() / rowHeightPx + 1;
+                return new ArrayList<>(visibleRowsCount);
+            }
+            return null; // nullable order to get compile-time warnings when trying to add items
+        }
+
+        private void updateRowsRuler(int firstRowIndex, int firstRowPositionY, @Nullable List<String> rowsLabels) {
+            if (rowsRuler != null && rowsLabels != null) {
+                int distanceFromRuler = getVerticalDistanceOnScreen(rowsRuler);
+                rowsRuler.onLabelsChanged(rowsLabels, firstRowIndex, firstRowPositionY + distanceFromRuler, rowHeightPx);
+            }
+        }
+
+        private void updateBoundsRuler(@NonNull BOUND totalDataStartBound, @NonNull BOUND visibleStartBound) {
+            if (boundsRuler != null) {
+                int distanceFromRuler = getHorizontalDistanceOnScreen(boundsRuler);
+                int firstBoundIndex = getLengthUnits(totalDataStartBound, visibleStartBound) / minSpanLengthUnits;
+                BOUND firstBoundTick = sum(totalDataStartBound, firstBoundIndex * minSpanLengthUnits);
+                int firstBoundPositionX = getLengthPx(visibleStartBound, firstBoundTick) + extraHorizontalPadding + distanceFromRuler;
+                int visibleBoundsCount = getWidth() / minSpanWidthPx + 2;
+                List<String> boundsLabels = new ArrayList<>(visibleBoundsCount);
+                computeBoundsLabels(firstBoundTick, visibleBoundsCount, boundsLabels);
+                boundsRuler.onLabelsChanged(boundsLabels, firstBoundIndex, firstBoundPositionX, minSpanWidthPx);
+            }
         }
 
         private void computeBoundsLabels(@NonNull BOUND firstBoundTick, int visibleBoundsCount, @NonNull List<String> boundsLabels) {
@@ -469,6 +525,11 @@ public class TableLayoutManager extends RecyclerView.LayoutManager {
             layoutParams.setEndsLast(totalDataEndBound.equals(viewHolder.getEnd()));
             layoutParams.setIsPlaceholder(viewHolder.isPlaceholder());
             view.setLayoutParams(layoutParams);
+        }
+
+        @Nullable
+        private RecyclerView getRecyclerView() {
+            return adapter == null ? null : adapter.getRecyclerView();
         }
 
         private int getLengthUnits(@NonNull BOUND start, @NonNull BOUND end) {

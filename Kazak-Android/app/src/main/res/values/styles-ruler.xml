@@ -4,13 +4,11 @@
   <style name="RulerDefaultStyle">
     <item name="android:textSize">@dimen/ruler_default_text_size</item>
     <item name="android:textColor">@color/ruler_default_text_color</item>
-  </style>
-
-  <style name="BoundsRulerDefaultStyle" parent="RulerDefaultStyle">
     <item name="tickSize">@dimen/ruler_default_tick_size</item>
     <item name="tickStrokeWidth">@dimen/ruler_default_tick_stroke_width</item>
     <item name="tickColor">@color/ruler_default_tick_color</item>
-    <item name="skipLabels">@integer/ruler_default_skip_labels</item>
+    <item name="orientation">@integer/ruler_default_orientation</item>
+    <item name="alignLabel">@integer/ruler_default_align_label</item>
   </style>
 
 </resources>

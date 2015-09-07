@@ -6,6 +6,7 @@
   <dimen name="ruler_default_text_size">14sp</dimen>
   <dimen name="ruler_default_tick_size">2dp</dimen>
   <dimen name="ruler_default_tick_stroke_width">1dp</dimen>
-  <integer name="ruler_default_skip_labels">0</integer>
+  <integer name="ruler_default_orientation">@integer/ruler_orientation_horizontal</integer>
+  <integer name="ruler_default_align_label">@integer/ruler_align_label_on_tick</integer>
 
 </resources>
