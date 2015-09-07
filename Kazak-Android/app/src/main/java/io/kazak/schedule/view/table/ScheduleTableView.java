@@ -8,17 +8,28 @@ import android.support.annotation.StyleRes;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import io.kazak.R;
+import io.kazak.model.Id;
+import io.kazak.model.Room;
 import io.kazak.model.Schedule;
+import io.kazak.model.Speaker;
+import io.kazak.model.Speakers;
 import io.kazak.model.Talk;
+import io.kazak.model.TimeSlot;
+import io.kazak.schedule.view.TalkView;
 import io.kazak.schedule.view.table.base.TableItemPaddingDecoration;
 import io.kazak.schedule.view.table.base.TableLayoutManager;
 
 public class ScheduleTableView extends RecyclerView {
+
+    private static final int UNSPECIFIED_MEASURE_SPEC = MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED);
+    private static final Id NO_ID = new Id("");
 
     private final ScheduleTableAdapter adapter;
 
@@ -41,14 +52,15 @@ public class ScheduleTableView extends RecyclerView {
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.ScheduleTableView, defStyleAttr, defStyleRes);
         int itemsPaddingHorizontal = a.getDimensionPixelSize(R.styleable.ScheduleTableView_itemsPaddingHorizontal, 0);
         int itemsPaddingVertical = a.getDimensionPixelSize(R.styleable.ScheduleTableView_itemsPaddingVertical, 0);
-        int rowHeightPx = a.getDimensionPixelSize(R.styleable.ScheduleTableView_rowHeight, 0);
         int timeSlotUnitWidthPx = a.getDimensionPixelSize(R.styleable.ScheduleTableView_timeSlotUnitWidth, 0);
         int timeSlotDurationMinutes = a.getInt(R.styleable.ScheduleTableView_timeSlotUnitDurationMinutes, 0);
         a.recycle();
 
-        int timeSlotDurationMilliseconds = (int) TimeUnit.MINUTES.toMillis(timeSlotDurationMinutes);
-
         adapter = new ScheduleTableAdapter(context);
+
+        int timeSlotDurationMilliseconds = (int) TimeUnit.MINUTES.toMillis(timeSlotDurationMinutes);
+        int rowHeightPx = computeRowHeight(timeSlotUnitWidthPx, timeSlotDurationMinutes);
+
         setHasFixedSize(true);
         addItemDecoration(new TableItemPaddingDecoration(itemsPaddingHorizontal, itemsPaddingVertical));
         setLayoutManager(
@@ -59,6 +71,10 @@ public class ScheduleTableView extends RecyclerView {
 
     public void updateWith(@NonNull ScheduleTableAdapter.Data data) {
         adapter.updateWith(data);
+    }
+
+    public void updateWith(@NonNull List<? extends Id> favorites) {
+        adapter.updateWith(favorites);
     }
 
     @NonNull
@@ -78,6 +94,37 @@ public class ScheduleTableView extends RecyclerView {
         } else {
             return schedule.getDays().get(0).getTalks(); //TODO
         }
+    }
+
+    private int computeRowHeight(int timeSlotUnitWidthPx, int timeSlotDurationMinutes) {
+        ScheduleTableViewHolder viewHolder = adapter.createMaxHeightReferenceViewHolder();
+        TalkView talkView = viewHolder.getTalkView();
+
+        talkView.updateWith(createMaxHeightReferenceTalk(timeSlotDurationMinutes));
+
+        int widthMeasureSpec = MeasureSpec.makeMeasureSpec(timeSlotUnitWidthPx, MeasureSpec.EXACTLY);
+        talkView.measure(widthMeasureSpec, UNSPECIFIED_MEASURE_SPEC);
+
+        return talkView.getMeasuredHeight();
+    }
+
+    @NonNull
+    private Talk createMaxHeightReferenceTalk(int timeSlotDurationMinutes) {
+        Date start = new Date();
+        Date end = new Date(start.getTime() + TimeUnit.MINUTES.toMillis(timeSlotDurationMinutes));
+        List<Speaker> speakerList = Arrays.asList(createDummySpeaker("Speaker1"), createDummySpeaker("Speaker2"));
+        return new Talk(
+                NO_ID,
+                "1\n2\n3",
+                new TimeSlot(start, end),
+                Collections.singletonList(new Room(NO_ID, "Room")),
+                new Speakers(speakerList),
+                null);
+    }
+
+    @NonNull
+    private static Speaker createDummySpeaker(String speakerName) {
+        return new Speaker(NO_ID, speakerName, null, null, null, null);
     }
 
 }

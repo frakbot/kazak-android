@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  xmlns:tools="http://schemas.android.com/tools">
+
+  <TextView
+    android:id="@+id/track_label"
+    style="@style/Session.Card.Track"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    tools:text="CODE QUALITY"
+    tools:backgroundTint="#0000ee"
+    tools:drawableLeft="@drawable/temp_circle_icon" />
+
+  <TextView
+    android:id="@+id/session_time"
+    style="@style/Session.Card.Time"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_toEndOf="@id/track_label"
+    android:layout_alignParentEnd="true"
+    tools:text="12:10—12:45" />
+
+  <TextView
+    android:id="@+id/session_title"
+    style="@style/Session.Card.Title"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_below="@id/track_label"
+    tools:text="Jump around, or how the animation system works in Android" />
+
+  <TextView
+    android:id="@+id/session_speakers"
+    style="@style/Session.Card.Speakers"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_below="@id/session_title"
+    android:layout_alignParentStart="true"
+    tools:text="Sterling Archer" />
+
+  <ImageButton
+    android:id="@+id/session_favorite"
+    style="@style/Session.Card.Favorite"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignParentEnd="true"
+    android:layout_alignParentBottom="true"
+    android:contentDescription="@string/description_favorite_session" />
+
+</RelativeLayout>

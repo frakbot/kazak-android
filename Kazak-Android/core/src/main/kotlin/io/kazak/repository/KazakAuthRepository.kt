@@ -2,7 +2,7 @@ package io.kazak.repository
 
 import io.kazak.auth.KazakAuth
 import io.kazak.repository.event.SyncEvent
-import io.kazak.repository.event.SyncEventObserver
+import io.kazak.repository.event.SyncObserver
 import rx.Observable
 import rx.subjects.BehaviorSubject
 
@@ -13,7 +13,7 @@ public class KazakAuthRepository(val authenticator: KazakAuth) : AuthRepository 
 
     override fun login(username: String, password: String) {
             authenticator.login(username, password)
-                    .subscribe(SyncEventObserver(authTokenCache, authTokenSyncCache))
+                    .subscribe(SyncObserver(authTokenCache, authTokenSyncCache))
     }
 
     override fun clearLoginCache() {

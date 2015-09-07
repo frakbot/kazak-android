@@ -5,8 +5,10 @@ import android.app.Application;
 import com.facebook.stetho.Stetho;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import io.kazak.injection.ApiModule;
 import io.kazak.injection.ApplicationInjector;
 import io.kazak.injection.DaggerApplicationInjector;
+import io.kazak.injection.RepositoriesModule;
 
 public class KazakApplication extends Application {
 
@@ -17,7 +19,10 @@ public class KazakApplication extends Application {
     public void onCreate() {
         super.onCreate();
         setupStetho();
-        applicationInjector = DaggerApplicationInjector.create();
+        applicationInjector = DaggerApplicationInjector.builder()
+                .apiModule(new ApiModule())
+                .repositoriesModule(new RepositoriesModule(this))
+                .build();
     }
 
     private void setupStetho() {

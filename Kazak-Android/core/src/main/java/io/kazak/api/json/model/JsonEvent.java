@@ -14,6 +14,7 @@ public class JsonEvent {
     @Nullable public final String type;
     @Nullable public final List<JsonPresenter> presenters;
     @Nullable public final List<JsonRoom> rooms;
+    @Nullable public final JsonTrack track;
 
     public JsonEvent(
             @Nullable String id,
@@ -23,7 +24,8 @@ public class JsonEvent {
             @Nullable String endDate,
             @Nullable String type,
             @Nullable List<JsonPresenter> presenters,
-            @Nullable List<JsonRoom> rooms
+            @Nullable List<JsonRoom> rooms,
+            @Nullable JsonTrack track
     ) {
         this.id = id;
         this.name = name;
@@ -33,6 +35,7 @@ public class JsonEvent {
         this.type = type;
         this.presenters = presenters;
         this.rooms = rooms;
+        this.track = track;
     }
 
 }

@@ -8,4 +8,7 @@
     <Class name="~.*\.R\$.*" />
     <Bug pattern="MS_MUTABLE_ARRAY" />
   </Match>
+  <Match>
+    <Source name="~.*\.kt" />
+  </Match>
 </FindBugsFilter>
