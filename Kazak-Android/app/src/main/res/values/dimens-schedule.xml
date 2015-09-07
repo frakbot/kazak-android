@@ -5,13 +5,13 @@
   <dimen name="session_card_padding_vertical">8dp</dimen>
   <dimen name="session_card_element_margin_single">8dp</dimen>
 
+  <dimen name="session_card_time_text">@dimen/text_body</dimen>
+
   <dimen name="track_label_padding_left">4dp</dimen>
   <dimen name="track_label_padding_right">6dp</dimen>
   <dimen name="track_label_padding_vertical">2dp</dimen>
   <dimen name="session_card_track_drawable_padding">4dp</dimen>
   <dimen name="session_card_track_text">@dimen/text_track_label</dimen>
-
-  <dimen name="session_card_time_text">@dimen/text_body</dimen>
 
   <dimen name="session_card_title_text">@dimen/text_title</dimen>
   <dimen name="session_card_title_margin_top">@dimen/session_card_element_margin_single</dimen>

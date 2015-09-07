@@ -289,7 +289,7 @@ public class TalkView extends ViewGroup {
 
     private int layoutSecondRow(int clientLeft, int clientRight, int firstRowBottom) {
         int titleTop = firstRowBottom + getTopMarginFor(titleView);
-        int titleHeight = titleTop + titleView.getMeasuredHeight();
+        int titleHeight = titleView.getMeasuredHeight();
         titleView.layout(clientLeft, titleTop, clientRight, titleTop + titleHeight);
         return titleView.getBottom() + getBottomMarginFor(titleView);
     }
