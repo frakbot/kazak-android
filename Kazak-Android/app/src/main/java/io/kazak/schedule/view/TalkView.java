@@ -127,7 +127,18 @@ public class TalkView extends ViewGroup {
         measureAndUpdateThirdRowContent(availableWidth);
         totalHeight += speakersView.getMeasuredHeight() + getVerticalMarginsFor(speakersView);
 
-        setMeasuredDimension(MeasureSpec.getSize(widthMeasureSpec), totalHeight + getPaddingBottom());
+        totalHeight += getPaddingBottom();
+
+        int measuredHeight;
+        int heightMode = MeasureSpec.getMode(heightMeasureSpec);
+        if (heightMode == MeasureSpec.EXACTLY) {
+            measuredHeight = MeasureSpec.getSize(heightMeasureSpec);
+        } else if (heightMode == MeasureSpec.AT_MOST) {
+            measuredHeight = Math.min(MeasureSpec.getSize(heightMeasureSpec), totalHeight);
+        } else {
+            measuredHeight = totalHeight;
+        }
+        setMeasuredDimension(MeasureSpec.getSize(widthMeasureSpec), measuredHeight);
     }
 
     private void measureAndUpdateFirstRowContent(int availableWidth) {
@@ -197,7 +208,7 @@ public class TalkView extends ViewGroup {
         boolean isLtr = isLayoutLtr();
         int clientLeft = left + getPaddingLeft();
         int clientTop = top + getPaddingTop();
-        int clientRight = right + getPaddingRight();
+        int clientRight = right - getPaddingRight();
         int clientBottom = bottom - getPaddingBottom();
 
         // Layout first row: [TIME] --- [TRACK LABEL]? - [TRACK DRAWABLE]?
@@ -297,7 +308,7 @@ public class TalkView extends ViewGroup {
         if (isLtr) {
             // [SPEAKERS] - [FAVORITE]
             speakersLeft = clientLeft + getLeftMarginFor(speakersView);
-            favoriteLeft = clientRight + drawableOpticalBalanceOffsetPx - favoriteWidth - getRightMarginFor(favoriteView);
+            favoriteLeft = clientRight + drawableOpticalBalanceOffsetPx - getRightMarginFor(favoriteView) - favoriteWidth;
         } else {
             // [FAVORITE] - [SPEAKERS]  
             speakersLeft = clientRight - speakersWidth + getRightMarginFor(speakersView);
@@ -364,6 +375,7 @@ public class TalkView extends ViewGroup {
         updateFavoriteWith(false);
 
         // TODO set maxLines for title and speakers
+        requestLayout();
     }
 
     private void updateTrackWith(@NonNull Track track) {

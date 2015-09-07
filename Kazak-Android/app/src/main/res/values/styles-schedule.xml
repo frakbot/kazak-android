@@ -65,7 +65,6 @@
   <style name="Schedule.Card.Talk.Favorite" parent="None">
     <item name="android:layout_marginStart">@dimen/session_card_element_margin_single</item>
     <item name="android:layout_marginTop">@dimen/session_card_speakers_margin_top</item>
-    <item name="android:padding">@dimen/session_card_favorite_padding</item>
     <item name="android:src">@drawable/ic_star_empty_20dp</item>
     <item name="android:background">@drawable/selector_clickable_unbound</item>
     <item name="android:textAppearance">?android:attr/textAppearanceButton</item>
