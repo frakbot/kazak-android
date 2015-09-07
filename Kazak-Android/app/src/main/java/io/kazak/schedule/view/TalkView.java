@@ -9,6 +9,7 @@ import android.graphics.Rect;
 import android.support.annotation.AttrRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.StyleRes;
+import android.support.annotation.UiThread;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -68,12 +69,20 @@ public class TalkView extends ViewGroup {
         trackDrawableSizePx = a.getDimensionPixelSize(R.styleable.TalkView_trackSymbolSize, 0);
         drawableOpticalBalanceOffsetPx = a.getDimensionPixelSize(R.styleable.TalkView_drawableOpticalBalanceOffset, 0);
         a.recycle();
+
+        super.setWillNotDraw(false);
+    }
+
+    @Override
+    public void setWillNotDraw(boolean willNotDraw) {
+        throw new DeveloperError("Nein nein nein nein nein! ಠ_ಠ");
     }
 
     @NonNull
     private Paint createTrackBgPaint() {
         Paint paint = new Paint();
         paint.setAntiAlias(true);
+        paint.setStyle(Paint.Style.FILL);
         return paint;
     }
 
@@ -366,6 +375,7 @@ public class TalkView extends ViewGroup {
         }
     }
 
+    @UiThread
     public void updateWith(Talk talk) {
         // TODO delegate to custom views
         updateTimeWith(talk.timeSlot());
@@ -375,7 +385,6 @@ public class TalkView extends ViewGroup {
         updateFavoriteWith(false);
 
         // TODO set maxLines for title and speakers
-        requestLayout();
     }
 
     private void updateTrackWith(@NonNull Track track) {
