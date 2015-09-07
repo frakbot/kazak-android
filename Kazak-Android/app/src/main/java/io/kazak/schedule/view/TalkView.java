@@ -6,6 +6,8 @@ import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.graphics.RectF;
+import android.graphics.Region;
 import android.support.annotation.AttrRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.StyleRes;
@@ -40,6 +42,9 @@ public class TalkView extends ViewGroup {
     private final int drawableOpticalBalanceOffsetPx;
     private final Rect trackDrawableBounds;
     private final Paint trackBgPaint;
+    private final RectF trackLineBounds;
+    private final int trackLineHeightPx;
+    private final int trackLineCornerRadiusPx;
 
     private boolean showTrackDrawable = true;
 
@@ -62,11 +67,14 @@ public class TalkView extends ViewGroup {
         super(context, attrs, defStyleAttr);
         dateFormat = new SimpleDateFormat(TIMESLOT_BOUND_PATTERN);
         trackDrawableBounds = new Rect();
+        trackLineBounds = new RectF();
         trackBgPaint = createTrackBgPaint();
 
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.TalkView, defStyleAttr, defStyleRes);
         trackDrawablePaddingPx = a.getDimensionPixelSize(R.styleable.TalkView_android_drawablePadding, 0);
         trackDrawableSizePx = a.getDimensionPixelSize(R.styleable.TalkView_trackSymbolSize, 0);
+        trackLineHeightPx = a.getDimensionPixelSize(R.styleable.TalkView_trackLineHeight, 0);
+        trackLineCornerRadiusPx = a.getDimensionPixelSize(R.styleable.TalkView_trackLineCornerRadius, 0);
         drawableOpticalBalanceOffsetPx = a.getDimensionPixelSize(R.styleable.TalkView_drawableOpticalBalanceOffset, 0);
         a.recycle();
 
@@ -228,6 +236,9 @@ public class TalkView extends ViewGroup {
 
         // Measure the third row of content: [SPEAKERS] - [FAVORITE] (assuming not wrapping favorite to fourth row)
         layoutThirdRow(clientLeft, clientRight, clientBottom, secondRowBottom, isLtr);
+
+        // Update the track line bounds
+        trackLineBounds.set(0f, 0f, (float) getWidth(), trackLineHeightPx * 2);
     }
 
     private int layoutFirstRow(int clientLeft, int clientTop, int clientRight, boolean isLtr) {
@@ -365,7 +376,10 @@ public class TalkView extends ViewGroup {
 
     @Override
     protected void onDraw(Canvas canvas) {
-        // TODO draw track line on top of the card
+        canvas.save();
+        canvas.clipRect(0f, 0f, getWidth(), trackLineHeightPx, Region.Op.INTERSECT);
+        canvas.drawRoundRect(trackLineBounds, trackLineCornerRadiusPx, trackLineCornerRadiusPx, trackBgPaint);
+        canvas.restore();
 
         super.onDraw(canvas);
 

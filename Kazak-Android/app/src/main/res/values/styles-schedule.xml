@@ -3,7 +3,10 @@
 
   <style name="Schedule" parent="None" />
 
-  <style name="Schedule.Card" parent="CardView" />
+  <style name="Schedule.Card" parent="CardView">
+    <item name="cardPreventCornerOverlap">false</item>
+    <item name="cardCornerRadius">@dimen/session_card_corner_radius</item>
+  </style>
 
   <style name="Schedule.Card.Talk" />
 
@@ -12,6 +15,8 @@
     <item name="android:paddingTop">@dimen/session_card_padding_vertical</item>
     <item name="android:paddingEnd">@dimen/session_card_padding_horizontal</item>
     <item name="android:paddingBottom">@dimen/session_card_padding_vertical</item>
+    <item name="trackLineHeight">@dimen/session_card_track_line_height</item>
+    <item name="trackLineCornerRadius">@dimen/session_card_track_line_corner_radius</item>
   </style>
 
   <style name="Schedule.Card.Talk.Time" parent="None">
