@@ -30,6 +30,7 @@ public class TalkView extends ViewGroup {
 
     private static final String TIMESLOT_BOUND_PATTERN = "HH:mm";
     private static final String TIMESLOT_TEMPLATE = "%1$s—%2$s";
+    private static final int UNSPECIFIED_MEASURE_SPEC = MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED);
 
     private final DateFormat dateFormat;
 
@@ -89,17 +90,17 @@ public class TalkView extends ViewGroup {
     }
 
     @Override
-    protected LayoutParams generateLayoutParams(LayoutParams lp) {
+    protected MarginLayoutParams generateLayoutParams(@NonNull LayoutParams lp) {
         return new MarginLayoutParams(lp);
     }
 
     @Override
-    public LayoutParams generateLayoutParams(AttributeSet attrs) {
+    public MarginLayoutParams generateLayoutParams(@NonNull AttributeSet attrs) {
         return new MarginLayoutParams(getContext(), attrs);
     }
 
     @Override
-    protected LayoutParams generateDefaultLayoutParams() {
+    protected MarginLayoutParams generateDefaultLayoutParams() {
         return new MarginLayoutParams(super.generateDefaultLayoutParams());
     }
 
@@ -115,30 +116,26 @@ public class TalkView extends ViewGroup {
         int availableWidth = MeasureSpec.getSize(widthMeasureSpec) - getPaddingStart() - getPaddingEnd();
 
         // Measure the first row of content: [TIME] --- [TRACK LABEL]? - [TRACK DRAWABLE]?
-        measureAndUpdateFirstRowContent(widthMeasureSpec, heightMeasureSpec, availableWidth);
-        int totalHeight = getPaddingTop() + timeView.getMeasuredHeight() + getVerticalMarginsFor(trackView);
+        measureAndUpdateFirstRowContent(availableWidth);
+        int totalHeight = getPaddingTop() + timeView.getMeasuredHeight() + getVerticalMarginsFor(timeView);
 
         // Measure the second row of content: [TITLE]
-        measureChildWithMargins(titleView, widthMeasureSpec, 0, heightMeasureSpec, 0);
+        measureChildWithMargins(titleView, availableWidth);
         totalHeight += titleView.getMeasuredHeight() + getVerticalMarginsFor(titleView);
 
         // Measure the third row of content: [SPEAKERS] - [FAVORITE] (assuming not wrapping favorite to fourth row)
-        measureAndUpdateThirdRowContent(widthMeasureSpec, heightMeasureSpec, availableWidth);
+        measureAndUpdateThirdRowContent(availableWidth);
         totalHeight += speakersView.getMeasuredHeight() + getVerticalMarginsFor(speakersView);
 
         setMeasuredDimension(MeasureSpec.getSize(widthMeasureSpec), totalHeight + getPaddingBottom());
     }
 
-    private void measureAndUpdateFirstRowContent(int widthMeasureSpec, int heightMeasureSpec, int availableWidth) {
-        measureChildWithMargins(timeView, widthMeasureSpec, 0, heightMeasureSpec, 0);
-
+    private void measureAndUpdateFirstRowContent(int availableWidth) {
+        measureChildWithMargins(timeView, availableWidth);
         int totalTimeWidth = timeView.getMeasuredWidth() + getHorizontalMarginsFor(timeView);
-        measureChildWithMargins(trackView, widthMeasureSpec, 0, heightMeasureSpec, 0);
-        int totalTrackLabelWidth =
-                Math.max(
-                        trackView.getMeasuredWidth() - trackDrawablePaddingPx - getHorizontalMarginsFor(trackView),
-                        0
-                );
+
+        measureChildWithMargins(trackView, Integer.MAX_VALUE);
+        int totalTrackLabelWidth = trackView.getMeasuredWidth() + trackDrawablePaddingPx + getHorizontalMarginsFor(trackView);
 
         int maxTimeWidthWithoutTrackLabel = availableWidth - trackDrawableSizePx + drawableOpticalBalanceOffsetPx;
         int maxTimeWidthWithTrackLabel = maxTimeWidthWithoutTrackLabel - totalTrackLabelWidth;
@@ -163,13 +160,20 @@ public class TalkView extends ViewGroup {
         }
     }
 
-    private void measureAndUpdateThirdRowContent(int widthMeasureSpec, int heightMeasureSpec, int availableWidth) {
-        int usedWidth = 0;
-        measureChildWithMargins(favoriteView, widthMeasureSpec, usedWidth, heightMeasureSpec, 0);
+    private void measureAndUpdateThirdRowContent(int availableWidth) {
+        int leftoverWidth = availableWidth;
+        measureChildWithMargins(favoriteView, leftoverWidth);
 
-        usedWidth = favoriteView.getMeasuredWidth() + getHorizontalMarginsFor(favoriteView);
+        leftoverWidth -= favoriteView.getMeasuredWidth() + getHorizontalMarginsFor(favoriteView);
+        leftoverWidth += drawableOpticalBalanceOffsetPx;
 
-        measureChildWithMargins(speakersView, widthMeasureSpec, usedWidth, heightMeasureSpec, 0);
+        measureChildWithMargins(speakersView, leftoverWidth);
+    }
+
+    private void measureChildWithMargins(@NonNull View child, int availableWidth) {
+        int maxChildWidth = availableWidth - getHorizontalMarginsFor(child);
+        int widthMeasureSpec = MeasureSpec.makeMeasureSpec(maxChildWidth, MeasureSpec.AT_MOST);
+        child.measure(widthMeasureSpec, UNSPECIFIED_MEASURE_SPEC);
     }
 
     private static int getHorizontalMarginsFor(@NonNull View view) {
@@ -346,8 +350,8 @@ public class TalkView extends ViewGroup {
         super.onDraw(canvas);
 
         if (showTrackDrawable) {
-            // TODO draw track drawable
             canvas.drawCircle(trackDrawableBounds.centerX(), trackDrawableBounds.centerY(), trackDrawableBounds.width() / 2f, trackBgPaint);
+            // TODO draw track drawable
         }
     }
 
