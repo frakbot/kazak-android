@@ -83,6 +83,7 @@ public class TalkView extends ViewGroup {
 
     @Override
     public void setWillNotDraw(boolean willNotDraw) {
+        // This is because otherwise onDraw() wouldn't get called.
         throw new DeveloperError("Nein nein nein nein nein! ಠ_ಠ");
     }
 
