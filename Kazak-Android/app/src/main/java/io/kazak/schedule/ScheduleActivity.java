@@ -61,7 +61,7 @@ public class ScheduleActivity extends AppCompatActivity {
     }
 
     private void setupRulers() {
-        scheduleView.setRoomsRuler((Ruler)findViewById(R.id.rooms_ruler));
+        scheduleView.setRoomsRuler((Ruler) findViewById(R.id.rooms_ruler));
         scheduleView.setTimeRuler((Ruler) findViewById(R.id.time_ruler));
     }
 
