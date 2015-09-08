@@ -126,7 +126,10 @@ public class TalkView extends ViewGroup {
 
         // Measure the first row of content: [TIME] --- [TRACK LABEL]? - [TRACK DRAWABLE]?
         measureAndUpdateFirstRowContent(availableWidth);
-        int totalHeight = getPaddingTop() + timeView.getMeasuredHeight() + getVerticalMarginsFor(timeView);
+        int totalHeight = getPaddingTop() + Math.max(
+                timeView.getMeasuredHeight() + getVerticalMarginsFor(timeView),
+                trackView.getMeasuredHeight() + getVerticalMarginsFor(trackView)
+        );
 
         // Measure the second row of content: [TITLE]
         measureChildWithMargins(titleView, availableWidth);
@@ -138,15 +141,7 @@ public class TalkView extends ViewGroup {
 
         totalHeight += getPaddingBottom();
 
-        int measuredHeight;
-        int heightMode = MeasureSpec.getMode(heightMeasureSpec);
-        if (heightMode == MeasureSpec.EXACTLY) {
-            measuredHeight = MeasureSpec.getSize(heightMeasureSpec);
-        } else if (heightMode == MeasureSpec.AT_MOST) {
-            measuredHeight = Math.min(MeasureSpec.getSize(heightMeasureSpec), totalHeight);
-        } else {
-            measuredHeight = totalHeight;
-        }
+        int measuredHeight = getMeasuredHeightFor(heightMeasureSpec, totalHeight);
         setMeasuredDimension(MeasureSpec.getSize(widthMeasureSpec), measuredHeight);
     }
 
@@ -210,6 +205,23 @@ public class TalkView extends ViewGroup {
         }
         MarginLayoutParams lp = (MarginLayoutParams) view.getLayoutParams();
         return lp.topMargin + lp.bottomMargin;
+    }
+
+    private static int getMeasuredHeightFor(int heightMeasureSpec, int totalHeight) {
+        int measuredHeight;
+        int heightMode = MeasureSpec.getMode(heightMeasureSpec);
+        switch (heightMode) {
+            case MeasureSpec.EXACTLY:
+                measuredHeight = MeasureSpec.getSize(heightMeasureSpec);
+                break;
+            case MeasureSpec.AT_MOST:
+                measuredHeight = Math.min(MeasureSpec.getSize(heightMeasureSpec), totalHeight);
+                break;
+            default:
+                measuredHeight = totalHeight;
+                break;
+        }
+        return measuredHeight;
     }
 
     @Override
