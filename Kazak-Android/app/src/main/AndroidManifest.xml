@@ -46,7 +46,6 @@
 
     <service
       android:name="io.kazak.login.KazakAuthenticationService"
-      android:exported="false"
       android:enabled="${supportsAccount}">
       <intent-filter>
         <action android:name="android.accounts.AccountAuthenticator" />

@@ -5,6 +5,6 @@ import rx.Observable
 
 public interface KazakAuth {
 
-    fun login(username: String, password: String) : Observable<String>
+    fun login(username: String, password: String) : Observable<KazakAuthToken>
 
 }

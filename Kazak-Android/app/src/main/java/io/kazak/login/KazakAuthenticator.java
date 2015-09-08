@@ -24,7 +24,10 @@ public class KazakAuthenticator extends AbstractAccountAuthenticator {
     }
 
     @Override
-    public Bundle addAccount(AccountAuthenticatorResponse response, String accountType, String authTokenType, String[] requiredFeatures,
+    public Bundle addAccount(AccountAuthenticatorResponse response,
+                             String accountType,
+                             String authTokenType,
+                             String[] requiredFeatures,
                              Bundle options) throws NetworkErrorException {
         // build and return an intent that will fire up the login activity for a new account
         return getLoginBundledIntent(response, accountType, authTokenType, true);
@@ -37,10 +40,13 @@ public class KazakAuthenticator extends AbstractAccountAuthenticator {
     }
 
     @Override
-    public Bundle getAuthToken(AccountAuthenticatorResponse response, Account account, String authTokenType, Bundle options)
-            throws NetworkErrorException {
+    public Bundle getAuthToken(
+            AccountAuthenticatorResponse response,
+            Account account,
+            String authTokenType,
+            Bundle options) throws NetworkErrorException {
         // retrieve the already-stored auth token
-        final AccountManager am = AccountManager.get(mContext);
+        AccountManager am = AccountManager.get(mContext);
         String authToken = am.peekAuthToken(account, authTokenType);
 
         // if there's no stored token, return the bundled Intent to launch the login activity
@@ -76,22 +82,26 @@ public class KazakAuthenticator extends AbstractAccountAuthenticator {
     }
 
     /**
-     * Builds a {@link Bundle} containing a parcelled {@link Intent} to open
-     * the login activity and make the user login.
+     * Create an {@link Intent} to open the {@link LoginActivity} with the proper extras set into it.
      *
      * @param response      The response object that will be used by the login activity to write information into.
      * @param accountType   The type of the account
      * @param authTokenType The type of the auth token
      * @param isNew         {@code true} if the login was triggered by the "new account" option in the settings, {@code false} otherwise
-     * @return A {@link Bundle} containing a parcelled {@link Intent}, accessible via {@link AccountManager#KEY_INTENT}
+     * @return An {@link Intent} to launch the {@link LoginActivity}
      */
-    private Bundle getLoginBundledIntent(AccountAuthenticatorResponse response, String accountType, String authTokenType, boolean isNew) {
-        final Intent intent = new Intent(mContext, LoginActivity.class);
+    private Intent createIntentLogin(AccountAuthenticatorResponse response, String accountType, String authTokenType, boolean isNew) {
+        Intent intent = new Intent(mContext, LoginActivity.class);
         intent.putExtra(AccountManager.KEY_ACCOUNT_AUTHENTICATOR_RESPONSE, response);
         intent.putExtra(AccountManager.KEY_ACCOUNT_TYPE, accountType);
-        intent.putExtra(LoginActivity.NEW_ACCOUNT, isNew);
         intent.putExtra(LoginActivity.AUTH_TOKEN_TYPE, authTokenType);
-        final Bundle bundle = new Bundle();
+        intent.putExtra(LoginActivity.NEW_ACCOUNT, isNew);
+        return intent;
+    }
+
+    private Bundle getLoginBundledIntent(AccountAuthenticatorResponse response, String accountType, String authTokenType, boolean isNew) {
+        Intent intent = createIntentLogin(response, accountType, authTokenType, isNew);
+        Bundle bundle = new Bundle();
         bundle.putParcelable(AccountManager.KEY_INTENT, intent);
         return bundle;
     }

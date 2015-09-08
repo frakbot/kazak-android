@@ -4,6 +4,11 @@ import rx.Observer
 import rx.subjects.BehaviorSubject
 
 public class SyncObserver<T>(val subject: BehaviorSubject<T>, val syncSubject: BehaviorSubject<SyncEvent>) : Observer<T> {
+
+    override fun onCompleted() {
+        syncSubject.onNext(SyncEvent(SyncState.IDLE))
+    }
+
     override fun onError(e: Throwable?) {
         syncSubject.onNext(SyncEvent(SyncState.ERROR, e))
     }
@@ -13,7 +18,4 @@ public class SyncObserver<T>(val subject: BehaviorSubject<T>, val syncSubject: B
         syncSubject.onNext(SyncEvent(SyncState.IDLE))
     }
 
-    override fun onCompleted() {
-        syncSubject.onNext(SyncEvent(SyncState.IDLE))
-    }
 }

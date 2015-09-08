@@ -12,7 +12,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -31,17 +30,13 @@ import java.util.List;
 
 import io.kazak.KazakApplication;
 import io.kazak.R;
+import io.kazak.auth.KazakAuthToken;
 import io.kazak.repository.AuthRepository;
 import io.kazak.repository.event.SyncEvent;
 import io.kazak.repository.event.SyncState;
-import rx.Observable;
 import rx.functions.Action1;
-import rx.functions.Func1;
 import rx.subscriptions.CompositeSubscription;
 
-/**
- * A login screen that offers login via email/password.
- */
 public class LoginActivity extends Activity {
 
     // unused for now, can be used to discriminate whether this is a new login or a confirmation for an existing one
@@ -55,19 +50,22 @@ public class LoginActivity extends Activity {
     // bundle key, its value specifies that a login is in progress
     private static final String BUNDLE_LOGIN_IN_PROGRESS = "BUNDLE_LOGIN_IN_PROGRESS";
 
-    private static final String TAG = LoginActivity.class.getSimpleName();
-
     @Inject
     AuthRepository authRepository;
+
     private CompositeSubscription loginSubscriptions;
 
     // UI references.
-    private AutoCompleteTextView mEmailView;
-    private EditText mPasswordView;
-    private View mProgressView;
-    private View mLoginFormView;
+    private AutoCompleteTextView emailView;
+    private EditText passwordView;
+    private View progressView;
+    private View loginFormView;
 
     private boolean isLoggingIn;
+
+    public LoginActivity() {
+        loginSubscriptions = new CompositeSubscription();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,17 +79,16 @@ public class LoginActivity extends Activity {
 
         // if this is a new login session, clear the login cache
         if (savedInstanceState == null || !savedInstanceState.getBoolean(BUNDLE_NEED_NEW_CACHE)) {
-            Log.v(TAG, "New LoginActivity created, clearing the login cache.");
             authRepository.clearLoginCache();
         }
 
         // Set up the login form.
-        mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
+        emailView = (AutoCompleteTextView) findViewById(R.id.email);
         populateAutoComplete();
 
-        mPasswordView = (EditText) findViewById(R.id.password);
+        passwordView = (EditText) findViewById(R.id.password);
         // Handle enter on the password
-        mPasswordView.setOnEditorActionListener(
+        passwordView.setOnEditorActionListener(
                 new TextView.OnEditorActionListener() {
                     @Override
                     public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
@@ -104,33 +101,110 @@ public class LoginActivity extends Activity {
                 }
         );
 
-        Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
-        mEmailSignInButton.setOnClickListener(
+        Button signIn = (Button) findViewById(R.id.email_sign_in_button);
+        signIn.setOnClickListener(
                 new OnClickListener() {
                     @Override
-                    public void onClick(View view) {
+                    public void onClick(@NonNull View view) {
                         attemptLogin();
                     }
                 }
         );
 
-        mLoginFormView = findViewById(R.id.login_form);
-        mProgressView = findViewById(R.id.login_progress);
+        loginFormView = findViewById(R.id.login_form);
+        progressView = findViewById(R.id.login_progress);
+    }
 
-        // will hold two subscriptions
-        loginSubscriptions = new CompositeSubscription();
+    private void populateAutoComplete() {
+        List<String> emails = LoginPackage.getDeviceUserEmails(this);
+        ArrayAdapter<String> adapter =
+                new ArrayAdapter<>(
+                        LoginActivity.this,
+                        android.R.layout.simple_dropdown_item_1line, emails
+                );
+        emailView.setAdapter(adapter);
+    }
+
+    private void attemptLogin() {
+        unsubscribe();
+        authRepository.clearLoginCache();
+        subscribe();
+
+        // Store values at the time of the login attempt
+        String email = emailView.getText().toString();
+        String password = passwordView.getText().toString();
+
+        View erroredView = validateLoginData(email, password);
+
+        if (erroredView != null) {
+            // There was an error; don't attempt login and focus the first
+            // form field with an error.
+            erroredView.requestFocus();
+        } else {
+            // Show a progress spinner, and kick off a background task to
+            // perform the user login attempt.
+            hideKeyboard();
+            showProgress(true);
+            isLoggingIn = true;
+            authRepository.login(email, password);
+        }
+    }
+
+    private View validateLoginData(String email, String password) {
+        // Reset errors
+        emailView.setError(null);
+        passwordView.setError(null);
+
+        View focusView = null;
+
+        // Check for a valid password, if the user entered one.
+        if (TextUtils.isEmpty(password)) {
+            passwordView.setError(getString(R.string.error_invalid_password));
+            focusView = passwordView;
+        }
+
+        // Check for a valid email address.
+        if (TextUtils.isEmpty(email)) {
+            emailView.setError(getString(R.string.error_field_required));
+            focusView = emailView;
+        } else if (!LoginPackage.isEmailValid(email)) {
+            emailView.setError(getString(R.string.error_invalid_email));
+            focusView = emailView;
+        }
+
+        return focusView;
+    }
+
+    private void hideKeyboard() {
+        View view = getCurrentFocus();
+        if (view != null) {
+            InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            inputManager.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+        }
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
+    protected void onStart() {
+        super.onStart();
+        subscribe();
+    }
+
+    private void subscribe() {
+        // Subscribe to the cache and sync state cache
+        loginSubscriptions.add(authRepository.getLastLoginSyncEvents().subscribe(new OnAuthTokenErroredAction(this)));
+        loginSubscriptions.add(authRepository.getLoginCache().subscribe(new OnAuthTokenRetrievedAction(this)));
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
         unsubscribe();
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        subscribe();
+    private void unsubscribe() {
+        // unsubscribe from all the things and re-instantiate the composite (needed to avoid losing notifications)
+        loginSubscriptions.unsubscribe();
+        loginSubscriptions = new CompositeSubscription();
     }
 
     @Override
@@ -143,93 +217,11 @@ public class LoginActivity extends Activity {
     @Override
     protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
+        // TODO: pick this up from a state event in the AuthRepository
         showProgress(savedInstanceState.getBoolean(BUNDLE_LOGIN_IN_PROGRESS));
     }
 
-    private void subscribe() {
-        // Subscribe to the cache and sync state cache
-        loginSubscriptions.add(authRepository.getLastLoginSyncEvents().subscribe(new OnAuthTokenErroredAction()));
-        loginSubscriptions.add(authRepository.getLoginCache().subscribe(new OnAuthTokenRetrievedAction(this)));
-        Log.v(TAG, "Subscribed to login events.");
-    }
-
-    private void unsubscribe() {
-        // unsubscribe from all the things
-        loginSubscriptions.unsubscribe();
-        loginSubscriptions = new CompositeSubscription();
-        Log.v(TAG, "Unsubscribed from login events.");
-    }
-
-    /**
-     * Attempts to sign in or register the account specified by the login form.
-     * If there are form errors (invalid email, missing fields, etc.), the
-     * errors are presented and no actual login attempt is made.
-     */
-    private void attemptLogin() {
-        unsubscribe();
-        authRepository.clearLoginCache();
-        subscribe();
-
-        // Reset errors.
-        mEmailView.setError(null);
-        mPasswordView.setError(null);
-
-        // Store values at the time of the login attempt.
-        String email = mEmailView.getText().toString();
-        String password = mPasswordView.getText().toString();
-
-        boolean cancel = false;
-        View focusView = null;
-
-        // Check for a valid password, if the user entered one.
-        if (TextUtils.isEmpty(password)) {
-            mPasswordView.setError(getString(R.string.error_invalid_password));
-            focusView = mPasswordView;
-            cancel = true;
-        }
-
-        // Check for a valid email address.
-        if (TextUtils.isEmpty(email)) {
-            mEmailView.setError(getString(R.string.error_field_required));
-            focusView = mEmailView;
-            cancel = true;
-        } else if (!isEmailValid(email)) {
-            mEmailView.setError(getString(R.string.error_invalid_email));
-            focusView = mEmailView;
-            cancel = true;
-        }
-
-        if (cancel) {
-            // There was an error; don't attempt login and focus the first
-            // form field with an error.
-            focusView.requestFocus();
-        } else {
-            // Show a progress spinner, and kick off a background task to
-            // perform the user login attempt.
-            hideKeyboard();
-            showProgress(true);
-            isLoggingIn = true;
-            authRepository.login(email, password);
-        }
-    }
-
-    private boolean isEmailValid(String email) {
-        //TODO: Replace this with an improved logic
-        return email.contains("@");
-    }
-
-    private void hideKeyboard() {
-        View view = this.getCurrentFocus();
-        if (view != null) {
-            InputMethodManager inputManager = (InputMethodManager) this.getSystemService(Context.INPUT_METHOD_SERVICE);
-            inputManager.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-        }
-    }
-
-    /**
-     * Shows the progress UI and hides the login form.
-     */
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
+    @TargetApi(Build.VERSION_CODES.M)
     public void showProgress(final boolean show) {
         // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
         // for very easy animations. If available, use these APIs to fade-in
@@ -237,73 +229,38 @@ public class LoginActivity extends Activity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
             int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
 
-            mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
-            mLoginFormView.animate().setDuration(shortAnimTime).alpha(
+            loginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
+            loginFormView.animate().setDuration(shortAnimTime).alpha(
                     show ? 0 : 1
             ).setListener(
                     new AnimatorListenerAdapter() {
                         @Override
-                        public void onAnimationEnd(Animator animation) {
-                            mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
+                        public void onAnimationEnd(@NonNull Animator animation) {
+                            loginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
                         }
                     }
             );
 
-            mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-            mProgressView.animate().setDuration(shortAnimTime).alpha(
+            progressView.setVisibility(show ? View.VISIBLE : View.GONE);
+            progressView.animate().setDuration(shortAnimTime).alpha(
                     show ? 1 : 0
             ).setListener(
                     new AnimatorListenerAdapter() {
                         @Override
-                        public void onAnimationEnd(Animator animation) {
-                            mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+                        public void onAnimationEnd(@NonNull Animator animation) {
+                            progressView.setVisibility(show ? View.VISIBLE : View.GONE);
                         }
                     }
             );
         } else {
             // The ViewPropertyAnimator APIs are not available, so simply show
             // and hide the relevant UI components.
-            mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-            mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
+            progressView.setVisibility(show ? View.VISIBLE : View.GONE);
+            loginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
         }
     }
-
-    private void populateAutoComplete() {
-        // fetch and filter emails from the account manager
-        AccountManager am = AccountManager.get(this);
-        Account[] accounts = am.getAccounts();
-        List<String> emails = Observable.from(accounts)
-                .map(new MapAccountToName())
-                .filter(new FilterEmail())
-                .distinct()
-                .toList()
-                .toBlocking()
-                .single();
-
-        ArrayAdapter<String> adapter =
-                new ArrayAdapter<>(
-                        LoginActivity.this,
-                        android.R.layout.simple_dropdown_item_1line, emails
-                );
-
-        mEmailView.setAdapter(adapter);
-    }
-
-    private static class MapAccountToName implements Func1<Account, String> {
-        @Override
-        public String call(Account account) {
-            return account.name;
-        }
-    }
-
-    private class FilterEmail implements Func1<String, Boolean> {
-        @Override
-        public Boolean call(String account) {
-            return isEmailValid(account);
-        }
-    }
-
-    private class OnAuthTokenRetrievedAction implements Action1<String> {
+    
+    private static class OnAuthTokenRetrievedAction implements Action1<KazakAuthToken> {
         private final LoginActivity activity;
 
         public OnAuthTokenRetrievedAction(LoginActivity activity) {
@@ -311,10 +268,9 @@ public class LoginActivity extends Activity {
         }
 
         @Override
-        public void call(String authToken) {
-            Log.v(TAG, "Got new auth token, saving the credentials in the AccountManager...");
-            Intent originalIntent = getIntent();
-            String accountName = mEmailView.getText().toString();
+        public void call(KazakAuthToken authToken) {
+            Intent originalIntent = activity.getIntent();
+            String accountName = activity.emailView.getText().toString();
             final Account account = new Account(accountName, originalIntent.getStringExtra(AccountManager.KEY_ACCOUNT_TYPE));
             String authTokenType = originalIntent.getStringExtra(AUTH_TOKEN_TYPE);
             if (authTokenType == null) {
@@ -324,26 +280,30 @@ public class LoginActivity extends Activity {
             final AccountManager mAccountManager = AccountManager.get(activity);
             mAccountManager.addAccountExplicitly(account, null, null);
             // Save the token credentials in the AccountManager
-            mAccountManager.setAuthToken(account, authTokenType, authToken);
-            setResult(RESULT_OK, originalIntent);
-            Log.v(TAG, "Auth token saved in the AccountManager.");
-            finish();
+            mAccountManager.setAuthToken(account, authTokenType, authToken.getToken());
+            activity.setResult(RESULT_OK, originalIntent);
+            activity.finish();
         }
     }
 
-    private class OnAuthTokenErroredAction implements Action1<SyncEvent> {
+    private static class OnAuthTokenErroredAction implements Action1<SyncEvent> {
+        private final LoginActivity activity;
+
+        public OnAuthTokenErroredAction(LoginActivity activity) {
+            this.activity = activity;
+        }
+
         @Override
         public void call(SyncEvent syncEvent) {
             if (syncEvent.getState() == SyncState.ERROR) {
-                Log.v(TAG, "Got a new error event from the login cache.");
                 if (syncEvent.getError() != null) {
-                    mPasswordView.setError(syncEvent.getError().getMessage());
+                    activity.passwordView.setError(syncEvent.getError().getMessage());
                 } else {
-                    mPasswordView.setError("Login error, check your credentials.");
+                    activity.passwordView.setError("Login error, check your credentials.");
                 }
-                mPasswordView.requestFocus();
-                showProgress(false);
-                isLoggingIn = false;
+                activity.passwordView.requestFocus();
+                activity.showProgress(false);
+                activity.isLoggingIn = false;
             }
         }
     }

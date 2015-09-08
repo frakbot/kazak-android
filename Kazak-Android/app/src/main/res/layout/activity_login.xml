@@ -4,10 +4,10 @@
   android:layout_height="match_parent"
   android:gravity="center_horizontal"
   android:orientation="vertical"
-  android:paddingBottom="16dp"
-  android:paddingLeft="16dp"
-  android:paddingRight="16dp"
-  android:paddingTop="16dp"
+  android:paddingBottom="@dimen/login_activity_padding"
+  android:paddingLeft="@dimen/login_activity_padding"
+  android:paddingRight="@dimen/login_activity_padding"
+  android:paddingTop="@dimen/login_activity_padding"
   tools:context="io.kazak.login.LoginActivity">
 
   <!-- Login progress -->
