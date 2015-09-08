@@ -96,10 +96,14 @@ class BuildProperties {
         flavor.buildConfigField "int", "VENUE_LOCATION_MAP_ZOOM", "${getInt("venue.map.defaultZoom")}"
         flavor.buildConfigField "String", "ENDPOINT_URL", "${getString("app.endpoint")}"
         flavor.buildConfigField "String", "AUTH_URL", "${getString("app.auth")}"
+        flavor.buildConfigField "boolean", "SUPPORTS_ACCOUNT", "${getString("app.supportsAccount")}"
 
         flavor.buildConfigField "boolean", "ENABLE_STETHO", "BuildConfig.DEBUG"
 
-        flavor.manifestPlaceholders = [googleMapsApiKey : getString('googleMaps.apiKey')]
+        flavor.manifestPlaceholders = [
+                googleMapsApiKey : getString('googleMaps.apiKey'),
+                supportsAccount: getString('app.supportsAccount')
+        ]
     }
 
     static BuildProperties load(String path, def project) {

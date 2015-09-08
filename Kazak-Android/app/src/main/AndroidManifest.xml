@@ -41,9 +41,13 @@
 
     <activity
       android:name="io.kazak.login.LoginActivity"
-      android:label="@string/activity_title_login" />
+      android:label="@string/activity_title_login"
+      android:enabled="${supportsAccount}"/>
 
-    <service android:name="io.kazak.login.KazakAuthenticationService" android:exported="false">
+    <service
+      android:name="io.kazak.login.KazakAuthenticationService"
+      android:exported="false"
+      android:enabled="${supportsAccount}">
       <intent-filter>
         <action android:name="android.accounts.AccountAuthenticator" />
       </intent-filter>
