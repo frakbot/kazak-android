@@ -8,7 +8,7 @@ BuildProperties.generateFlavors(new File('build-props').listFiles(), project)
 
 android {
     compileSdkVersion 23
-    buildToolsVersion "23.0.1"
+    buildToolsVersion "23.0.0"
 
     defaultConfig {
         versionName defaultProperties.getString('versionName')
