@@ -241,8 +241,7 @@ public class TalkView extends ViewGroup {
         // Measure the third row of content: [SPEAKERS] - [FAVORITE] (assuming not wrapping favorite to fourth row)
         layoutThirdRow(clientLeft, clientRight, clientBottom, secondRowBottom, isLtr);
 
-        // Update the track line bounds
-        trackLineBounds.set(0f, 0f, (float) getWidth(), trackLineHeightPx * 2);
+        updateTrackLineBounds();
     }
 
     private int layoutFirstRow(int clientLeft, int clientTop, int clientRight, boolean isLtr) {
@@ -378,19 +377,35 @@ public class TalkView extends ViewGroup {
         return getLayoutDirection() == LAYOUT_DIRECTION_LTR;
     }
 
+    private void updateTrackLineBounds() {
+        // The bounds are double the line height so that we can draw the bottom half of
+        // the line outside of the clip path we define in onDraw(), to hide the bottom
+        // rounded corners for the track line and pretend it only has them on the top edge
+        trackLineBounds.set(0f, 0f, (float) getWidth(), trackLineHeightPx * 2);
+    }
+
     @Override
     protected void onDraw(Canvas canvas) {
-        canvas.save();
-        canvas.clipRect(0f, 0f, getWidth(), trackLineHeightPx, Region.Op.INTERSECT);
-        canvas.drawRoundRect(trackLineBounds, trackLineCornerRadiusPx, trackLineCornerRadiusPx, trackBgPaint);
-        canvas.restore();
+        drawTrackLineOn(canvas);
 
         super.onDraw(canvas);
 
         if (showTrackDrawable) {
-            canvas.drawCircle(trackDrawableBounds.centerX(), trackDrawableBounds.centerY(), trackDrawableBounds.width() / 2f, trackBgPaint);
-            // TODO draw track drawable
+            drawTrackDrawableOn(canvas);
         }
+    }
+
+    private void drawTrackLineOn(Canvas canvas) {
+        canvas.save();
+        // This is to hide the bottom edge's rounded corners
+        canvas.clipRect(0f, 0f, getWidth(), trackLineHeightPx, Region.Op.INTERSECT);
+        canvas.drawRoundRect(trackLineBounds, trackLineCornerRadiusPx, trackLineCornerRadiusPx, trackBgPaint);
+        canvas.restore();
+    }
+
+    private void drawTrackDrawableOn(Canvas canvas) {
+        canvas.drawCircle(trackDrawableBounds.centerX(), trackDrawableBounds.centerY(), trackDrawableBounds.width() / 2f, trackBgPaint);
+        // TODO draw track drawable
     }
 
     @UiThread
