@@ -4,8 +4,8 @@ import android.support.annotation.NonNull;
 
 import io.kazak.model.Event;
 
-public interface ScheduleEventView {
+public interface ScheduleEventView<T extends Event> {
 
-    void updateWith(@NonNull Event event);
+    void updateWith(@NonNull T event);
 
 }

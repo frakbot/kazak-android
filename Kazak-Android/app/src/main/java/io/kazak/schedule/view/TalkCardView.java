@@ -7,10 +7,9 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 
 import io.kazak.R;
-import io.kazak.model.Event;
 import io.kazak.model.Talk;
 
-public class TalkCardView extends CardView implements ScheduleEventView {
+public class TalkCardView extends CardView implements ScheduleEventView<Talk> {
 
     private TalkView talkView;
 
@@ -30,8 +29,7 @@ public class TalkCardView extends CardView implements ScheduleEventView {
     }
 
     @Override
-    public void updateWith(@NonNull Event event) {
-        Talk talk = (Talk) event;
+    public void updateWith(@NonNull Talk talk) {
         talkView.updateWith(talk);
     }
 
