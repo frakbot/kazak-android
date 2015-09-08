@@ -23,7 +23,10 @@ public data class Talk(val id : String, val name : String, val timeSlot: TimeSlo
     }
 
     fun track(): Track {
-        return Track("1234", "LOL", 0xFF2C69CD.toInt())
+        val colors = arrayOf(0xFF2C69CD, 0xFFE91E63, 0xFF009688, 0xFFEF6C00)
+        val colorIndex = (Math.random() * colors.size()).toInt()
+        val color = colors[colorIndex].toInt()
+        return Track("1234", "LOL", color)
     }
 
 }
