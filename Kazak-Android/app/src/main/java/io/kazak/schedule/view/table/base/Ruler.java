@@ -69,7 +69,6 @@ public class Ruler extends View {
 
     @NonNull
     private List<String> labels = Collections.emptyList();
-    private int firstIndex;
     private int firstPositionPx;
     private int ticksSpacingPx;
 
@@ -141,7 +140,6 @@ public class Ruler extends View {
 
     public void onLabelsChanged(@NonNull List<String> newLabels, int newFirstIndex, int newFirstPositionPx, int newTicksSpacingPx) {
         labels = getEllipsizedLabels(newLabels, newTicksSpacingPx);
-        firstIndex = newFirstIndex;
         firstPositionPx = newFirstPositionPx;
         ticksSpacingPx = newTicksSpacingPx;
         invalidate();
