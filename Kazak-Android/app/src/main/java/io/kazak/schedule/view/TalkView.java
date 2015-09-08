@@ -1,6 +1,5 @@
 package io.kazak.schedule.view;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
@@ -62,13 +61,13 @@ public class TalkView extends ViewGroup {
         this(context, attrs, defStyleAttr, R.style.TalkViewDefaultStyle);
     }
 
-    @SuppressLint("SimpleDateFormat")       // At this time we want to always use 24h-format
     public TalkView(Context context, AttributeSet attrs, @AttrRes int defStyleAttr, @StyleRes int defStyleRes) {
         super(context, attrs, defStyleAttr);
-        dateFormat = new SimpleDateFormat(TIMESLOT_BOUND_PATTERN);
+
+        dateFormat = new SimpleDateFormat(TIMESLOT_BOUND_PATTERN, Locale.UK);
         trackDrawableBounds = new Rect();
         trackLineBounds = new RectF();
-        trackBgPaint = createTrackBgPaint();
+        trackBgPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.TalkView, defStyleAttr, defStyleRes);
         trackDrawablePaddingPx = a.getDimensionPixelSize(R.styleable.TalkView_android_drawablePadding, 0);
@@ -85,14 +84,6 @@ public class TalkView extends ViewGroup {
     public void setWillNotDraw(boolean willNotDraw) {
         // This is because otherwise onDraw() wouldn't get called.
         throw new DeveloperError("Nein nein nein nein nein! ಠ_ಠ");
-    }
-
-    @NonNull
-    private Paint createTrackBgPaint() {
-        Paint paint = new Paint();
-        paint.setAntiAlias(true);
-        paint.setStyle(Paint.Style.FILL);
-        return paint;
     }
 
     @Override
