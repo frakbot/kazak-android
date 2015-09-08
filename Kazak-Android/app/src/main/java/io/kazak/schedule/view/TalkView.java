@@ -78,11 +78,18 @@ public class TalkView extends ViewGroup {
         a.recycle();
 
         super.setWillNotDraw(false);
+        super.setClipToPadding(false);
     }
 
     @Override
     public void setWillNotDraw(boolean willNotDraw) {
         // This is because otherwise onDraw() wouldn't get called.
+        throw new DeveloperError("Nein nein nein nein nein! ಠ_ಠ");
+    }
+
+    @Override
+    public void setClipToPadding(boolean willNotDraw) {
+        // This is because otherwise the favorite button would get clipped
         throw new DeveloperError("Nein nein nein nein nein! ಠ_ಠ");
     }
 

@@ -18,6 +18,7 @@
     <item name="android:drawablePadding">@dimen/session_card_track_drawable_padding</item>
     <item name="trackLineHeight">@dimen/session_card_track_line_height</item>
     <item name="trackLineCornerRadius">@dimen/session_card_track_line_corner_radius</item>
+    <item name="drawableOpticalBalanceOffset">@dimen/session_card_track_drawable_optical_offset</item>
   </style>
 
   <style name="Schedule.Card.Talk.Time" parent="None">
