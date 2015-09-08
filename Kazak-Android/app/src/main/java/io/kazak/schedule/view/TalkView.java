@@ -424,6 +424,12 @@ public class TalkView extends ViewGroup {
         trackView.setText(track.name().toUpperCase(Locale.getDefault()));
         trackView.setTextColor(track.color());
         trackBgPaint.setColor(track.color());
+        invalidate(trackDrawableBounds);
+        invalidate(toRect(trackLineBounds));
+    }
+
+    private static Rect toRect(RectF rectF) {
+        return new Rect((int) rectF.left, (int) rectF.top, (int) rectF.right, (int) rectF.bottom);
     }
 
     private void updateTimeWith(TimeSlot timeSlot) {
