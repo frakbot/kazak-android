@@ -116,7 +116,7 @@ public class RulerView extends View implements Ruler {
     protected void onDraw(@NonNull Canvas canvas) {
         super.onDraw(canvas);
 
-        canvas.save();
+        int canvasSave = canvas.save();
 
         int height;
         int directionX;
@@ -143,7 +143,7 @@ public class RulerView extends View implements Ruler {
             canvas.translate(directionX * ticksSpacingPx, 0);
         }
 
-        canvas.restore();
+        canvas.restoreToCount(canvasSave);
     }
 
     public void onLabelsChanged(@NonNull List<String> newLabels, int newFirstIndex, int newFirstPositionPx, int newTicksSpacingPx) {
