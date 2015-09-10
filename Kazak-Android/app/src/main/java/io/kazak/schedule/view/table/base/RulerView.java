@@ -30,8 +30,6 @@ import io.kazak.base.DeveloperError;
 
 public class RulerView extends View implements Ruler {
 
-    private static final int COMPARE_EQUALS = 0;
-
     private static final int[] TMP_LOCATION = new int[2];
     private static final int LOCATION_X = 0;
     private static final int LOCATION_Y = 1;
@@ -241,7 +239,7 @@ public class RulerView extends View implements Ruler {
     }
 
     private static boolean equals(float a, float b) {
-        return Float.compare(a, b) == COMPARE_EQUALS;
+        return Float.compare(a, b) == 0;
     }
 
     public void onLabelsChanged(@NonNull List<String> newLabels, int newFirstIndex, int newFirstPositionPx, int newTicksSpacingPx) {
