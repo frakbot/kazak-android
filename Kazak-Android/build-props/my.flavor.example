@@ -15,9 +15,11 @@ versionName=0.0.1
 
 # Global app configuration
 app.hasVenueMap=false
+app.endpoint=TODO
 
 # API keys
 googleMaps.apiKey=TODO
+gcm.senderId=TODO
 
 # Venue map configuration
 venue.latitude=0

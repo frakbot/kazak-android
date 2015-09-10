@@ -13,6 +13,8 @@ public interface DataRepository {
 
     fun getScheduleSyncEvents(): Observable<SyncEvent>
 
+    fun refreshSchedule() : Observable<SyncEvent>
+
     fun getFavoriteIds(): Observable<List<Id>>
 
     fun getFavorites(): Observable<List<Session>>

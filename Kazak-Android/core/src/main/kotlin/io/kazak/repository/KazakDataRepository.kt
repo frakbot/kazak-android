@@ -25,7 +25,12 @@ public class KazakDataRepository(val api: KazakApi, val favoritesRepository: Fav
     }
 
     override fun getScheduleSyncEvents(): Observable<SyncEvent> {
-        return scheduleSyncCache;
+        return scheduleSyncCache
+    }
+
+    override fun refreshSchedule(): Observable<SyncEvent> {
+        updateSchedule()
+        return scheduleSyncCache.filter { it.state != SyncState.LOADING }
     }
 
     override fun getFavoriteIds(): Observable<List<Id>> {
@@ -64,7 +69,7 @@ public class KazakDataRepository(val api: KazakApi, val favoritesRepository: Fav
     }
 
     override fun getFavoritesSyncEvents(): Observable<SyncEvent> {
-        return favoritesSyncCache;
+        return favoritesSyncCache
     }
 
     override fun addToFavorites(id: Id) {
@@ -96,12 +101,13 @@ public class KazakDataRepository(val api: KazakApi, val favoritesRepository: Fav
     // ATM there is no separate flow for talks we simply fetch them by filtering the schedule.
     // This can be revisited once a DB layer is in place.
     override fun getTalkSyncEvents(): Observable<SyncEvent> {
-        return scheduleSyncCache;
+        return scheduleSyncCache
     }
 
     private fun updateSchedule() {
         scheduleSyncCache.onNext(SyncEvent(SyncState.LOADING, null))
         api.fetchSchedule()
+                .subscribeOn(Schedulers.io())
                 .subscribe(SyncObserver(scheduleCache, scheduleSyncCache))
     }
 

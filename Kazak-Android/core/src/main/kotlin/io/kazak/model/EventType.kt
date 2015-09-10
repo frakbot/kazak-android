@@ -4,7 +4,7 @@ public enum class EventType {
     TALK,
     CEREMONY,
     COFFEE_BREAK,
-    PLACEHOLDER;
+    PLACEHOLDER
 
     fun canBeFavorite(): Boolean {
         return when(this) {
