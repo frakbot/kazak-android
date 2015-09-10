@@ -5,13 +5,14 @@
     <Bug pattern="NM_CLASS_NAMING_CONVENTION" />
   </Match>
   <Match>
+    <Class name="~.*\.Manifest\$.*" />
+    <Bug pattern="NM_CLASS_NAMING_CONVENTION" />
+  </Match>
+  <Match>
     <Class name="~.*\.R\$.*" />
     <Bug pattern="MS_MUTABLE_ARRAY" />
   </Match>
   <Match>
     <Source name="~.*\.kt" />
-  </Match>
-  <Match>
-    <Source name="~.*/build/generated.*" />
   </Match>
 </FindBugsFilter>
