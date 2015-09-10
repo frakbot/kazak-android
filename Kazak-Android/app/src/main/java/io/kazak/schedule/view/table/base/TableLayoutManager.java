@@ -416,7 +416,7 @@ public class TableLayoutManager extends RecyclerView.LayoutManager {
             int rowIndex = 0;
             int lastRowIndex = rows.size() - 1;
             int placeholdersCount = 0;
-            boolean visibleVerticalRange = false;
+            boolean isVisibleVerticalRange = false;
 
             int firstRowIndex = -1;
             int firstRowPositionY = 0;
@@ -430,13 +430,12 @@ public class TableLayoutManager extends RecyclerView.LayoutManager {
                     break;
                 }
 
-                // only do something if it's in the visible vertical range
-                if (!visibleVerticalRange && y + rowHeightPx > visibleTop) {
-                    visibleVerticalRange = true;
+                if (!isVisibleVerticalRange && y + rowHeightPx > visibleTop) {
+                    isVisibleVerticalRange = true;
                     firstRowIndex = rowIndex;
                     firstRowPositionY = y;
                 }
-                if (visibleVerticalRange) {
+                if (isVisibleVerticalRange) {
 
                     isFirstRow = rowIndex == 0;
                     isLastRow = rowIndex == lastRowIndex;
