@@ -1,6 +1,17 @@
 package io.kazak.model
 
-public data class Talk(val id : String, val name : String, val timeSlot: TimeSlot, val rooms: List<Room>, val speakers: Speakers) : Session {
+public data class Talk(
+        val id : Id,
+        val name : String,
+        val timeSlot: TimeSlot,
+        val rooms: List<Room>,
+        val speakers: Speakers,
+        val track: Track?
+) : Session {
+
+    override fun id(): Id {
+        return id
+    }
 
     override fun type(): EventType {
         return EventType.TALK
@@ -22,11 +33,8 @@ public data class Talk(val id : String, val name : String, val timeSlot: TimeSlo
         return speakers.names()
     }
 
-    fun track(): Track {
-        val colors = arrayOf(0xFF2C69CD, 0xFFE91E63, 0xFF009688, 0xFFEF6C00)
-        val colorIndex = (Math.random() * colors.size()).toInt()
-        val color = colors[colorIndex].toInt()
-        return Track("1234", "LOL", color)
+    fun track(): Track? {
+        return track
     }
 
 }

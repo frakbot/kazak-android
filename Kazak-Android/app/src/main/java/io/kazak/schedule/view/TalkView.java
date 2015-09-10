@@ -3,12 +3,15 @@ package io.kazak.schedule.view;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.Region;
 import android.support.annotation.AttrRes;
+import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.annotation.StyleRes;
 import android.support.annotation.UiThread;
 import android.util.AttributeSet;
@@ -427,10 +430,18 @@ public class TalkView extends ViewGroup {
         // TODO set maxLines for title and speakers
     }
 
-    private void updateTrackWith(@NonNull Track track) {
-        trackView.setText(track.name().toUpperCase(Locale.getDefault()));
-        trackView.setTextColor(track.color());
-        trackBgPaint.setColor(track.color());
+    private void updateTrackWith(@Nullable Track track) {
+        //TODO better handling of null track
+        String name = track == null ? "" : track.name();
+        io.kazak.model.Color color = track == null ? null : track.color();
+        @ColorInt int colorInt = color != null ? color.getIntValue() : Color.BLACK; //TODO provide a default color
+        updateTrackWith(name, colorInt);
+    }
+
+    private void updateTrackWith(@NonNull String name, @ColorInt int color) {
+        trackView.setText(name.toUpperCase(Locale.getDefault()));
+        trackView.setTextColor(color);
+        trackBgPaint.setColor(color);
         invalidate(trackDrawableBounds);
         invalidate(toRect(trackLineBounds));
     }

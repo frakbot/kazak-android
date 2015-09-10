@@ -1,14 +1,13 @@
 package io.kazak.api.json;
 
-import java.util.List;
+import com.google.gson.JsonArray;
 
-import io.kazak.api.json.model.JsonEvent;
 import retrofit.http.GET;
 import rx.Observable;
 
 public interface JsonKazakApi {
 
-    @GET("/events?expand=rooms&expand=presenters")
-    Observable<List<JsonEvent>> fetchSchedule();
+    @GET("/events?expand=rooms&expand=presenters&expand=track")
+    Observable<JsonArray> fetchSchedule();
 
 }

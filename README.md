@@ -1,7 +1,9 @@
 # Kazak
-![Build Status](https://ci.stylingandroid.com/jenkins/buildStatus/icon?job=droidcon-app "Build Status")
+![Build Status](https://ci.stylingandroid.com/jenkins/buildStatus/icon?job=kazak-app "Build Status")
 
 **Kazak** is a next-gen tech conference schedule platform created by members of the community. The project is made of two main parts, an **Android app** and a **cloud backend**.
+
+Issue tracker: [youtrack.kazak.io](http://youtrack.kazak.io/issues)
 
 ## Core team
 [Mark Allison](http://github.com/StylingAndroid)
