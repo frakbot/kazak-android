@@ -80,7 +80,7 @@ public class NotificationCreator {
             sb.delete(sb.length() - 2, sb.length() - 1);
         }
 
-        return rooms.get(0).getName();
+        return sb.toString();
     }
 
     private Notification createSummaryNotification(List<? extends Session> sessions) {
