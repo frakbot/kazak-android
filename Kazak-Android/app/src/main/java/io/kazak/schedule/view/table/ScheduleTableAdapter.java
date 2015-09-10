@@ -132,12 +132,12 @@ public class ScheduleTableAdapter extends TableTreeAdapter<Talk, Room, Date, Sch
         }
 
         @Override
-        public String getRowLabel(Room room) {
+        public String getLabelForRow(Room room) {
             return room.getName();
         }
 
         @Override
-        public String getBoundLabel(Date date) {
+        public String getLabelForBound(Date date) {
             return timeFormatter.format(date);
         }
 

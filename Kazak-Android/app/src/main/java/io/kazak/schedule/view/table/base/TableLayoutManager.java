@@ -559,14 +559,14 @@ public class TableLayoutManager extends RecyclerView.LayoutManager {
             if (adapter == null) {
                 throwAdapterNotSetException();
             }
-            return adapter.getDataHandler().getRowLabel(row);
+            return adapter.getDataHandler().getLabelForRow(row);
         }
 
         private String getBoundLabel(@NonNull BOUND bound) {
             if (adapter == null) {
                 throwAdapterNotSetException();
             }
-            return adapter.getDataHandler().getBoundLabel(bound);
+            return adapter.getDataHandler().getLabelForBound(bound);
         }
 
         private void throwAdapterNotSetException() {
