@@ -107,6 +107,7 @@ public class KazakDataRepository(val api: KazakApi, val favoritesRepository: Fav
     private fun updateSchedule() {
         scheduleSyncCache.onNext(SyncEvent(SyncState.LOADING, null))
         api.fetchSchedule()
+                .subscribeOn(Schedulers.io())
                 .subscribe(SyncObserver(scheduleCache, scheduleSyncCache))
     }
 
