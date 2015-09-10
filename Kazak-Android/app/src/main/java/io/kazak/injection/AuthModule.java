@@ -22,7 +22,7 @@ public class AuthModule {
     @Provides
     @Singleton
     KazakAuth providesAuth() {
-        return new FirebaseKazakAuth(BuildConfig.AUTH_URL);
+        return new FirebaseKazakAuth(context, BuildConfig.AUTH_URL);
     }
 
 }

@@ -1,12 +1,17 @@
 package io.kazak.auth
 
+import android.content.Context
 import com.firebase.client.AuthData
 import com.firebase.client.Firebase
 import com.firebase.client.FirebaseError
 import rx.Observable
 import rx.schedulers.Schedulers
 
-public class FirebaseKazakAuth(val baseUrl: String) : KazakAuth {
+public class FirebaseKazakAuth(val context: Context, val baseUrl: String) : KazakAuth {
+
+    init {
+        Firebase.setAndroidContext(context);
+    }
 
     override fun login(username: String, password: String): Observable<KazakAuthToken> {
         val ref = Firebase(baseUrl)
