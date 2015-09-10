@@ -463,16 +463,10 @@ public class TableLayoutManager extends RecyclerView.LayoutManager {
                 rowIndex++;
             }
 
-            updateBoundsRuler(totalDataStartBound, visibleStartBound);
             updateRowsRuler(firstRowIndex, firstRowPositionY, rowsLabels);
+            updateBoundsRuler(totalDataStartBound, visibleStartBound);
 
             adapter.onReleaseRowsPositionsResources();
-        }
-
-        private void addRowLabel(@Nullable List<String> rowsLabels, @NonNull ROW row) {
-            if (rowsRuler != null && rowsLabels != null) {
-                rowsLabels.add(getRowLabel(row));
-            }
         }
 
         @Nullable
@@ -482,6 +476,27 @@ public class TableLayoutManager extends RecyclerView.LayoutManager {
                 return new ArrayList<>(visibleRowsCount);
             }
             return null; // nullable order to get compile-time warnings when trying to add items
+        }
+
+        private void addRowLabel(@Nullable List<String> rowsLabels, @NonNull ROW row) {
+            if (rowsRuler != null && rowsLabels != null) {
+                rowsLabels.add(getRowLabel(row));
+            }
+        }
+
+        private void updateLayoutParamsForView(
+                @NonNull TableViewHolder<?, ROW, BOUND> viewHolder,
+                @NonNull BOUND totalDataStartBound, @NonNull BOUND totalDataEndBound,
+                boolean isFirstRow, boolean isLastRow) {
+
+            View view = viewHolder.itemView;
+            TableLayoutParams layoutParams = TableLayoutParams.getFor(view, true);
+            layoutParams.setIsFirstRow(isFirstRow);
+            layoutParams.setIsLastRow(isLastRow);
+            layoutParams.setStartsFirst(totalDataStartBound.equals(viewHolder.getStart()));
+            layoutParams.setEndsLast(totalDataEndBound.equals(viewHolder.getEnd()));
+            layoutParams.setIsPlaceholder(viewHolder.isPlaceholder());
+            view.setLayoutParams(layoutParams);
         }
 
         private void updateRowsRuler(int firstRowIndex, int firstRowPositionY, @Nullable List<String> rowsLabels) {
@@ -510,26 +525,6 @@ public class TableLayoutManager extends RecyclerView.LayoutManager {
                 boundsLabels.add(getBoundLabel(boundTick));
                 boundTick = sum(boundTick, minSpanLengthUnits);
             }
-        }
-
-        private void updateLayoutParamsForView(
-                @NonNull TableViewHolder<?, ROW, BOUND> viewHolder,
-                @NonNull BOUND totalDataStartBound, @NonNull BOUND totalDataEndBound,
-                boolean isFirstRow, boolean isLastRow) {
-
-            View view = viewHolder.itemView;
-            TableLayoutParams layoutParams = TableLayoutParams.getFor(view, true);
-            layoutParams.setIsFirstRow(isFirstRow);
-            layoutParams.setIsLastRow(isLastRow);
-            layoutParams.setStartsFirst(totalDataStartBound.equals(viewHolder.getStart()));
-            layoutParams.setEndsLast(totalDataEndBound.equals(viewHolder.getEnd()));
-            layoutParams.setIsPlaceholder(viewHolder.isPlaceholder());
-            view.setLayoutParams(layoutParams);
-        }
-
-        @Nullable
-        private RecyclerView getRecyclerView() {
-            return adapter == null ? null : adapter.getRecyclerView();
         }
 
         private int getLengthUnits(@NonNull BOUND start, @NonNull BOUND end) {
@@ -570,6 +565,11 @@ public class TableLayoutManager extends RecyclerView.LayoutManager {
 
         private void throwAdapterNotSetException() {
             throw new DeveloperError("Adapter is not set.");
+        }
+
+        @Nullable
+        private RecyclerView getRecyclerView() {
+            return adapter == null ? null : adapter.getRecyclerView();
         }
 
     }
