@@ -21,6 +21,7 @@ import static android.view.View.MeasureSpec.makeMeasureSpec;
 
 public class TableLayoutManager extends RecyclerView.LayoutManager {
 
+    private static final Rect TMP_BOUNDS = new Rect();
     private static final int[] TMP_LOCATION = new int[2];
     private static final int LOCATION_X = 0;
     private static final int LOCATION_Y = 1;
@@ -290,7 +291,7 @@ public class TableLayoutManager extends RecyclerView.LayoutManager {
         // else -> onDataOrSizeChanged will be called through onLayoutChildren
     }
 
-    private void getDistanceOnScreen(@NonNull @Size(2) int[] distance, @NonNull View view) {
+    private void getDistanceOnScreen(@NonNull @Size(2) int[] distance, @NonNull Ruler ruler) {
         RecyclerView recyclerView = adapterWrapper.getRecyclerView();
         if (recyclerView == null) {
             throw new DeveloperError("Must be bound to a RecyclerView.");
@@ -300,21 +301,21 @@ public class TableLayoutManager extends RecyclerView.LayoutManager {
         int recyclerViewX = TMP_LOCATION[LOCATION_X];
         int recyclerViewY = TMP_LOCATION[LOCATION_Y];
 
-        view.getLocationOnScreen(TMP_LOCATION);
-        int viewX = TMP_LOCATION[LOCATION_X];
-        int viewY = TMP_LOCATION[LOCATION_Y];
+        ruler.getBoundsOnScreen(TMP_BOUNDS);
+        int rulerX = TMP_BOUNDS.left;
+        int rulerY = TMP_BOUNDS.top;
 
-        distance[DISTANCE_HORIZONTAL] = recyclerViewX - viewX;
-        distance[DISTANCE_VERTICAL] = recyclerViewY - viewY;
+        distance[DISTANCE_HORIZONTAL] = recyclerViewX - rulerX;
+        distance[DISTANCE_VERTICAL] = recyclerViewY - rulerY;
     }
 
-    private int getVerticalDistanceOnScreen(@NonNull View view) {
-        getDistanceOnScreen(TMP_DISTANCE, view);
+    private int getVerticalDistanceOnScreen(@NonNull Ruler ruler) {
+        getDistanceOnScreen(TMP_DISTANCE, ruler);
         return TMP_DISTANCE[DISTANCE_VERTICAL];
     }
 
-    private int getHorizontalDistanceOnScreen(@NonNull View view) {
-        getDistanceOnScreen(TMP_DISTANCE, view);
+    private int getHorizontalDistanceOnScreen(@NonNull Ruler ruler) {
+        getDistanceOnScreen(TMP_DISTANCE, ruler);
         return TMP_DISTANCE[DISTANCE_HORIZONTAL];
     }
 

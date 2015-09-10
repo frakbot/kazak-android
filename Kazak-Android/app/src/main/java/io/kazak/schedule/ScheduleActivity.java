@@ -21,7 +21,7 @@ import io.kazak.repository.DataRepository;
 import io.kazak.repository.event.SyncEvent;
 import io.kazak.schedule.view.table.ScheduleTableAdapter;
 import io.kazak.schedule.view.table.ScheduleTableView;
-import io.kazak.schedule.view.table.base.Ruler;
+import io.kazak.schedule.view.table.base.RulerView;
 import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.subscriptions.CompositeSubscription;
@@ -61,8 +61,8 @@ public class ScheduleActivity extends AppCompatActivity {
     }
 
     private void setupRulers() {
-        scheduleView.setRoomsRuler((Ruler) findViewById(R.id.rooms_ruler));
-        scheduleView.setTimeRuler((Ruler) findViewById(R.id.time_ruler));
+        scheduleView.setRoomsRuler((RulerView) findViewById(R.id.rooms_ruler));
+        scheduleView.setTimeRuler((RulerView) findViewById(R.id.time_ruler));
     }
 
     private void hackToHideNavDrawerHeaderRipple() {
