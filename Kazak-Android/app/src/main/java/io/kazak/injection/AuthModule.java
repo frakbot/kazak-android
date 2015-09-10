@@ -1,5 +1,7 @@
 package io.kazak.injection;
 
+import android.content.Context;
+
 import javax.inject.Singleton;
 
 import dagger.Module;
@@ -10,6 +12,12 @@ import io.kazak.auth.KazakAuth;
 
 @Module
 public class AuthModule {
+
+    private final Context context;
+
+    public AuthModule(Context context) {
+        this.context = context;
+    }
 
     @Provides
     @Singleton
