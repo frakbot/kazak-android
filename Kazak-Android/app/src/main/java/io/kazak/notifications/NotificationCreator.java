@@ -17,6 +17,7 @@ import io.kazak.model.Id;
 import io.kazak.model.Room;
 import io.kazak.model.Session;
 import io.kazak.model.Talk;
+import io.kazak.model.Track;
 import io.kazak.schedule.ScheduleActivity;
 import io.kazak.talk.TalkDetailsActivity;
 
@@ -53,20 +54,19 @@ public class NotificationCreator {
                 .setContentText(getDisplayedRooms(session))
                 .setGroup(GROUP_KEY_NOTIFY_SESSION);
 
-        setTrackColor(notificationBuilder, session);
+        if (!(session instanceof Talk)) {
+            setTrackColor(notificationBuilder, (Talk) session);
+        }
 
         NotificationCompat.BigTextStyle richNotification = createBigTextRichNotification(notificationBuilder, session);
 
         return richNotification.build();
     }
 
-    private void setTrackColor(NotificationCompat.Builder notificationBuilder, Session session) {
-        if (!(session instanceof Talk)) {
-            return;
-        }
-        Talk talk = (Talk) session;
-        if (talk.track() != null && talk.track().color() != null) {
-            notificationBuilder.setColor(talk.track().color().getIntValue());
+    private void setTrackColor(NotificationCompat.Builder notificationBuilder, Talk talk) {
+        Track track = talk.track();
+        if (track != null && track.color() != null) {
+            notificationBuilder.setColor(track.color().getIntValue());
         }
     }
 
