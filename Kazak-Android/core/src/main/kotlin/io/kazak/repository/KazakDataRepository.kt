@@ -57,7 +57,7 @@ public class KazakDataRepository(val api: KazakApi, val favoritesRepository: Fav
     }
 
     private fun updateFavorites() {
-        favoritesSyncCache.onNext(SyncEvent(SyncState.LOADING, null))
+        favoritesSyncCache.onNext(SyncEvent(SyncState.LOADING))
         favoritesRepository.read()
                 .subscribeOn(Schedulers.io())
                 .subscribe(SyncObserver(favoritesCache, favoritesSyncCache))
@@ -100,7 +100,7 @@ public class KazakDataRepository(val api: KazakApi, val favoritesRepository: Fav
     }
 
     private fun updateSchedule() {
-        scheduleSyncCache.onNext(SyncEvent(SyncState.LOADING, null))
+        scheduleSyncCache.onNext(SyncEvent(SyncState.LOADING))
         api.fetchSchedule()
                 .subscribe(SyncObserver(scheduleCache, scheduleSyncCache))
     }
