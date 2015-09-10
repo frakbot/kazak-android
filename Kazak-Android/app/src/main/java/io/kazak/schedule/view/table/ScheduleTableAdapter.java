@@ -7,9 +7,12 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import java.io.Serializable;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
@@ -96,6 +99,8 @@ public class ScheduleTableAdapter extends TableTreeAdapter<Talk, Room, Date, Sch
 
     private static final class TalkDataHandler implements TableDataHandler<Talk, Room, Date>, Serializable {
 
+        private final DateFormat timeFormatter = new SimpleDateFormat("HH:mm", Locale.US);
+
         @Override
         public Room getRowFor(Talk item) {
             return item.getRooms().get(0);  //TODO: handle multiple rooms per talk
@@ -124,6 +129,16 @@ public class ScheduleTableAdapter extends TableTreeAdapter<Talk, Room, Date, Sch
         @Override
         public boolean isPlaceholder(Talk item) {
             return false; //TODO
+        }
+
+        @Override
+        public String getLabelForRow(Room room) {
+            return room.getName();
+        }
+
+        @Override
+        public String getLabelForBound(Date date) {
+            return timeFormatter.format(date);
         }
 
         @Override

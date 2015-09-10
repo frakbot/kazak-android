@@ -9,7 +9,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
-import android.widget.FrameLayout;
 
 import javax.inject.Inject;
 import java.util.List;
@@ -22,6 +21,7 @@ import io.kazak.repository.DataRepository;
 import io.kazak.repository.event.SyncEvent;
 import io.kazak.schedule.view.table.ScheduleTableAdapter;
 import io.kazak.schedule.view.table.ScheduleTableView;
+import io.kazak.schedule.view.table.base.RulerView;
 import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.subscriptions.CompositeSubscription;
@@ -33,7 +33,7 @@ public class ScheduleActivity extends AppCompatActivity {
     @Inject
     DataRepository dataRepository;
 
-    private FrameLayout contentRootView;
+    private View contentRootView;
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
     private Toolbar toolbar;
@@ -49,14 +49,20 @@ public class ScheduleActivity extends AppCompatActivity {
         KazakApplication.injector().inject(this);
         setContentView(R.layout.activity_schedule);
 
-        contentRootView = (FrameLayout) findViewById(R.id.content_root);
+        contentRootView = findViewById(R.id.content_root);
         drawerLayout = (DrawerLayout) findViewById(R.id.navigation_drawer);
         navigationView = (NavigationView) findViewById(R.id.drawer_menu);
         toolbar = (Toolbar) findViewById(R.id.appbar);
         scheduleView = (ScheduleTableView) findViewById(R.id.schedule);
 
+        setupRulers();
         setupAppBar();
         hackToHideNavDrawerHeaderRipple();
+    }
+
+    private void setupRulers() {
+        scheduleView.setRoomsRuler((RulerView) findViewById(R.id.rooms_ruler));
+        scheduleView.setTimeRuler((RulerView) findViewById(R.id.time_ruler));
     }
 
     private void hackToHideNavDrawerHeaderRipple() {

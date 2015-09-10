@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+  <color name="ruler_default_text_color">@android:color/white</color>
+  <color name="ruler_default_tick_color">@color/ruler_default_text_color</color>
+
+</resources>

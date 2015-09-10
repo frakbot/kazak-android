@@ -16,4 +16,8 @@ public interface TableDataHandler<ITEM, ROW, BOUND> extends Comparator<BOUND> {
 
     boolean isPlaceholder(ITEM item);
 
+    String getLabelForRow(ROW row);
+
+    String getLabelForBound(BOUND bound);
+
 }
