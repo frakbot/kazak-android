@@ -291,7 +291,7 @@ public class TableLayoutManager extends RecyclerView.LayoutManager {
         // else -> onDataOrSizeChanged will be called through onLayoutChildren
     }
 
-    private void getDistanceOnScreen(@NonNull @Size(2) int[] distance, @NonNull Ruler ruler) {
+    private void getDistanceOnScreenFrom(@NonNull @Size(2) int[] distance, @NonNull Ruler ruler) {
         RecyclerView recyclerView = adapterWrapper.getRecyclerView();
         if (recyclerView == null) {
             throw new DeveloperError("Must be bound to a RecyclerView.");
@@ -309,13 +309,13 @@ public class TableLayoutManager extends RecyclerView.LayoutManager {
         distance[DISTANCE_VERTICAL] = recyclerViewY - rulerY;
     }
 
-    private int getVerticalDistanceOnScreen(@NonNull Ruler ruler) {
-        getDistanceOnScreen(TMP_DISTANCE, ruler);
+    private int getVerticalDistanceOnScreenFrom(@NonNull Ruler ruler) {
+        getDistanceOnScreenFrom(TMP_DISTANCE, ruler);
         return TMP_DISTANCE[DISTANCE_VERTICAL];
     }
 
-    private int getHorizontalDistanceOnScreen(@NonNull Ruler ruler) {
-        getDistanceOnScreen(TMP_DISTANCE, ruler);
+    private int getHorizontalDistanceOnScreenFrom(@NonNull Ruler ruler) {
+        getDistanceOnScreenFrom(TMP_DISTANCE, ruler);
         return TMP_DISTANCE[DISTANCE_HORIZONTAL];
     }
 
@@ -487,14 +487,14 @@ public class TableLayoutManager extends RecyclerView.LayoutManager {
 
         private void updateRowsRuler(int firstRowIndex, int firstRowPositionY, @Nullable List<String> rowsLabels) {
             if (rowsRuler != null && rowsLabels != null) {
-                int distanceFromRuler = getVerticalDistanceOnScreen(rowsRuler);
+                int distanceFromRuler = getVerticalDistanceOnScreenFrom(rowsRuler);
                 rowsRuler.onLabelsChanged(rowsLabels, firstRowIndex, firstRowPositionY + distanceFromRuler, rowHeightPx);
             }
         }
 
         private void updateBoundsRuler(@NonNull BOUND totalDataStartBound, @NonNull BOUND visibleStartBound) {
             if (boundsRuler != null) {
-                int distanceFromRuler = getHorizontalDistanceOnScreen(boundsRuler);
+                int distanceFromRuler = getHorizontalDistanceOnScreenFrom(boundsRuler);
                 int firstBoundIndex = getLengthUnits(totalDataStartBound, visibleStartBound) / minSpanLengthUnits;
                 BOUND firstBoundTick = sum(totalDataStartBound, firstBoundIndex * minSpanLengthUnits);
                 int firstBoundPositionX = getLengthPx(visibleStartBound, firstBoundTick) + extraHorizontalPadding + distanceFromRuler;
