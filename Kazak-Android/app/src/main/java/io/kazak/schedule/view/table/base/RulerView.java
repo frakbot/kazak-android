@@ -241,7 +241,7 @@ public class RulerView extends View implements Ruler {
     }
 
     private static boolean equals(float a, float b) {
-        return Float.compare(a, b) != COMPARE_EQUALS;
+        return Float.compare(a, b) == COMPARE_EQUALS;
     }
 
     public void onLabelsChanged(@NonNull List<String> newLabels, int newFirstIndex, int newFirstPositionPx, int newTicksSpacingPx) {
