@@ -45,16 +45,6 @@ public class GcmListenerService extends IntentService {
         Log.i(TAG, "GCM token received");
     }
 
-    private static void saveTokenSentFlag(Context context) {
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-        sharedPreferences.edit().putBoolean(KEY_TOKEN_SENT_TO_SERVER, true).apply();
-    }
-
-    private static void removeTokenSentFlag(Context context) {
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-        sharedPreferences.edit().putBoolean(KEY_TOKEN_SENT_TO_SERVER, false).apply();
-    }
-
     private static String retrieveToken(InstanceID instanceID) throws IOException {
         return instanceID.getToken(BuildConfig.GCM_SENDER_ID, GoogleCloudMessaging.INSTANCE_ID_SCOPE);
     }
@@ -63,11 +53,21 @@ public class GcmListenerService extends IntentService {
         // TODO send the token to the server
     }
 
+    private static void saveTokenSentFlag(Context context) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        sharedPreferences.edit().putBoolean(KEY_TOKEN_SENT_TO_SERVER, true).apply();
+    }
+
     private void subscribeTopics(String token) throws IOException {
         GcmPubSub pubSub = GcmPubSub.getInstance(this);
         for (String topic : TOPICS) {
             pubSub.subscribe(token, "/topics/" + topic, null);
         }
+    }
+
+    private static void removeTokenSentFlag(Context context) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        sharedPreferences.edit().putBoolean(KEY_TOKEN_SENT_TO_SERVER, false).apply();
     }
 
 }
