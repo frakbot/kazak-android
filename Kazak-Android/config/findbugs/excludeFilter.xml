@@ -11,4 +11,7 @@
   <Match>
     <Source name="~.*\.kt" />
   </Match>
+  <Match>
+    <Source name="~.*/build/generated.*" />
+  </Match>
 </FindBugsFilter>
