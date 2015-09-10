@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-  <style name="RulerDefaultStyle">
+  <style name="RulerViewDefaultStyle">
     <item name="android:textSize">@dimen/ruler_default_text_size</item>
     <item name="android:textColor">@color/ruler_default_text_color</item>
     <item name="tickSize">@dimen/ruler_default_tick_size</item>

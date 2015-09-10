@@ -84,11 +84,11 @@ public class RulerView extends View implements Ruler {
     }
 
     public RulerView(Context context, AttributeSet attrs) {
-        this(context, attrs, R.attr.rulerDefaultStyle);
+        this(context, attrs, R.attr.rulerViewDefaultStyle);
     }
 
     public RulerView(Context context, AttributeSet attrs, @AttrRes int defStyleAttr) {
-        this(context, attrs, defStyleAttr, R.style.RulerDefaultStyle);
+        this(context, attrs, defStyleAttr, R.style.RulerViewDefaultStyle);
     }
 
     public RulerView(Context context, AttributeSet attrs, @AttrRes int defStyleAttr, @StyleRes int defStyleRes) {

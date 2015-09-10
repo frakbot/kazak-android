@@ -27,7 +27,7 @@
 
   </declare-styleable>
 
-  <attr name="rulerDefaultStyle" format="reference" />
+  <attr name="rulerViewDefaultStyle" format="reference" />
 
   <!-- enum constants for referencing -->
 
