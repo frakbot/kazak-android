@@ -265,14 +265,14 @@ public class RulerView extends View implements Ruler {
     public void setOrientation(@RulerView.Orientation int newOrientation) {
         if (orientation != newOrientation) {
             switch (orientation) {
-                default:
-                    throw new DeveloperError("Unsupported orientation value.");
-
                 case Orientation.HORIZONTAL:
                 case Orientation.VERTICAL:
                     orientation = newOrientation;
                     invalidate();
                     break;
+
+                default:
+                    throw new DeveloperError("Unsupported orientation value.");
             }
         }
     }
@@ -285,14 +285,14 @@ public class RulerView extends View implements Ruler {
     public void setAlignLabel(@RulerView.AlignLabel int newAlignLabel) {
         if (alignLabel != newAlignLabel) {
             switch (alignLabel) {
-                default:
-                    throw new DeveloperError("Unsupported align label value.");
-
                 case AlignLabel.ON_TICK:
                 case AlignLabel.BETWEEN_TICKS:
                     alignLabel = newAlignLabel;
                     invalidate();
                     break;
+
+                default:
+                    throw new DeveloperError("Unsupported align label value.");
             }
         }
     }
