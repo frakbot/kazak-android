@@ -91,7 +91,7 @@ public class RulerView extends View implements Ruler {
 
     public RulerView(Context context, AttributeSet attrs, @AttrRes int defStyleAttr, @StyleRes int defStyleRes) {
         super(context, attrs, defStyleAttr);
-        setWillNotDraw(false);
+        super.setWillNotDraw(false);
 
         textPaint = createTextPaint();
         tickPaint = createTickPaint();
@@ -108,11 +108,9 @@ public class RulerView extends View implements Ruler {
 
 
     @Override
+    @Deprecated
     public void setWillNotDraw(boolean willNotDraw) {
-        if (willNotDraw) {
-            throw new DeveloperError("setWillNotDraw(true) is not compatible with custom drawing.");
-        }
-        super.setWillNotDraw(false);
+        throw new DeveloperError("Changing setWillNotDraw() is not compatible with custom drawing.");
     }
 
     @NonNull
