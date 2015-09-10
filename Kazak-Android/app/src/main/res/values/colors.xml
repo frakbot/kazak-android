@@ -15,6 +15,4 @@
 
   <color name="notification_led_color">@color/color_primary</color>
 
-  <color name="rooms_ruler_color">#757575</color>
-
 </resources>
