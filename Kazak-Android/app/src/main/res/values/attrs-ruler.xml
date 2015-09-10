@@ -7,37 +7,27 @@
 
     <attr name="android:textColor" />
 
-    <attr name="tickSize"
-      format="dimension|reference" />
+    <attr name="tickSize" format="dimension|reference" />
 
-    <attr name="tickStrokeWidth"
-      format="dimension|reference" />
+    <attr name="tickStrokeWidth" format="dimension|reference" />
 
-    <attr name="tickColor"
-      format="color|reference" />
+    <attr name="tickColor" format="color|reference" />
 
     <!-- keep in sync with Ruler.Orientation -->
-    <attr name="orientation"
-      format="enum|reference">
-      <enum name="horizontal"
-        value="0" />
-      <enum name="vertical"
-        value="1" />
+    <attr name="orientation" format="enum|reference">
+      <enum name="horizontal" value="0" />
+      <enum name="vertical" value="1" />
     </attr>
 
     <!-- keep in sync with Ruler.AlignLabel -->
-    <attr name="alignLabel"
-      format="enum|reference">
-      <enum name="onTick"
-        value="0" />
-      <enum name="betweenTicks"
-        value="1" />
+    <attr name="alignLabel" format="enum|reference">
+      <enum name="onTick" value="0" />
+      <enum name="betweenTicks" value="1" />
     </attr>
 
   </declare-styleable>
 
-  <attr name="rulerDefaultStyle"
-    format="reference" />
+  <attr name="rulerDefaultStyle" format="reference" />
 
   <!-- enum constants for referencing -->
 
