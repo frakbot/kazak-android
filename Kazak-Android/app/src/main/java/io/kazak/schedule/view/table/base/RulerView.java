@@ -108,83 +108,6 @@ public class RulerView extends View implements Ruler {
         a.recycle();
     }
 
-    @SuppressWarnings("MagicConstant") // getInt doesn't know anything about the types, but the setters will check if they're correct
-    private void parseXmlEnumsFrom(@NotNull TypedArray a) {
-        setOrientation(a.getInt(R.styleable.RulerView_orientation, Orientation.HORIZONTAL));
-        setAlignLabel(a.getInt(R.styleable.RulerView_alignLabel, AlignLabel.ON_TICK));
-    }
-
-    @Override
-    protected void onDraw(@NonNull Canvas canvas) {
-        super.onDraw(canvas);
-
-        int canvasSave = canvas.save();
-
-        int height;
-        int directionX;
-
-        if (orientation == Orientation.VERTICAL) {
-            canvas.rotate(VERTICALLY_COUNTER_CLOCKWISE);
-            height = getWidth();
-            directionX = BACKWARD;
-        } else {
-            height = getHeight();
-            directionX = FORWARD;
-        }
-
-        float halfHeight = (float) height / 2f;
-
-        canvas.translate(directionX * firstPositionPx, halfHeight);
-        if (alignLabel == AlignLabel.BETWEEN_TICKS) {
-            canvas.translate(directionX * (float) ticksSpacingPx / 2f, 0f);
-        }
-
-        for (String label : labels) {
-            drawVerticallyCenteredLabel(canvas, label);
-            drawTick(canvas, 0f, halfHeight, 0f, halfHeight - getTickSize());
-            canvas.translate(directionX * ticksSpacingPx, 0);
-        }
-
-        canvas.restoreToCount(canvasSave);
-    }
-
-    public void onLabelsChanged(@NonNull List<String> newLabels, int newFirstIndex, int newFirstPositionPx, int newTicksSpacingPx) {
-        labels = getEllipsizedLabels(newLabels, newTicksSpacingPx);
-        firstPositionPx = newFirstPositionPx;
-        ticksSpacingPx = newTicksSpacingPx;
-        invalidate();
-    }
-
-    @Override
-    public void getBoundsOnScreen(@NonNull Rect bounds) {
-        getLocationOnScreen(TMP_LOCATION);
-        int x = TMP_LOCATION[LOCATION_X];
-        int y = TMP_LOCATION[LOCATION_Y];
-        bounds.set(x, y, x + getWidth(), y + getHeight());
-    }
-
-    private void computeBaselineShift() {
-        Paint.FontMetrics fm = textPaint.getFontMetrics();
-        centeredBaselineShift = -(fm.descent + fm.ascent) / 2f;
-    }
-
-    private void drawTick(@NonNull Canvas canvas, float startX, float startY, float stopX, float stopY) {
-        canvas.drawLine(startX, startY, stopX, stopY, tickPaint);
-    }
-
-    private void drawVerticallyCenteredLabel(@NonNull Canvas canvas, @NonNull String label) {
-        canvas.drawText(label, 0f, centeredBaselineShift, textPaint);
-    }
-
-    private List<String> getEllipsizedLabels(@NotNull List<String> newLabels, float newTicksSpacingPx) {
-        List<String> ellipsizedLabels = new ArrayList<>(newLabels.size());
-        for (String label : newLabels) {
-            CharSequence ellipsizedLabel = TextUtils.ellipsize(label, textPaint, newTicksSpacingPx, TextUtils.TruncateAt.MIDDLE);
-            ellipsizedLabels.add(ellipsizedLabel.toString());
-        }
-        return ellipsizedLabels;
-    }
-
     @NonNull
     private TextPaint createTextPaint() {
         TextPaint paint = new TextPaint(Paint.ANTI_ALIAS_FLAG);
@@ -197,6 +120,12 @@ public class RulerView extends View implements Ruler {
         Paint paint = new Paint();
         paint.setStyle(Paint.Style.STROKE);
         return paint;
+    }
+
+    @SuppressWarnings("MagicConstant") // getInt doesn't know anything about the types, but the setters will check if they're correct
+    private void parseXmlEnumsFrom(@NotNull TypedArray a) {
+        setOrientation(a.getInt(R.styleable.RulerView_orientation, Orientation.HORIZONTAL));
+        setAlignLabel(a.getInt(R.styleable.RulerView_alignLabel, AlignLabel.ON_TICK));
     }
 
     @ColorInt
@@ -297,8 +226,79 @@ public class RulerView extends View implements Ruler {
         }
     }
 
+    private void computeBaselineShift() {
+        Paint.FontMetrics fm = textPaint.getFontMetrics();
+        centeredBaselineShift = -(fm.descent + fm.ascent) / 2f;
+    }
+
     private static boolean equals(float a, float b) {
         return Float.compare(a, b) != COMPARE_EQUALS;
+    }
+
+    public void onLabelsChanged(@NonNull List<String> newLabels, int newFirstIndex, int newFirstPositionPx, int newTicksSpacingPx) {
+        labels = getEllipsizedLabels(newLabels, newTicksSpacingPx);
+        firstPositionPx = newFirstPositionPx;
+        ticksSpacingPx = newTicksSpacingPx;
+        invalidate();
+    }
+
+    private List<String> getEllipsizedLabels(@NotNull List<String> newLabels, float newTicksSpacingPx) {
+        List<String> ellipsizedLabels = new ArrayList<>(newLabels.size());
+        for (String label : newLabels) {
+            CharSequence ellipsizedLabel = TextUtils.ellipsize(label, textPaint, newTicksSpacingPx, TextUtils.TruncateAt.MIDDLE);
+            ellipsizedLabels.add(ellipsizedLabel.toString());
+        }
+        return ellipsizedLabels;
+    }
+
+    @Override
+    public void getBoundsOnScreen(@NonNull Rect bounds) {
+        getLocationOnScreen(TMP_LOCATION);
+        int x = TMP_LOCATION[LOCATION_X];
+        int y = TMP_LOCATION[LOCATION_Y];
+        bounds.set(x, y, x + getWidth(), y + getHeight());
+    }
+
+    @Override
+    protected void onDraw(@NonNull Canvas canvas) {
+        super.onDraw(canvas);
+
+        int canvasSave = canvas.save();
+
+        int height;
+        int directionX;
+
+        if (orientation == Orientation.VERTICAL) {
+            canvas.rotate(VERTICALLY_COUNTER_CLOCKWISE);
+            height = getWidth();
+            directionX = BACKWARD;
+        } else {
+            height = getHeight();
+            directionX = FORWARD;
+        }
+
+        float halfHeight = (float) height / 2f;
+
+        canvas.translate(directionX * firstPositionPx, halfHeight);
+        if (alignLabel == AlignLabel.BETWEEN_TICKS) {
+            canvas.translate(directionX * (float) ticksSpacingPx / 2f, 0f);
+        }
+
+        for (String label : labels) {
+            drawVerticallyCenteredLabel(canvas, label);
+            drawTick(canvas, 0f, halfHeight, 0f, halfHeight - getTickSize());
+            canvas.translate(directionX * ticksSpacingPx, 0);
+        }
+
+        canvas.restoreToCount(canvasSave);
+    }
+
+    private void drawVerticallyCenteredLabel(@NonNull Canvas canvas, @NonNull String label) {
+        canvas.drawText(label, 0f, centeredBaselineShift, textPaint);
+    }
+
+    private void drawTick(@NonNull Canvas canvas, float startX, float startY, float stopX, float stopY) {
+        canvas.drawLine(startX, startY, stopX, stopY, tickPaint);
     }
 
 }
