@@ -1,7 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
   <style name="Schedule" parent="None" />
+
+  <style name="Schedule.Toolbar" parent="None">
+    <item name="android:minHeight" tools:ignore="PrivateResource">?attr/actionBarSize</item>
+    <item name="navigationIcon">@drawable/ic_menu_white</item>
+  </style>
+
+  <style name="Schedule.ToolbarWrapper" parent="None">
+    <item name="android:orientation">vertical</item>
+    <item name="android:background" tools:ignore="PrivateResource">?attr/colorPrimary</item>
+    <item name="android:elevation" tools:ignore="NewApi">@dimen/schedule_toolbar_wrapper_elevation</item>
+  </style>
 
   <style name="Session.Card.Track" parent="None">
     <item name="android:layout_marginStart">@dimen/session_card_padding_horizontal</item>
@@ -74,10 +85,11 @@
   <style name="Schedule.Ruler.Time" parent="None" />
 
   <style name="Schedule.Ruler.Rooms" parent="None">
-    <item name="tickSize">0dp</item>
+    <item name="android:elevation" tools:ignore="NewApi">@dimen/schedule_ruler_rooms_elevation</item>
+    <item name="android:background">@color/rooms_ruler_color</item>
+    <item name="tickSize">@dimen/schedule_ruler_rooms_ticks_size</item>
     <item name="orientation">vertical</item>
     <item name="alignLabel">betweenTicks</item>
-    <item name="android:background">@color/rooms_ruler_color</item>
   </style>
 
 </resources>
