@@ -11,11 +11,11 @@ import android.os.Bundle;
 import android.text.TextUtils;
 
 public class KazakAuthenticator extends AbstractAccountAuthenticator {
-    private Context mContext;
+    private Context context;
 
     public KazakAuthenticator(Context context) {
         super(context);
-        mContext = context;
+        this.context = context;
     }
 
     @Override
@@ -46,7 +46,7 @@ public class KazakAuthenticator extends AbstractAccountAuthenticator {
             String authTokenType,
             Bundle options) throws NetworkErrorException {
         // retrieve the already-stored auth token
-        AccountManager am = AccountManager.get(mContext);
+        AccountManager am = AccountManager.get(context);
         String authToken = am.peekAuthToken(account, authTokenType);
 
         // if there's no stored token, return the bundled Intent to launch the login activity
@@ -91,7 +91,7 @@ public class KazakAuthenticator extends AbstractAccountAuthenticator {
      * @return An {@link Intent} to launch the {@link LoginActivity}
      */
     private Intent createIntentLogin(AccountAuthenticatorResponse response, String accountType, String authTokenType, boolean isNew) {
-        Intent intent = new Intent(mContext, LoginActivity.class);
+        Intent intent = new Intent(context, LoginActivity.class);
         intent.putExtra(AccountManager.KEY_ACCOUNT_AUTHENTICATOR_RESPONSE, response);
         intent.putExtra(AccountManager.KEY_ACCOUNT_TYPE, accountType);
         intent.putExtra(LoginActivity.AUTH_TOKEN_TYPE, authTokenType);
