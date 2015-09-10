@@ -11,7 +11,9 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -21,9 +23,8 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
-
-import com.firebase.client.Firebase;
 
 import javax.inject.Inject;
 import java.util.List;
@@ -47,21 +48,18 @@ public class LoginActivity extends Activity {
     private static final String AUTH_TOKEN_TYPE_PASSWORD = "AUTH_TOKEN_TYPE_PASSWORD";
     // bundle state key, if its value is true the login cache will be invalidated when the activity is created
     private static final String BUNDLE_NEED_NEW_CACHE = "BUNDLE_NEW_CACHE";
-    // bundle key, its value specifies that a login is in progress
-    private static final String BUNDLE_LOGIN_IN_PROGRESS = "BUNDLE_LOGIN_IN_PROGRESS";
 
     @Inject
     AuthRepository authRepository;
 
     private CompositeSubscription loginSubscriptions;
 
-    // UI references.
+    // UI references
+    private LinearLayout contentRootView;
     private AutoCompleteTextView emailView;
     private EditText passwordView;
     private View progressView;
     private View loginFormView;
-
-    private boolean isLoggingIn;
 
     public LoginActivity() {
         loginSubscriptions = new CompositeSubscription();
@@ -74,8 +72,7 @@ public class LoginActivity extends Activity {
 
         setContentView(R.layout.activity_login);
 
-        // Init Firebase
-        Firebase.setAndroidContext(this);
+        contentRootView = (LinearLayout) findViewById(R.id.login_root_layout);
 
         // if this is a new login session, clear the login cache
         if (savedInstanceState == null || !savedInstanceState.getBoolean(BUNDLE_NEED_NEW_CACHE)) {
@@ -137,15 +134,11 @@ public class LoginActivity extends Activity {
         View erroredView = validateLoginData(email, password);
 
         if (erroredView != null) {
-            // There was an error; don't attempt login and focus the first
-            // form field with an error.
+            // There was an error; don't attempt login and focus the first form field with an error
             erroredView.requestFocus();
         } else {
-            // Show a progress spinner, and kick off a background task to
-            // perform the user login attempt.
+            // Show a progress spinner, and kick off a background task to perform the user login attempt
             hideKeyboard();
-            showProgress(true);
-            isLoggingIn = true;
             authRepository.login(email, password);
         }
     }
@@ -159,16 +152,16 @@ public class LoginActivity extends Activity {
 
         // Check for a valid password, if the user entered one.
         if (TextUtils.isEmpty(password)) {
-            passwordView.setError(getString(R.string.error_invalid_password));
+            showErrorSnackbar(getString(R.string.error_invalid_password));
             focusView = passwordView;
         }
 
         // Check for a valid email address.
         if (TextUtils.isEmpty(email)) {
-            emailView.setError(getString(R.string.error_field_required));
+            showErrorSnackbar(getString(R.string.error_email_required));
             focusView = emailView;
         } else if (!LoginPackage.isEmailValid(email)) {
-            emailView.setError(getString(R.string.error_invalid_email));
+            showErrorSnackbar(getString(R.string.error_invalid_email));
             focusView = emailView;
         }
 
@@ -209,7 +202,6 @@ public class LoginActivity extends Activity {
 
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
-        outState.putBoolean(BUNDLE_LOGIN_IN_PROGRESS, isLoggingIn);
         outState.putBoolean(BUNDLE_NEED_NEW_CACHE, true);
         super.onSaveInstanceState(outState);
     }
@@ -217,12 +209,10 @@ public class LoginActivity extends Activity {
     @Override
     protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        // TODO: pick this up from a state event in the AuthRepository
-        showProgress(savedInstanceState.getBoolean(BUNDLE_LOGIN_IN_PROGRESS));
     }
 
     @TargetApi(Build.VERSION_CODES.M)
-    public void showProgress(final boolean show) {
+    private void showProgress(final boolean show) {
         // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
         // for very easy animations. If available, use these APIs to fade-in
         // the progress spinner.
@@ -259,7 +249,23 @@ public class LoginActivity extends Activity {
             loginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
         }
     }
-    
+
+    private void showErrorSnackbar(String errorMessage) {
+        Snackbar errorSnackbar = Snackbar.make(contentRootView, errorMessage, Snackbar.LENGTH_LONG);
+        // when the error snackbar is dismissed for any reason, clean the error state so it doesn't get shown anymore
+        errorSnackbar.setCallback(
+                new Snackbar.Callback() {
+                    @Override
+                    public void onDismissed(Snackbar snackbar, int event) {
+                        super.onDismissed(snackbar, event);
+                        authRepository.forceIdleState();
+                    }
+                }
+        );
+        // show the error snackbar
+        errorSnackbar.show();
+    }
+
     private static class OnAuthTokenRetrievedAction implements Action1<KazakAuthToken> {
         private final LoginActivity activity;
 
@@ -293,17 +299,21 @@ public class LoginActivity extends Activity {
             this.activity = activity;
         }
 
+        // we don't care about throwing the error out of this method since we're handling it here
+        @SuppressWarnings("ThrowableResultOfMethodCallIgnored")
         @Override
         public void call(SyncEvent syncEvent) {
+            // show the progress iif the last state is loading, otherwise hide it
+            activity.showProgress(syncEvent.getState() == SyncState.LOADING);
+            // if we have an error, show a message
             if (syncEvent.getState() == SyncState.ERROR) {
-                if (syncEvent.getError() != null) {
-                    activity.passwordView.setError(syncEvent.getError().getMessage());
-                } else {
-                    activity.passwordView.setError("Login error, check your credentials.");
+                Log.e("Kazak", "Failed to log user in", syncEvent.getError());
+                String errorMessage = activity.getString(R.string.error_login);
+                if (syncEvent.getError() != null && syncEvent.getError().getMessage() != null) {
+                    errorMessage = syncEvent.getError().getMessage();
                 }
+                activity.showErrorSnackbar(errorMessage);
                 activity.passwordView.requestFocus();
-                activity.showProgress(false);
-                activity.isLoggingIn = false;
             }
         }
     }

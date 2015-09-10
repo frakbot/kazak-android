@@ -10,6 +10,8 @@ public interface AuthRepository {
 
     fun clearLoginCache()
 
+    fun forceIdleState()
+
     fun getLastLoginSyncEvents(): Observable<SyncEvent>
 
     fun getLoginCache(): Observable<KazakAuthToken>
