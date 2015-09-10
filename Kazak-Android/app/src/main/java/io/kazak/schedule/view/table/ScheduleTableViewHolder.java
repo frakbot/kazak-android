@@ -8,24 +8,25 @@ import java.util.Date;
 import io.kazak.model.Room;
 import io.kazak.model.Talk;
 import io.kazak.schedule.view.table.base.TableViewHolder;
-import io.kazak.schedule.view.TalkView;
+import io.kazak.schedule.view.TalkCardView;
 
 public class ScheduleTableViewHolder extends TableViewHolder<Talk, Room, Date> {
 
-    private TalkView talkView;
+    private TalkCardView cardView;
 
-    public ScheduleTableViewHolder(@NonNull TalkView talkView, @NonNull RecyclerView.Adapter adapter) {
-        super(talkView, adapter);
-        this.talkView = talkView;
+    public ScheduleTableViewHolder(@NonNull TalkCardView cardView, @NonNull RecyclerView.Adapter adapter) {
+        super(cardView, adapter);
+        this.cardView = cardView;
     }
 
     @Override
     public void updateWith(Talk item, Room row, Date start, Date end, boolean isPlaceholder) {
         super.updateWith(item, row, start, end, isPlaceholder);
-        talkView.updateWith(item);
+        cardView.updateWith(item);
     }
 
-    TalkView getTalkView() {
-        return talkView;
+    TalkCardView getCardView() {
+        return cardView;
     }
+
 }

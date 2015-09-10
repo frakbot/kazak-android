@@ -22,7 +22,7 @@ import io.kazak.model.Id;
 import io.kazak.model.Room;
 import io.kazak.model.Talk;
 import io.kazak.model.TimeSlot;
-import io.kazak.schedule.view.TalkView;
+import io.kazak.schedule.view.TalkCardView;
 import io.kazak.schedule.view.table.base.RangePosition;
 import io.kazak.schedule.view.table.base.TableDataHandler;
 import io.kazak.schedule.view.table.base.TableTreeAdapter;
@@ -53,7 +53,7 @@ public class ScheduleTableAdapter extends TableTreeAdapter<Talk, Room, Date, Sch
 
     @NonNull
     public ScheduleTableViewHolder createNormalViewHolder(@Nullable ViewGroup parent) {
-        return new ScheduleTableViewHolder((TalkView) inflater.inflate(R.layout.view_talk_item, parent, false), this);
+        return new ScheduleTableViewHolder((TalkCardView) inflater.inflate(R.layout.view_schedule_talk_card, parent, false), this);
     }
 
     @NonNull
