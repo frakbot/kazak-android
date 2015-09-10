@@ -3,7 +3,7 @@ package io.kazak.injection;
 import javax.inject.Singleton;
 
 import dagger.Component;
-import io.kazak.notifications.EventAlarmService;
+import io.kazak.repository.DataRepository;
 import io.kazak.schedule.ScheduleActivity;
 
 @Singleton
@@ -15,6 +15,6 @@ public interface ApplicationInjector {
 
     void inject(ScheduleActivity injectable);
 
-    void inject(EventAlarmService injectable);
+    DataRepository getDataRepository();
 
 }
