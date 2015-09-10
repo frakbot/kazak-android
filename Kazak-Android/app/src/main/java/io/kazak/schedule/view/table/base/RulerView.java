@@ -102,11 +102,14 @@ public class RulerView extends View implements Ruler {
         setTickSize(a.getDimension(R.styleable.RulerView_tickSize, 0f));
         setTickStrokeWidth(a.getDimension(R.styleable.RulerView_tickStrokeWidth, 0f));
         setTickColor(a.getColor(R.styleable.RulerView_tickColor, Color.BLACK));
-        //noinspection MagicConstant
-        setOrientation(a.getInt(R.styleable.RulerView_orientation, Orientation.HORIZONTAL));
-        //noinspection MagicConstant
-        setAlignLabel(a.getInt(R.styleable.RulerView_alignLabel, AlignLabel.ON_TICK));
+        parseXmlEnumsFrom(a);
         a.recycle();
+    }
+
+    @SuppressWarnings("MagicConstant") // getInt doesn't know anything about the types, but the setters will check if they're correct
+    private void parseXmlEnumsFrom(@NotNull TypedArray a) {
+        setOrientation(a.getInt(R.styleable.RulerView_orientation, Orientation.HORIZONTAL));
+        setAlignLabel(a.getInt(R.styleable.RulerView_alignLabel, AlignLabel.ON_TICK));
     }
 
     @Override
