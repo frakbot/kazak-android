@@ -160,7 +160,7 @@ public class LoginActivity extends Activity {
         if (TextUtils.isEmpty(email)) {
             showErrorSnackbar(getString(R.string.error_email_required));
             focusView = emailView;
-        } else if (!LoginPackage.isEmailValid(email)) {
+        } else if (!LoginPackage.isValidEmail(email)) {
             showErrorSnackbar(getString(R.string.error_invalid_email));
             focusView = emailView;
         }

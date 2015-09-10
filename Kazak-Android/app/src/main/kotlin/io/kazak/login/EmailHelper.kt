@@ -12,12 +12,12 @@ public fun getDeviceUserEmails(context: Context): List<String> {
                 it.name
             }
             .filter {
-                isEmailValid(it)
+                isValidEmail(it)
             }
             .distinct()
 }
 
-public fun isEmailValid(email: String): Boolean {
+public fun isValidEmail(email: String): Boolean {
     // TODO: Replace this with an improved logic
     return email.contains("@")
 }
