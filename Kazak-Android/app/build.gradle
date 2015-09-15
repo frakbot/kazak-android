@@ -58,9 +58,9 @@ android {
         project.task(taskName) << {
             def scheduleUrl = variant.getMergedFlavor().getBuildConfigFields().get("ENDPOINT_URL").getValue()
             scheduleUrl = scheduleUrl[1..scheduleUrl.length() - 2]
-            def assetsDir = android.sourceSets.main.assets.srcDirs[0]
+            def assetsDir = android.sourceSets[variant.flavorName].assets.srcDirs[0]
             download {
-                src "${scheduleUrl}/events?expand=rooms&expand=presenters&expand=track"
+                src "${scheduleUrl}/events?expand=rooms&expand=presenters&expand=track&expand=rooms&expand=secondaryRooms"
                 dest "${assetsDir}/json/schedule.json"
             }
         }
