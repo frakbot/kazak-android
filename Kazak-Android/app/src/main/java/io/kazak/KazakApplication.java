@@ -7,6 +7,7 @@ import com.facebook.stetho.Stetho;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.kazak.injection.ApiModule;
 import io.kazak.injection.ApplicationInjector;
+import io.kazak.injection.AuthModule;
 import io.kazak.injection.DaggerApplicationInjector;
 import io.kazak.injection.RepositoriesModule;
 
@@ -22,6 +23,7 @@ public class KazakApplication extends Application {
         applicationInjector = DaggerApplicationInjector.builder()
                 .apiModule(new ApiModule())
                 .repositoriesModule(new RepositoriesModule(this))
+                .authModule(new AuthModule(this))
                 .build();
     }
 

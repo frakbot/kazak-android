@@ -8,6 +8,8 @@
   <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
   <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
   <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+  <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+  <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS" />
 
   <application
     android:name=".KazakApplication"
@@ -36,6 +38,22 @@
     <activity
       android:name="io.kazak.map.VenueMapActivity"
       android:label="@string/activity_title_venue_map" />
+
+    <activity
+      android:name="io.kazak.login.LoginActivity"
+      android:label="@string/activity_title_login"
+      android:enabled="${supportsAccount}"/>
+
+    <service
+      android:name="io.kazak.login.KazakAuthenticationService"
+      android:enabled="${supportsAccount}">
+      <intent-filter>
+        <action android:name="android.accounts.AccountAuthenticator" />
+      </intent-filter>
+      <meta-data
+        android:name="android.accounts.AccountAuthenticator"
+        android:resource="@xml/authenticator" />
+    </service>
 
     <meta-data
       android:name="com.google.android.gms.version"

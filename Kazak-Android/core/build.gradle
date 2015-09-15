@@ -8,6 +8,7 @@ dependencies {
     compile 'com.google.code.gson:gson:2.3.1'
     compile 'com.squareup.retrofit:retrofit:1.9.0'
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    compile 'com.firebase:firebase-client-android:2.3.1'
     testCompile('junit:junit:4.11') {
         exclude module: 'hamcrest'
         exclude module: 'hamcrest-core'
