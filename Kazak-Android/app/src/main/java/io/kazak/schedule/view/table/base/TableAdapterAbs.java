@@ -109,4 +109,9 @@ public abstract class TableAdapterAbs<ITEM, ROW, BOUND, VH extends TableViewHold
         return RangePosition.createMarker(dataHandler);
     }
 
+    @Nullable
+    public RecyclerView getRecyclerView() {
+        return boundRecyclerView;
+    }
+
 }

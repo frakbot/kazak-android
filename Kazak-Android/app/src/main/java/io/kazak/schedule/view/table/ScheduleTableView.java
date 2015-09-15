@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.support.annotation.AttrRes;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.annotation.StyleRes;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
@@ -23,6 +24,7 @@ import io.kazak.model.Speakers;
 import io.kazak.model.Talk;
 import io.kazak.model.TimeSlot;
 import io.kazak.schedule.view.TalkView;
+import io.kazak.schedule.view.table.base.Ruler;
 import io.kazak.schedule.view.table.base.TableItemPaddingDecoration;
 import io.kazak.schedule.view.table.base.TableLayoutManager;
 
@@ -32,6 +34,7 @@ public class ScheduleTableView extends RecyclerView {
     private static final Id NO_ID = new Id("");
 
     private final ScheduleTableAdapter adapter;
+    private final TableLayoutManager layoutManager;
 
     public ScheduleTableView(Context context) {
         this(context, null);
@@ -60,12 +63,12 @@ public class ScheduleTableView extends RecyclerView {
 
         int timeSlotDurationMilliseconds = (int) TimeUnit.MINUTES.toMillis(timeSlotDurationMinutes);
         int rowHeightPx = computeRowHeight(timeSlotUnitWidthPx, timeSlotDurationMinutes);
+        layoutManager = new TableLayoutManager(
+                rowHeightPx, timeSlotUnitWidthPx, timeSlotDurationMilliseconds, itemsPaddingHorizontal, itemsPaddingVertical);
 
         setHasFixedSize(true);
         addItemDecoration(new TableItemPaddingDecoration(itemsPaddingHorizontal, itemsPaddingVertical));
-        setLayoutManager(
-                new TableLayoutManager(
-                        rowHeightPx, timeSlotUnitWidthPx, timeSlotDurationMilliseconds, itemsPaddingHorizontal, itemsPaddingVertical));
+        setLayoutManager(layoutManager);
         setAdapter(adapter);
     }
 
@@ -125,6 +128,14 @@ public class ScheduleTableView extends RecyclerView {
     @NonNull
     private static Speaker createDummySpeaker(String speakerName) {
         return new Speaker(NO_ID, speakerName, null, null, null, null);
+    }
+
+    public void setRoomsRuler(@Nullable Ruler ruler) {
+        layoutManager.setRowsRuler(ruler);
+    }
+
+    public void setTimeRuler(@Nullable Ruler ruler) {
+        layoutManager.setBoundsRuler(ruler);
     }
 
 }

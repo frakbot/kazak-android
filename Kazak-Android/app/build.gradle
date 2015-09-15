@@ -9,7 +9,9 @@ BuildProperties.generateFlavors(new File('build-props').listFiles(), project)
 
 android {
     compileSdkVersion 23
-    buildToolsVersion "23.0.0"
+    buildToolsVersion "23.0.1"
+
+    archivesBaseName = 'kazak'
 
     defaultConfig {
         versionName defaultProperties.getString('versionName')
