@@ -3,9 +3,9 @@ package io.kazak.repository
 import io.kazak.api.KazakApi
 import io.kazak.model.*
 import io.kazak.repository.event.SyncEvent
+import io.kazak.repository.event.SyncObserver
 import io.kazak.repository.event.SyncState
 import rx.Observable
-import rx.Observer
 import rx.schedulers.Schedulers
 import rx.subjects.BehaviorSubject
 
@@ -57,7 +57,7 @@ public class KazakDataRepository(val api: KazakApi, val favoritesRepository: Fav
     }
 
     private fun updateFavorites() {
-        favoritesSyncCache.onNext(SyncEvent(SyncState.LOADING, null))
+        favoritesSyncCache.onNext(SyncEvent(SyncState.LOADING))
         favoritesRepository.read()
                 .subscribeOn(Schedulers.io())
                 .subscribe(SyncObserver(favoritesCache, favoritesSyncCache))
@@ -100,26 +100,9 @@ public class KazakDataRepository(val api: KazakApi, val favoritesRepository: Fav
     }
 
     private fun updateSchedule() {
-        scheduleSyncCache.onNext(SyncEvent(SyncState.LOADING, null))
+        scheduleSyncCache.onNext(SyncEvent(SyncState.LOADING))
         api.fetchSchedule()
                 .subscribe(SyncObserver(scheduleCache, scheduleSyncCache))
-    }
-
-    class SyncObserver<T>(val subject: BehaviorSubject<T>, val syncSubject: BehaviorSubject<SyncEvent>) : Observer<T> {
-
-        override fun onCompleted() {
-            syncSubject.onNext(SyncEvent(SyncState.IDLE, null))
-        }
-
-        override fun onError(e: Throwable) {
-            syncSubject.onNext(SyncEvent(SyncState.ERROR, e))
-        }
-
-        override fun onNext(t: T) {
-            subject.onNext(t)
-            syncSubject.onNext(SyncEvent(SyncState.IDLE, null))
-        }
-
     }
 
 }
