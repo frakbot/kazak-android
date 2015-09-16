@@ -35,7 +35,7 @@ public class AndroidFavoritesRepository(val files: File, val gson: Gson) : Favor
                         it.fold(StringBuffer(), { buffer, line -> buffer.append(line) })
                     }.toString()
             it.onNext(
-                    gson.fromJson(json, javaClass<FavoriteSessions>())
+                    gson.fromJson(json, FavoriteSessions::class.java)
             )
             it.onCompleted()
         }

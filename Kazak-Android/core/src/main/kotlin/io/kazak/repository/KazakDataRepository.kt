@@ -44,7 +44,7 @@ public class KazakDataRepository(val api: KazakApi, val favoritesRepository: Fav
                     Observable.from(it)
                         .flatMap { getEvent(it) }
                         .filter { it.type().canBeFavorite() }
-                        .cast(javaClass<Session>())
+                        .cast(Session::class.java)
                         .toList()
                 }
     }

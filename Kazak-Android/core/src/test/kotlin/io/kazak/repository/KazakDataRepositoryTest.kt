@@ -16,8 +16,8 @@ public class KazakDataRepositoryTest {
     val talkId = Id("TestId")
     val testDate = Date()
 
-    val mockApi: KazakApi = Mockito.mock(javaClass())
-    val mockFavoritesRepo: FavoriteSessionsRepository = Mockito.mock(javaClass())
+    val mockApi: KazakApi = Mockito.mock(KazakApi::class.java)
+    val mockFavoritesRepo: FavoriteSessionsRepository = Mockito.mock(FavoriteSessionsRepository::class.java)
     val scheduleObservable: BehaviorSubject<Schedule> = BehaviorSubject.create()
 
     val repository: DataRepository = KazakDataRepository(mockApi, mockFavoritesRepo)
