@@ -92,6 +92,7 @@ public class DebugActivity extends Activity {
         return new Talk(
                 new Id(String.valueOf(id)),
                 "A very interesting talk",
+                "The talk description which will tell you things about it",
                 createTalkTimeSlot(),
                 createTalkRooms(id),
                 createTalkSpeakers(),

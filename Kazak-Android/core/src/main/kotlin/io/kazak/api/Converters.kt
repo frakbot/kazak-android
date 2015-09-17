@@ -12,11 +12,11 @@ import java.util.Date
 
 private val ISO_DATE_FORMATTER = SimpleDateFormatThreadSafe("yyyy-MM-dd'T'HH:mm:ss")
 
-private val HEX_COLOR_PREFIX = '#';
-private val RGB_HEX_LENGTH = 7;
-private val ARGB_HEX_LENGTH = 9;
-private val FULL_ALPHA_BITMASK = 0x00000000ff000000;
-private val HEX_BASE_16_RADIX = 16;
+private val HEX_COLOR_PREFIX = '#'
+private val RGB_HEX_LENGTH = 7
+private val ARGB_HEX_LENGTH = 9
+private val FULL_ALPHA_BITMASK = 0x00000000ff000000
+private val HEX_BASE_16_RADIX = 16
 
 fun asSchedule(jsonTalks: List<JsonEvent>) = asScheduleInternal(jsonTalks, ::asEvent)
 
@@ -70,7 +70,7 @@ fun asSpeaker(jsonPresenter: JsonPresenter): Speaker? {
 }
 
 private fun asScheduleInternal(jsonTalks: List<JsonEvent>, asEvent: (JsonEvent) -> Event?): Schedule {
-    val calendar = Calendar.getInstance();
+    val calendar = Calendar.getInstance()
     val talks = jsonTalks.map {
         asEvent(it)
     }.filterNotNull().groupBy {
@@ -108,10 +108,11 @@ private fun asTalkInternal(
 ): Talk? {
     val id = jsonEvent.id ?: return null
     val name = jsonEvent.name ?: return null
+    val description = jsonEvent.description
     val timeSlot = asTimeSlot(jsonEvent.startDate, jsonEvent.endDate) ?: return null
     val rooms = jsonEvent.rooms?.map { asRoom(it) }?.filterNotNull() ?: return null
     val jsonPresenters = jsonEvent.presenters ?: return null
-    return Talk(Id(id), name, timeSlot, rooms, asSpeakers(jsonPresenters), asTrack(jsonEvent.track))
+    return Talk(Id(id), name, description, timeSlot, rooms, asSpeakers(jsonPresenters), asTrack(jsonEvent.track))
 }
 
 private fun asCoffeeBreakInternal(
@@ -120,8 +121,9 @@ private fun asCoffeeBreakInternal(
 ): CoffeeBreak? {
     val id = jsonEvent.id ?: return null
     val name = jsonEvent.name ?: return null
+    val description = jsonEvent.description
     val timeSlot = asTimeSlot(jsonEvent.startDate, jsonEvent.endDate) ?: return null
-    return CoffeeBreak(Id(id), name, timeSlot)
+    return CoffeeBreak(Id(id), name, description, timeSlot)
 }
 
 private fun asPlaceholderInternal(
@@ -130,9 +132,10 @@ private fun asPlaceholderInternal(
 ): Placeholder? {
     val id = jsonEvent.id ?: return null
     val name = jsonEvent.name ?: return null
+    val description = jsonEvent.description
     val timeSlot = asTimeSlot(jsonEvent.startDate, jsonEvent.endDate) ?: return null
     val rooms = jsonEvent.rooms?.map { asRoom(it) }?.filterNotNull() ?: return null
-    return Placeholder(Id(id), name, timeSlot, rooms)
+    return Placeholder(Id(id), name, description, timeSlot, rooms)
 }
 
 private fun asCeremonyInternal(
@@ -142,16 +145,17 @@ private fun asCeremonyInternal(
 ): Ceremony? {
     val id = jsonEvent.id ?: return null
     val name = jsonEvent.name ?: return null
+    val description = jsonEvent.description
     val timeSlot = asTimeSlot(jsonEvent.startDate, jsonEvent.endDate) ?: return null
     val rooms = jsonEvent.rooms?.map { asRoom(it) }?.filterNotNull() ?: return null
-    return Ceremony(Id(id), name, timeSlot, rooms)
+    return Ceremony(Id(id), name, description, timeSlot, rooms)
 }
 
 private fun asTimeSlotInternal(start: String?, end: String?, asDate: (String?) -> Date?): TimeSlot? {
     val startDate = asDate(start)
     val endDate = asDate(end)
     if (startDate == null || endDate == null) {
-        return null;
+        return null
     }
     return TimeSlot(startDate, endDate)
 }
@@ -171,33 +175,33 @@ fun asTrackInternal(jsonTrack: JsonTrack?, asColor: (String?) -> Color?): Track?
 
 fun asColor(hexColorString: String?): Color? {
     if (hexColorString == null) {
-        return null;
+        return null
     }
 
-    val trimmedHexColorString = hexColorString.trim();
+    val trimmedHexColorString = hexColorString.trim()
     if (notValid(trimmedHexColorString) || unsupportedFormat(trimmedHexColorString)) {
-        return null;
+        return null
     }
 
     if (trimmedHexColorString.length() == RGB_HEX_LENGTH) {
-        return Color(parseRgbHex(trimmedHexColorString).toInt());
+        return Color(parseRgbHex(trimmedHexColorString).toInt())
     } else {
-        return Color(parseArgbHex(trimmedHexColorString).toInt());
+        return Color(parseArgbHex(trimmedHexColorString).toInt())
     }
 }
 
 private fun notValid(hexColorString: String): Boolean {
-    return hexColorString.isEmpty() || hexColorString.charAt(0) != HEX_COLOR_PREFIX;
+    return hexColorString.isEmpty() || hexColorString.charAt(0) != HEX_COLOR_PREFIX
 }
 
 private fun unsupportedFormat(hexColorString: String): Boolean {
-    return hexColorString.length() != RGB_HEX_LENGTH && hexColorString.length() != ARGB_HEX_LENGTH;
+    return hexColorString.length() != RGB_HEX_LENGTH && hexColorString.length() != ARGB_HEX_LENGTH
 }
 
 private fun parseRgbHex(rgbHex: String): Long {
-    return parseArgbHex(rgbHex).or(FULL_ALPHA_BITMASK);
+    return parseArgbHex(rgbHex).or(FULL_ALPHA_BITMASK)
 }
 
 private fun parseArgbHex(argbHex: String): Long {
-    return java.lang.Long.parseLong(argbHex.substring(1), HEX_BASE_16_RADIX);
+    return java.lang.Long.parseLong(argbHex.substring(1), HEX_BASE_16_RADIX)
 }
