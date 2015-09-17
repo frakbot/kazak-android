@@ -10,6 +10,7 @@ import java.util.Collection;
 import org.jetbrains.annotations.NotNull;
 
 import io.kazak.base.DeveloperError;
+import io.kazak.schedule.view.ScheduleEventView;
 
 public abstract class TableAdapterAbs<ITEM, ROW, BOUND, VH extends TableViewHolder<ITEM, ROW, BOUND>> extends RecyclerView.Adapter<VH> {
 
@@ -19,6 +20,7 @@ public abstract class TableAdapterAbs<ITEM, ROW, BOUND, VH extends TableViewHold
     private final TableDataHandler<ITEM, ROW, BOUND> dataHandler;
 
     private RecyclerView boundRecyclerView;
+    private ScheduleEventView.Listener listener;
 
     protected TableAdapterAbs(@NonNull TableDataHandler<ITEM, ROW, BOUND> dh) {
         dataHandler = dh;
@@ -72,6 +74,10 @@ public abstract class TableAdapterAbs<ITEM, ROW, BOUND, VH extends TableViewHold
         return tvh;
     }
 
+    public void setListener(@Nullable ScheduleEventView.Listener listener) {
+        this.listener = listener;
+    }
+
     @Override
     public void onBindViewHolder(VH holder, int position) {
         ITEM item = getItem(position);
@@ -80,7 +86,8 @@ public abstract class TableAdapterAbs<ITEM, ROW, BOUND, VH extends TableViewHold
                 dataHandler.getRowFor(item),
                 dataHandler.getStartFor(item),
                 dataHandler.getEndFor(item),
-                dataHandler.isPlaceholder(item));
+                dataHandler.isPlaceholder(item),
+                listener);
     }
 
     @Override

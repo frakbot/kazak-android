@@ -29,7 +29,7 @@ import io.kazak.schedule.view.table.base.RangePosition;
 import io.kazak.schedule.view.table.base.TableDataHandler;
 import io.kazak.schedule.view.table.base.TableTreeAdapter;
 
-public class ScheduleTableAdapter extends TableTreeAdapter<Pair<Talk, Room>, Room, Date, ScheduleTableViewHolder> {
+public class ScheduleTableAdapter extends TableTreeAdapter<Pair<Talk, Room>, Room, Date, ScheduleTalkTableViewHolder> {
 
     private static final TableDataHandler<Pair<Talk, Room>, Room, Date> TALK_DATA_HANDLER = new TalkDataHandler();
     private static final Comparator<Room> ROOM_COMPARATOR = new RoomComparator();
@@ -42,7 +42,7 @@ public class ScheduleTableAdapter extends TableTreeAdapter<Pair<Talk, Room>, Roo
     }
 
     @Override
-    public ScheduleTableViewHolder onCreateViewHolder(@Nullable ViewGroup parent, int viewType) {
+    public ScheduleTalkTableViewHolder onCreateViewHolder(@Nullable ViewGroup parent, int viewType) {
         switch (viewType) {
             case VIEW_TYPE_NORMAL:
                 return createNormalViewHolder(parent);
@@ -54,17 +54,17 @@ public class ScheduleTableAdapter extends TableTreeAdapter<Pair<Talk, Room>, Roo
     }
 
     @NonNull
-    public ScheduleTableViewHolder createNormalViewHolder(@Nullable ViewGroup parent) {
-        return new ScheduleTableViewHolder((TalkCardView) inflater.inflate(R.layout.view_schedule_talk_card, parent, false), this);
+    public ScheduleTalkTableViewHolder createNormalViewHolder(@Nullable ViewGroup parent) {
+        return new ScheduleTalkTableViewHolder((TalkCardView) inflater.inflate(R.layout.view_schedule_talk_card, parent, false), this);
     }
 
     @NonNull
-    public ScheduleTableViewHolder createPlaceholderViewHolder(@Nullable ViewGroup parent) {
+    public ScheduleTalkTableViewHolder createPlaceholderViewHolder(@Nullable ViewGroup parent) {
         return createNormalViewHolder(parent); //TODO create the placeholder view for real
     }
 
     @NonNull
-    public ScheduleTableViewHolder createMaxHeightReferenceViewHolder() {
+    public ScheduleTalkTableViewHolder createMaxHeightReferenceViewHolder() {
         return createNormalViewHolder(null);
     }
 

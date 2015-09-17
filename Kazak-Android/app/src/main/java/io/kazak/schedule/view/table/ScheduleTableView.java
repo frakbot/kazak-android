@@ -23,6 +23,7 @@ import io.kazak.model.Speaker;
 import io.kazak.model.Speakers;
 import io.kazak.model.Talk;
 import io.kazak.model.TimeSlot;
+import io.kazak.schedule.view.ScheduleEventView;
 import io.kazak.schedule.view.TalkCardView;
 import io.kazak.schedule.view.table.base.Ruler;
 import io.kazak.schedule.view.table.base.TableItemPaddingDecoration;
@@ -72,6 +73,10 @@ public class ScheduleTableView extends RecyclerView {
         setAdapter(adapter);
     }
 
+    public void setListener(@Nullable ScheduleEventView.Listener listener) {
+        adapter.setListener(listener);
+    }
+
     public void updateWith(@NonNull ScheduleTableAdapter.Data data) {
         adapter.updateWith(data);
     }
@@ -100,10 +105,10 @@ public class ScheduleTableView extends RecyclerView {
     }
 
     private int computeRowHeight(int timeSlotUnitWidthPx, int timeSlotDurationMinutes) {
-        ScheduleTableViewHolder viewHolder = adapter.createMaxHeightReferenceViewHolder();
+        ScheduleTalkTableViewHolder viewHolder = adapter.createMaxHeightReferenceViewHolder();
         TalkCardView cardView = viewHolder.getCardView();
 
-        cardView.updateWith(createMaxHeightReferenceTalk(timeSlotDurationMinutes));
+        cardView.updateWith(createMaxHeightReferenceTalk(timeSlotDurationMinutes), null);
 
         int widthMeasureSpec = MeasureSpec.makeMeasureSpec(timeSlotUnitWidthPx, MeasureSpec.EXACTLY);
         cardView.measure(widthMeasureSpec, UNSPECIFIED_MEASURE_SPEC);
