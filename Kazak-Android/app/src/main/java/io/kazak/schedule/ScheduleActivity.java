@@ -30,7 +30,7 @@ import io.kazak.schedule.view.table.ScheduleTableAdapter;
 import io.kazak.schedule.view.table.ScheduleTableView;
 import io.kazak.schedule.view.table.base.RulerView;
 import io.kazak.settings.SettingsActivity;
-import io.kazak.talk.TalkDetailsActivity;
+import io.kazak.session.SessionActivity;
 import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.subscriptions.CompositeSubscription;
@@ -174,8 +174,8 @@ public class ScheduleActivity extends AppCompatActivity implements ScheduleEvent
 
     @Override
     public void onTalkClicked(Id talkId) {
-        Intent intent = new Intent(this, TalkDetailsActivity.class);
-        intent.putExtra(TalkDetailsActivity.EXTRA_TALK_ID, talkId.getId());
+        Intent intent = new Intent(this, SessionActivity.class);
+        intent.putExtra(SessionActivity.EXTRA_TALK_ID, talkId.getId());
         startActivity(intent);
     }
 

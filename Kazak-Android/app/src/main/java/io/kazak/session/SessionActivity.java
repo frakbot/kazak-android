@@ -1,0 +1,229 @@
+/**
+ * Copyright (c) 2015, Facebook, Inc.  All rights reserved.
+ *
+ * Facebook, Inc. (“Facebook”) owns all right, title and interest, including all intellectual
+ * property and other proprietary rights, in and to its contributions to the Droidcon App software
+ * (the “Contributions”). Subject to your compliance with these terms, you are hereby granted a
+ * non-exclusive, worldwide, royalty-free copyright license to (1) use and copy the Contributions;
+ * (2) reproduce and distribute the Contributions as part of your own software (“Your Software”),
+ * provided Your Software does not consist solely of the Contributions; and
+ * (3) modify the Contributions for your own internal use.
+ * Facebook reserves all rights not expressly granted to you in this license agreement.
+ *
+ * THE CONTRIBUTIONS AND DOCUMENTATION, IF ANY, ARE PROVIDED "AS IS" AND ANY EXPRESS OR IMPLIED
+ * WARRANTIES (INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+ * FOR A PARTICULAR PURPOSE) ARE DISCLAIMED. IN NO EVENT SHALL FACEBOOK OR ITS AFFILIATES, OFFICERS,
+ * DIRECTORS OR EMPLOYEES BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY,
+ * OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
+ * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THE CONTRIBUTIONS, EVEN IF ADVISED OF
+ * THE POSSIBILITY OF SUCH DAMAGE.
+ */
+package io.kazak.session;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
+
+import javax.inject.Inject;
+
+import io.kazak.BuildConfig;
+import io.kazak.KazakApplication;
+import io.kazak.R;
+import io.kazak.model.Event;
+import io.kazak.model.Id;
+import io.kazak.model.Session;
+import io.kazak.repository.DataRepository;
+import io.kazak.repository.event.SyncEvent;
+import io.kazak.session.view.SessionContentView;
+import rx.Observer;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Func1;
+import rx.subscriptions.CompositeSubscription;
+
+import static io.kazak.base.BasePackage.safeTrim;
+
+public class SessionActivity extends AppCompatActivity {
+
+    public static final String EXTRA_TALK_ID = BuildConfig.APPLICATION_ID + ".extra.TALK_ID";
+
+    private final CompositeSubscription subscriptions;
+
+    @Inject
+    DataRepository dataRepository;
+
+    private Id talkId;
+    private SessionContentView talkDetailsView;
+    private FloatingActionButton favouriteFab;
+
+    public SessionActivity() {
+        subscriptions = new CompositeSubscription();
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        KazakApplication.injector().inject(this);
+        setContentView(R.layout.activity_session);
+
+        talkDetailsView = (SessionContentView) findViewById(R.id.session_content);
+        favouriteFab = (FloatingActionButton) findViewById(R.id.session_favorite_fab);
+
+        talkId = extractTalkIdFrom(getIntent());
+
+        setupActionBar();
+    }
+
+    private void setupActionBar() {
+        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        subscribeToTalk(talkId);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        subscriptions.clear();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.session, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+
+            case R.id.session_map:
+                // TODO: open the venue map and put the right asset
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void updateWith(Session session) {
+        updateToolbar(session.name());
+        updateFab();
+        talkDetailsView.updateWith(session);
+    }
+
+    private void updateToolbar(String title) {
+        ((TextView) findViewById(R.id.session_title)).setText(title);
+    }
+
+    private void updateFab() {
+        // TODO: needs code to hookup the fab with the backend
+        // TODO: the current empty is gray instead of white, not very visible
+        favouriteFab.setImageResource(R.drawable.ic_star_empty_20dp);
+    }
+
+    private void subscribeToTalk(Id talkId) {
+        subscriptions.add(
+                dataRepository.getEvent(talkId)
+                        .map(asSession())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new SessionObserver())
+        );
+        subscriptions.add(
+                dataRepository.getScheduleSyncEvents()
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new SyncEventObserver())
+        );
+    }
+
+    private void showErrorSnackbar() {
+        Snackbar.make(talkDetailsView, R.string.error_loading_schedule, Snackbar.LENGTH_LONG)
+                .setAction(
+                        R.string.action_retry, new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                subscribeToTalk(talkId);
+                            }
+                        })
+                .show();
+    }
+
+    private static Id extractTalkIdFrom(Intent intent) {
+        return new Id(intent.getStringExtra(EXTRA_TALK_ID));
+    }
+
+    private static Func1<Event, Session> asSession() {
+        return new Func1<Event, Session>() {
+            @Override
+            public Session call(Event event) {
+                return (Session) event;
+            }
+        };
+    }
+
+    private class SessionObserver implements Observer<Session> {
+
+        @Override
+        public void onCompleted() {
+            // No-op
+        }
+
+        @Override
+        public void onError(Throwable e) {
+            throw new IllegalStateException(e);
+        }
+
+        @Override
+        public void onNext(Session session) {
+            updateWith(session);
+        }
+    }
+
+    private class SyncEventObserver implements Observer<SyncEvent> {
+
+        @Override
+        public void onCompleted() {
+            // Ignore
+        }
+
+        @Override
+        public void onError(Throwable e) {
+            throw new IllegalStateException(e);
+        }
+
+        @Override
+        public void onNext(SyncEvent syncEvent) {
+            switch (syncEvent.getState()) {
+                case ERROR:
+                    showErrorSnackbar();
+                    break;
+
+                case IDLE:
+                    //Display empty screen if no data
+                    break;
+
+                case LOADING:
+                    //Display loading screen
+                    break;
+            }
+        }
+    }
+}

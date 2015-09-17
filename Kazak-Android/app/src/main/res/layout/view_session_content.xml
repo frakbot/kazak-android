@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<io.kazak.session.view.SessionContentView
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/session_content"
+    style="@style/Session"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:showIn="@layout/activity_session">
+
+    <TextView
+        android:id="@+id/session_topics"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:text="Topics!!!" />
+
+    <TextView
+        android:id="@+id/session_description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:text="Summary!!!"
+        style="@style/Session.Description"/>
+
+</io.kazak.session.view.SessionContentView>
