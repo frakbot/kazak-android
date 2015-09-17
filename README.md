@@ -5,7 +5,7 @@
 
 Issue tracker: [youtrack.kazak.io](http://youtrack.kazak.io/issues)
 
-## Core team IS SEWPER AWESUM
+## Core team IS SEWPER AWESUM!
 
 [Benjamin Augustin](http://github.com/Dorvaryn)
 
