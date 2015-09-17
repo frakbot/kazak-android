@@ -6,7 +6,6 @@
 Issue tracker: [youtrack.kazak.io](http://youtrack.kazak.io/issues)
 
 ## Core team
-[Mark Allison](http://github.com/StylingAndroid)
 
 [Benjamin Augustin](http://github.com/Dorvaryn)
 
