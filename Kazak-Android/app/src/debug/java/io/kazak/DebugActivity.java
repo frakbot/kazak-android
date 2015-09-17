@@ -2,6 +2,7 @@ package io.kazak;
 
 import android.app.Activity;
 import android.app.Notification;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.View;
@@ -19,6 +20,7 @@ import io.kazak.model.Speaker;
 import io.kazak.model.Speakers;
 import io.kazak.model.Talk;
 import io.kazak.model.TimeSlot;
+import io.kazak.notifications.EventAlarmService;
 import io.kazak.notifications.NotificationCreator;
 import io.kazak.notifications.Notifier;
 
@@ -48,6 +50,17 @@ public class DebugActivity extends Activity {
                     @Override
                     public void onClick(View view) {
                         testMultipleNotifications();
+                    }
+                }
+        );
+
+        Button buttonEventAlarmService = (Button) findViewById(R.id.button_test_event_alarm_service);
+        buttonEventAlarmService.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent serviceIntent = new Intent(DebugActivity.this, EventAlarmService.class);
+                        startService(serviceIntent);
                     }
                 }
         );
