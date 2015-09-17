@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <lint>
-  <issue id="GradleDependency" severity="info" />
-  <issue id="OldTargetApi" severity="info" />
-  <issue id="PrivateResource" severity="info" />
+  <issue id="GradleDependency" severity="informational" />
+  <issue id="OldTargetApi" severity="informational" />
+  <issue id="PrivateResource" severity="informational" />
 </lint>

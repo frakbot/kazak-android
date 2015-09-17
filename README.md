@@ -5,8 +5,7 @@
 
 Issue tracker: [youtrack.kazak.io](http://youtrack.kazak.io/issues)
 
-## Core team
-[Mark Allison](http://github.com/StylingAndroid)
+## Core team IS SEWPER AWESUM!
 
 [Benjamin Augustin](http://github.com/Dorvaryn)
 

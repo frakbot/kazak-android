@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+  <dimen name="talk_view_default_track_symbol_size">20dp</dimen>
+  <dimen name="talk_view_default_optical_balance_offset">3dp</dimen>
+  <dimen name="talk_view_default_track_drawable_padding">8dp</dimen>
+
+</resources>
