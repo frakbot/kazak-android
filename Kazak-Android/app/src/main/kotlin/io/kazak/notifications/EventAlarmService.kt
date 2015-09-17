@@ -6,7 +6,6 @@ import android.app.Notification
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.util.Log
 import io.kazak.KazakApplication
 import io.kazak.model.Session
 import io.kazak.repository.DataRepository
@@ -14,7 +13,7 @@ import rx.Observable
 import java.util.Calendar
 import java.util.Date
 
-public class EventAlarmService : IntentService(javaClass<EventAlarmService>().getName()) {
+public class EventAlarmService : IntentService(EventAlarmService::class.java.name) {
 
     companion object {
         private val NOTIFICATION_INTERVAL_MINUTES = 10
@@ -23,7 +22,7 @@ public class EventAlarmService : IntentService(javaClass<EventAlarmService>().ge
     val dataRepository: DataRepository
 
     init {
-        dataRepository = KazakApplication.injector().getDataRepository()
+        dataRepository = KazakApplication.injector().dataRepository
     }
 
     override fun onHandleIntent(intent: Intent) {
@@ -31,11 +30,11 @@ public class EventAlarmService : IntentService(javaClass<EventAlarmService>().ge
         val notifier = Notifier.from(this)
 
         val calendar = Calendar.getInstance()
-        val now = calendar.getTime()
+        val now = calendar.time
         calendar.add(Calendar.MINUTE, NOTIFICATION_INTERVAL_MINUTES)
-        val notificationInterval = calendar.getTime()
+        val notificationInterval = calendar.time
 
-        val sessions = dataRepository!!.getFavorites()
+        val sessions = dataRepository.getFavorites()
                 .take(1)
                 .map { sortByStartingTime(it) }
                 .flatMap { Observable.from(it) }
@@ -75,13 +74,13 @@ public class EventAlarmService : IntentService(javaClass<EventAlarmService>().ge
     private fun scheduleNextAlarm(session: Session) {
         val talkStart = session.timeSlot().start
         val calendar = Calendar.getInstance()
-        calendar.setTime(talkStart)
+        calendar.time = talkStart
         calendar.add(Calendar.MINUTE, -NOTIFICATION_INTERVAL_MINUTES)
 
-        val serviceIntent = Intent(this@EventAlarmService, javaClass<EventAlarmService>())
+        val serviceIntent = Intent(this@EventAlarmService, EventAlarmService::class.java)
         val pendingIntent = PendingIntent.getService(this@EventAlarmService, 0, serviceIntent, PendingIntent.FLAG_CANCEL_CURRENT)
         val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent)
+        alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, pendingIntent)
     }
 
 }

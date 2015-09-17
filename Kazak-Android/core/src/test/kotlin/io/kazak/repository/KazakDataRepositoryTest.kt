@@ -8,8 +8,8 @@ import org.mockito.Mockito
 import rx.subjects.BehaviorSubject
 import java.util.ArrayList
 import java.util.Date
-import org.junit.Before as before
-import org.junit.Test as test
+import org.junit.Before
+import org.junit.Test
 
 public class KazakDataRepositoryTest {
 
@@ -22,13 +22,13 @@ public class KazakDataRepositoryTest {
 
     val repository: DataRepository = KazakDataRepository(mockApi, mockFavoritesRepo)
 
-    before
+    @Before
     fun setup() {
         Mockito.`when`(mockApi.fetchSchedule()).thenReturn(scheduleObservable)
         scheduleObservable.onNext(testSchedule())
     }
 
-    test
+    @Test
     fun itFetchesAScheduleFromApiIfMemoryCacheEmpty() {
         val schedule = repository.getSchedule().toBlocking().first()
 
@@ -36,7 +36,7 @@ public class KazakDataRepositoryTest {
         assertThat(schedule).isEqualTo(testSchedule())
     }
 
-    test
+    @Test
     fun itFindsATalkGivenAnId() {
         val talk = repository.getEvent(talkId).toBlocking().first()
 
@@ -47,7 +47,7 @@ public class KazakDataRepositoryTest {
 
     private fun testDay() = Day(testDate, listOf(testTalk()))
 
-    private fun testTalk() = Talk(talkId, "", TimeSlot(testDate, testDate), listOf(Room(Id(""), "")), testSpeakers(), null)
+    private fun testTalk() = Talk(talkId, "", "", TimeSlot(testDate, testDate), listOf(Room(Id(""), "")), testSpeakers(), null)
 
     private fun testSpeakers() = Speakers(testSpeakersList())
 

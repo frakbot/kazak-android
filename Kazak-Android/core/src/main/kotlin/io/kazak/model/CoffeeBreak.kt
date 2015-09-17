@@ -1,6 +1,6 @@
 package io.kazak.model
 
-public data class CoffeeBreak(val id: Id, val name: String, val timeSlot: TimeSlot) : Event {
+public data class CoffeeBreak(val id: Id, val name: String, val description: String?, val timeSlot: TimeSlot) : Event {
 
     override fun id(): Id {
         return id
@@ -12,6 +12,10 @@ public data class CoffeeBreak(val id: Id, val name: String, val timeSlot: TimeSl
 
     override fun name(): String {
         return name
+    }
+
+    override fun description(): String? {
+        return description
     }
 
     override fun timeSlot(): TimeSlot {

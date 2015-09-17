@@ -124,6 +124,7 @@ public class ScheduleTableView extends RecyclerView {
         return new Talk(
                 NO_ID,
                 "1\n2\n3",
+                "description",
                 new TimeSlot(start, end),
                 Collections.singletonList(new Room(NO_ID, "Room")),
                 new Speakers(speakerList),

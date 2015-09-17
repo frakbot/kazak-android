@@ -10,4 +10,6 @@ public interface Event {
 
     fun timeSlot(): TimeSlot
 
+    fun description(): String?
+
 }

@@ -3,6 +3,7 @@ package io.kazak.model
 public data class Talk(
         val id : Id,
         val name : String,
+        val description : String?,
         val timeSlot: TimeSlot,
         val rooms: List<Room>,
         val speakers: Speakers,
@@ -19,6 +20,10 @@ public data class Talk(
 
     override fun name(): String {
         return name
+    }
+
+    override fun description(): String? {
+        return description
     }
 
     override fun rooms(): List<Room> {
