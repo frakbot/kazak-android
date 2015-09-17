@@ -1,8 +1,7 @@
 package io.kazak.base
 
 import io.kazak.assertThat
-import org.junit.Before as before
-import org.junit.Test as test
+import org.junit.Test
 
 public class StringUtilsTest {
 
@@ -10,7 +9,7 @@ public class StringUtilsTest {
     private val ANY_TRIMMABLE_STRING = "   $ANY_TRIMMED_STRING "
     private val EMPTY_STRING = ""
 
-    test
+    @Test
     fun trimmableStringIsTrimmed() {
 
         val trimmed = ANY_TRIMMABLE_STRING.safeTrim()
@@ -18,7 +17,7 @@ public class StringUtilsTest {
         assertThat(trimmed).isEqualTo(ANY_TRIMMED_STRING)
     }
 
-    test
+    @Test
     fun nullStringIsConvertedToEmptyString() {
 
         val trimmed = null.safeTrim()
