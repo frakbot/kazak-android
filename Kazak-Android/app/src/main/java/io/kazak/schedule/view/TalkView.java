@@ -7,6 +7,7 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.Region;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.AttrRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.StyleRes;
@@ -24,6 +25,7 @@ import java.util.Locale;
 
 import io.kazak.R;
 import io.kazak.base.DeveloperError;
+import io.kazak.model.Color;
 import io.kazak.model.Talk;
 import io.kazak.model.TimeSlot;
 import io.kazak.model.Track;
@@ -46,6 +48,7 @@ public class TalkView extends ViewGroup {
     private final int trackLineCornerRadiusPx;
 
     private boolean showTrackDrawable = true;
+    private Drawable trackDrawable;
 
     private TextView timeView;
     private TextView trackView;
@@ -412,7 +415,16 @@ public class TalkView extends ViewGroup {
 
     private void drawTrackDrawableOn(Canvas canvas) {
         canvas.drawCircle(trackDrawableBounds.centerX(), trackDrawableBounds.centerY(), trackDrawableBounds.width() / 2f, trackBgPaint);
-        // TODO draw track drawable
+        if (trackDrawable != null) {
+            int saveState = canvas.save();
+
+            canvas.translate(
+                    trackDrawableBounds.centerX() - trackDrawableSizePx / 2,
+                    trackDrawableBounds.centerY() - trackDrawableSizePx / 2);
+            trackDrawable.draw(canvas);
+
+            canvas.restoreToCount(saveState);
+        }
     }
 
     @UiThread
@@ -429,11 +441,13 @@ public class TalkView extends ViewGroup {
 
     private void updateTrackWith(@NonNull Track track) {
         trackView.setText(track.name().toUpperCase(Locale.getDefault()));
-        if (track.color() != null) {
-            int trackColor = track.color().getIntValue();
+        Color color = track.color();
+        if (color != null) {
+            int trackColor = color.getIntValue();
             trackView.setTextColor(trackColor);
             trackBgPaint.setColor(trackColor);
         }
+        // TODO trackDrawable = getTrackDrawableFor(track.id())
         invalidate(trackDrawableBounds);
         invalidate(toRect(trackLineBounds));
     }
