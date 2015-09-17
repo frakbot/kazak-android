@@ -5,6 +5,8 @@ import javax.inject.Singleton;
 import dagger.Component;
 import io.kazak.repository.DataRepository;
 import io.kazak.schedule.ScheduleActivity;
+import io.kazak.session.SessionActivity;
+
 
 @Singleton
 @Component(modules = {
@@ -17,4 +19,5 @@ public interface ApplicationInjector {
 
     DataRepository getDataRepository();
 
+    void inject(SessionActivity injectable);
 }

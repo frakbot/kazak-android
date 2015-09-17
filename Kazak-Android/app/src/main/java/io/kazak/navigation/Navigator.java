@@ -8,9 +8,10 @@ import android.support.annotation.NonNull;
 import io.kazak.DebugActivity;
 import io.kazak.map.VenueMapActivity;
 import io.kazak.model.Id;
+import io.kazak.model.Session;
 import io.kazak.schedule.ScheduleActivity;
+import io.kazak.session.SessionActivity;
 import io.kazak.settings.SettingsActivity;
-import io.kazak.talk.TalkDetailsActivity;
 
 public class Navigator {
 
@@ -27,8 +28,8 @@ public class Navigator {
     }
 
     public void toSessionDetails(Id sessionId) {
-        Intent intent = new Intent(activityContext, ScheduleActivity.class);
-        intent.putExtra(TalkDetailsActivity.EXTRA_TALK_ID, sessionId.getId());
+        Intent intent = new Intent(activityContext, SessionActivity.class);
+        intent.putExtra(SessionActivity.EXTRA_SESSION_ID, sessionId.getId());
         activityContext.startActivity(intent);
     }
 

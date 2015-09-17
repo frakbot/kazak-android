@@ -3,7 +3,7 @@
   <string name="app_name">Kazak</string>
 
   <string name="activity_title_venue_map">Venue Map</string>
-  <string name="activity_title_talk_details">Talk details</string>
+  <string name="activity_title_session">Session</string>
 
   <string name="developer_error_loading_schedule">DEV ERROR: %s</string>
   <string name="error_loading_schedule">Error while loading schedule.</string>
