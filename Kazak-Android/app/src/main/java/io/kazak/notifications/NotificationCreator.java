@@ -54,7 +54,7 @@ public class NotificationCreator {
                 .setContentText(getDisplayedRooms(session))
                 .setGroup(GROUP_KEY_NOTIFY_SESSION);
 
-        if (!(session instanceof Talk)) {
+        if (session instanceof Talk) {
             setTrackColor(notificationBuilder, (Talk) session);
         }
 
