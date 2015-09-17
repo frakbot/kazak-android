@@ -1,5 +1,6 @@
 package io.kazak.schedule;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -19,14 +20,16 @@ import io.kazak.base.DeveloperError;
 import io.kazak.model.Id;
 import io.kazak.repository.DataRepository;
 import io.kazak.repository.event.SyncEvent;
+import io.kazak.schedule.view.ScheduleEventView;
 import io.kazak.schedule.view.table.ScheduleTableAdapter;
 import io.kazak.schedule.view.table.ScheduleTableView;
 import io.kazak.schedule.view.table.base.RulerView;
+import io.kazak.talk.TalkDetailsActivity;
 import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.subscriptions.CompositeSubscription;
 
-public class ScheduleActivity extends AppCompatActivity {
+public class ScheduleActivity extends AppCompatActivity implements ScheduleEventView.Listener {
 
     private final CompositeSubscription subscriptions;
 
@@ -55,12 +58,13 @@ public class ScheduleActivity extends AppCompatActivity {
         toolbar = (Toolbar) findViewById(R.id.appbar);
         scheduleView = (ScheduleTableView) findViewById(R.id.schedule);
 
-        setupRulers();
+        setupScheduleView();
         setupAppBar();
         hackToHideNavDrawerHeaderRipple();
     }
 
-    private void setupRulers() {
+    private void setupScheduleView() {
+        scheduleView.setListener(this);
         scheduleView.setRoomsRuler((RulerView) findViewById(R.id.rooms_ruler));
         scheduleView.setTimeRuler((RulerView) findViewById(R.id.time_ruler));
     }
@@ -128,6 +132,13 @@ public class ScheduleActivity extends AppCompatActivity {
 
     private void updateWith(@NonNull List<? extends Id> favorites) {
         scheduleView.updateWith(favorites);
+    }
+
+    @Override
+    public void onTalkClicked(Id talkId) {
+        Intent intent = new Intent(this, TalkDetailsActivity.class);
+        intent.putExtra(TalkDetailsActivity.EXTRA_TALK_ID, talkId.getId());
+        startActivity(intent);
     }
 
     private class ScheduleObserver implements Observer<ScheduleTableAdapter.Data> {
