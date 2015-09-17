@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+  <dimen name="schedule_toolbar_wrapper_elevation">6dp</dimen>
+
   <dimen name="session_card_corner_radius">@dimen/cardview_default_radius</dimen>
   <dimen name="session_card_padding_horizontal">12dp</dimen>
   <dimen name="session_card_padding_vertical">8dp</dimen>
@@ -20,5 +22,8 @@
 
   <dimen name="session_card_speakers_text">@dimen/text_body</dimen>
   <dimen name="session_card_speakers_margin_top">@dimen/session_card_element_margin_single</dimen>
+
+  <dimen name="schedule_ruler_rooms_elevation">8dp</dimen>
+  <dimen name="schedule_ruler_rooms_ticks_size">0dp</dimen>
 
 </resources>

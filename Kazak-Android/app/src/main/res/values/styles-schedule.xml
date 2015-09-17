@@ -1,11 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
   <style name="Schedule" parent="None" />
+
+  <style name="Schedule.Toolbar" parent="None">
+    <item name="android:minHeight" tools:ignore="PrivateResource">?attr/actionBarSize</item>
+    <item name="navigationIcon">@drawable/ic_menu_white</item>
+  </style>
+
+  <style name="Schedule.ToolbarWrapper" parent="None">
+    <item name="android:orientation">vertical</item>
+    <item name="android:background" tools:ignore="PrivateResource">?attr/colorPrimary</item>
+    <item name="android:elevation" tools:ignore="NewApi">@dimen/schedule_toolbar_wrapper_elevation</item>
+  </style>
 
   <style name="Schedule.Card" parent="CardView">
     <item name="cardPreventCornerOverlap">false</item>
     <item name="cardCornerRadius">@dimen/session_card_corner_radius</item>
+  </style>
+
+  <style name="Schedule.Card.Track" parent="None">
+    <item name="android:layout_marginStart">@dimen/session_card_padding_horizontal</item>
+    <item name="android:layout_marginTop">@dimen/session_card_padding_vertical</item>
+    <item name="android:layout_marginEnd">@dimen/session_card_element_margin_single</item>
+    <item name="android:gravity">start|center_vertical</item>
+    <item name="android:background">@drawable/shape_track_label_background</item>
+    <item name="android:textAppearance">@style/TextAppearance.Schedule.Card.Track</item>
+    <item name="android:drawablePadding">@dimen/session_card_track_drawable_padding</item>
+    <item name="android:lines">1</item>
   </style>
 
   <style name="Schedule.Card.Talk" />
@@ -76,6 +98,16 @@
     <item name="android:background">@drawable/selector_clickable_unbound</item>
     <item name="android:textAppearance">?android:attr/textAppearanceButton</item>
     <item name="android:gravity">center</item>
+  </style>
+
+  <style name="Schedule.Ruler.Time" parent="None" />
+
+  <style name="Schedule.Ruler.Rooms" parent="None">
+    <item name="android:elevation" tools:ignore="NewApi">@dimen/schedule_ruler_rooms_elevation</item>
+    <item name="android:background">@color/rooms_ruler_color</item>
+    <item name="tickSize">@dimen/schedule_ruler_rooms_ticks_size</item>
+    <item name="orientation">vertical</item>
+    <item name="alignLabel">betweenTicks</item>
   </style>
 
 </resources>

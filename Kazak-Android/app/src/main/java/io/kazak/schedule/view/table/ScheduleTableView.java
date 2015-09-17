@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.support.annotation.AttrRes;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.annotation.StyleRes;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
@@ -15,6 +16,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import io.kazak.R;
+import io.kazak.model.Id;
 import io.kazak.model.Room;
 import io.kazak.model.Schedule;
 import io.kazak.model.Speaker;
@@ -22,15 +24,17 @@ import io.kazak.model.Speakers;
 import io.kazak.model.Talk;
 import io.kazak.model.TimeSlot;
 import io.kazak.schedule.view.TalkCardView;
+import io.kazak.schedule.view.table.base.Ruler;
 import io.kazak.schedule.view.table.base.TableItemPaddingDecoration;
 import io.kazak.schedule.view.table.base.TableLayoutManager;
 
 public class ScheduleTableView extends RecyclerView {
 
     private static final int UNSPECIFIED_MEASURE_SPEC = MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED);
-    private static final String NO_ID = "";
+    private static final Id NO_ID = new Id("");
 
     private final ScheduleTableAdapter adapter;
+    private final TableLayoutManager layoutManager;
 
     public ScheduleTableView(Context context) {
         this(context, null);
@@ -59,17 +63,21 @@ public class ScheduleTableView extends RecyclerView {
 
         int timeSlotDurationMilliseconds = (int) TimeUnit.MINUTES.toMillis(timeSlotDurationMinutes);
         int rowHeightPx = computeRowHeight(timeSlotUnitWidthPx, timeSlotDurationMinutes);
+        layoutManager = new TableLayoutManager(
+                rowHeightPx, timeSlotUnitWidthPx, timeSlotDurationMilliseconds, itemsPaddingHorizontal, itemsPaddingVertical);
 
         setHasFixedSize(true);
         addItemDecoration(new TableItemPaddingDecoration(itemsPaddingHorizontal, itemsPaddingVertical));
-        setLayoutManager(
-                new TableLayoutManager(
-                        rowHeightPx, timeSlotUnitWidthPx, timeSlotDurationMilliseconds, itemsPaddingHorizontal, itemsPaddingVertical));
+        setLayoutManager(layoutManager);
         setAdapter(adapter);
     }
 
     public void updateWith(@NonNull ScheduleTableAdapter.Data data) {
         adapter.updateWith(data);
+    }
+
+    public void updateWith(@NonNull List<? extends Id> favorites) {
+        adapter.updateWith(favorites);
     }
 
     @NonNull
@@ -113,12 +121,21 @@ public class ScheduleTableView extends RecyclerView {
                 "1\n2\n3",
                 new TimeSlot(start, end),
                 Collections.singletonList(new Room(NO_ID, "Room")),
-                new Speakers(speakerList));
+                new Speakers(speakerList),
+                null);
     }
 
     @NonNull
     private static Speaker createDummySpeaker(String speakerName) {
         return new Speaker(NO_ID, speakerName, null, null, null, null);
+    }
+
+    public void setRoomsRuler(@Nullable Ruler ruler) {
+        layoutManager.setRowsRuler(ruler);
+    }
+
+    public void setTimeRuler(@Nullable Ruler ruler) {
+        layoutManager.setBoundsRuler(ruler);
     }
 
 }

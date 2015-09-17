@@ -9,17 +9,19 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
-import android.widget.FrameLayout;
 
 import javax.inject.Inject;
+import java.util.List;
 
 import io.kazak.KazakApplication;
 import io.kazak.R;
 import io.kazak.base.DeveloperError;
+import io.kazak.model.Id;
 import io.kazak.repository.DataRepository;
 import io.kazak.repository.event.SyncEvent;
 import io.kazak.schedule.view.table.ScheduleTableAdapter;
 import io.kazak.schedule.view.table.ScheduleTableView;
+import io.kazak.schedule.view.table.base.RulerView;
 import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.subscriptions.CompositeSubscription;
@@ -31,7 +33,7 @@ public class ScheduleActivity extends AppCompatActivity {
     @Inject
     DataRepository dataRepository;
 
-    private FrameLayout contentRootView;
+    private View contentRootView;
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
     private Toolbar toolbar;
@@ -47,14 +49,20 @@ public class ScheduleActivity extends AppCompatActivity {
         KazakApplication.injector().inject(this);
         setContentView(R.layout.activity_schedule);
 
-        contentRootView = (FrameLayout) findViewById(R.id.content_root);
+        contentRootView = findViewById(R.id.content_root);
         drawerLayout = (DrawerLayout) findViewById(R.id.navigation_drawer);
         navigationView = (NavigationView) findViewById(R.id.drawer_menu);
         toolbar = (Toolbar) findViewById(R.id.appbar);
         scheduleView = (ScheduleTableView) findViewById(R.id.schedule);
 
+        setupRulers();
         setupAppBar();
         hackToHideNavDrawerHeaderRipple();
+    }
+
+    private void setupRulers() {
+        scheduleView.setRoomsRuler((RulerView) findViewById(R.id.rooms_ruler));
+        scheduleView.setTimeRuler((RulerView) findViewById(R.id.time_ruler));
     }
 
     private void hackToHideNavDrawerHeaderRipple() {
@@ -97,6 +105,11 @@ public class ScheduleActivity extends AppCompatActivity {
                         .subscribe(new ScheduleObserver())
         );
         subscriptions.add(
+                dataRepository.getFavoriteIds()
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new FavoritesObserver())
+        );
+        subscriptions.add(
                 dataRepository.getScheduleSyncEvents()
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(new SyncEventObserver())
@@ -111,6 +124,10 @@ public class ScheduleActivity extends AppCompatActivity {
 
     private void updateWith(@NonNull ScheduleTableAdapter.Data data) {
         scheduleView.updateWith(data);
+    }
+
+    private void updateWith(@NonNull List<? extends Id> favorites) {
+        scheduleView.updateWith(favorites);
     }
 
     private class ScheduleObserver implements Observer<ScheduleTableAdapter.Data> {
@@ -128,6 +145,25 @@ public class ScheduleActivity extends AppCompatActivity {
         @Override
         public void onNext(ScheduleTableAdapter.Data data) {
             updateWith(data);
+        }
+
+    }
+
+    private class FavoritesObserver implements Observer<List<? extends Id>> {
+
+        @Override
+        public void onCompleted() {
+            // No-op
+        }
+
+        @Override
+        public void onError(Throwable e) {
+            throw new IllegalStateException(e);
+        }
+
+        @Override
+        public void onNext(List<? extends Id> favorites) {
+            updateWith(favorites);
         }
 
     }
