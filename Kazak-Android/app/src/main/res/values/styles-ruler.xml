@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+  <style name="RulerViewDefaultStyle">
+    <item name="android:textSize">@dimen/ruler_default_text_size</item>
+    <item name="android:textColor">@color/ruler_default_text_color</item>
+    <item name="tickSize">@dimen/ruler_default_tick_size</item>
+    <item name="tickStrokeWidth">@dimen/ruler_default_tick_stroke_width</item>
+    <item name="tickColor">@color/ruler_default_tick_color</item>
+    <item name="orientation">@integer/ruler_default_orientation</item>
+    <item name="alignLabel">@integer/ruler_default_align_label</item>
+  </style>
+
+</resources>

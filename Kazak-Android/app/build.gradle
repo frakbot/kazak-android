@@ -3,13 +3,16 @@ import java.text.SimpleDateFormat
 apply plugin: 'com.android.application'
 apply plugin: 'com.neenbedankt.android-apt'
 apply plugin: 'kotlin-android'
+apply plugin: 'de.undercouch.download'
 
 BuildProperties defaultProperties = BuildProperties.load('/build-props/base.properties', project)
 BuildProperties.generateFlavors(new File('build-props').listFiles(), project)
 
 android {
     compileSdkVersion 23
-    buildToolsVersion "23.0.0"
+    buildToolsVersion "23.0.1"
+
+    archivesBaseName = 'kazak'
 
     defaultConfig {
         versionName defaultProperties.getString('versionName')
@@ -49,6 +52,19 @@ android {
     lintOptions {
         lintConfig file("${project(':').projectDir}/config/lint.xml")
     }
+
+    applicationVariants.all { variant ->
+        def taskName = "download${variant.name.capitalize()}Schedule"
+        project.task(taskName) << {
+            def scheduleUrl = variant.getMergedFlavor().getBuildConfigFields().get("ENDPOINT_URL").getValue()
+            scheduleUrl = scheduleUrl[1..scheduleUrl.length() - 2]
+            def assetsDir = android.sourceSets[variant.flavorName].assets.srcDirs[0]
+            download {
+                src "${scheduleUrl}/events?expand=rooms&expand=presenters&expand=track&expand=rooms&expand=secondaryRooms"
+                dest "${assetsDir}/json/schedule.json"
+            }
+        }
+    }
 }
 
 dependencies {
@@ -68,7 +84,7 @@ dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     compile 'com.google.android.gms:play-services-maps:7.8.0'
     compile 'com.google.code.findbugs:annotations:3.0.0'
-    compile ('com.facebook.stetho:stetho:1.1.1') {
+    compile ('com.facebook.stetho:stetho:1.2.0') {
         exclude (group: 'com.google.code.findbugs', module: 'jsr305')
     }
 }

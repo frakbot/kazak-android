@@ -16,8 +16,8 @@ public class KazakDataRepositoryTest {
     val talkId = Id("TestId")
     val testDate = Date()
 
-    val mockApi: KazakApi = Mockito.mock(javaClass())
-    val mockFavoritesRepo: FavoriteSessionsRepository = Mockito.mock(javaClass())
+    val mockApi: KazakApi = mock()
+    val mockFavoritesRepo: FavoriteSessionsRepository = mock()
     val scheduleObservable: BehaviorSubject<Schedule> = BehaviorSubject.create()
 
     val repository: DataRepository = KazakDataRepository(mockApi, mockFavoritesRepo)
@@ -56,5 +56,7 @@ public class KazakDataRepositoryTest {
         speakers + Speaker(Id(""), "", null, null, null, null)
         return speakers
     }
+
+    private inline fun <reified T : Any> mock() = Mockito.mock(T::class.java)
 
 }
