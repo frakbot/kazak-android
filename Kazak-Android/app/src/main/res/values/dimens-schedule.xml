@@ -3,26 +3,25 @@
 
   <dimen name="schedule_toolbar_wrapper_elevation">6dp</dimen>
 
+  <dimen name="session_card_corner_radius">@dimen/cardview_default_radius</dimen>
   <dimen name="session_card_padding_horizontal">12dp</dimen>
   <dimen name="session_card_padding_vertical">8dp</dimen>
   <dimen name="session_card_element_margin_single">8dp</dimen>
 
-  <dimen name="track_label_background_corner_radius">10dp</dimen>
-  <dimen name="track_label_padding_left">4dp</dimen>
-  <dimen name="track_label_padding_right">6dp</dimen>
-  <dimen name="track_label_padding_vertical">2dp</dimen>
+  <dimen name="session_card_track_line_height">3dp</dimen>
+  <dimen name="session_card_track_line_corner_radius">@dimen/session_card_corner_radius</dimen>
   <dimen name="session_card_track_drawable_padding">4dp</dimen>
-  <dimen name="session_card_track_text">@dimen/text_track_label</dimen>
+  <dimen name="session_card_track_drawable_optical_offset">3dp</dimen>
 
   <dimen name="session_card_time_text">@dimen/text_body</dimen>
+
+  <dimen name="session_card_track_text">@dimen/text_track_label</dimen>
 
   <dimen name="session_card_title_text">@dimen/text_title</dimen>
   <dimen name="session_card_title_margin_top">@dimen/session_card_element_margin_single</dimen>
 
   <dimen name="session_card_speakers_text">@dimen/text_body</dimen>
   <dimen name="session_card_speakers_margin_top">@dimen/session_card_element_margin_single</dimen>
-
-  <dimen name="session_card_favorite_padding">14dp</dimen>
 
   <dimen name="schedule_ruler_rooms_elevation">8dp</dimen>
   <dimen name="schedule_ruler_rooms_ticks_size">0dp</dimen>

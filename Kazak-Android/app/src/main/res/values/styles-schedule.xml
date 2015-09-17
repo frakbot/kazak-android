@@ -14,68 +14,75 @@
     <item name="android:elevation" tools:ignore="NewApi">@dimen/schedule_toolbar_wrapper_elevation</item>
   </style>
 
-  <style name="Session.Card.Track" parent="None">
-    <item name="android:layout_marginStart">@dimen/session_card_padding_horizontal</item>
-    <item name="android:layout_marginTop">@dimen/session_card_padding_vertical</item>
-    <item name="android:layout_marginEnd">@dimen/session_card_element_margin_single</item>
-    <item name="android:gravity">start|center_vertical</item>
-    <item name="android:background">@drawable/shape_track_label_background</item>
-    <item name="android:textAppearance">@style/TextAppearance.Session.Card.Track</item>
+  <style name="Schedule.Card" parent="CardView">
+    <item name="cardPreventCornerOverlap">false</item>
+    <item name="cardCornerRadius">@dimen/session_card_corner_radius</item>
+  </style>
+
+  <style name="Schedule.Card.Talk" />
+
+  <style name="Schedule.Card.Talk.Content" parent="None">
+    <item name="android:paddingStart">@dimen/session_card_padding_horizontal</item>
+    <item name="android:paddingTop">@dimen/session_card_padding_vertical</item>
+    <item name="android:paddingEnd">@dimen/session_card_padding_horizontal</item>
+    <item name="android:paddingBottom">@dimen/session_card_padding_vertical</item>
     <item name="android:drawablePadding">@dimen/session_card_track_drawable_padding</item>
-    <item name="android:lines">1</item>
+    <item name="trackLineHeight">@dimen/session_card_track_line_height</item>
+    <item name="trackLineCornerRadius">@dimen/session_card_track_line_corner_radius</item>
+    <item name="drawableOpticalBalanceOffset">@dimen/session_card_track_drawable_optical_offset</item>
   </style>
 
-  <style name="TextAppearance.Session.Card.Track" parent="TextAppearance.AppCompat.Caption">
-    <item name="android:textColor">@color/session_card_track_text</item>
-    <item name="android:textSize">@dimen/session_card_track_text</item>
-  </style>
-
-  <style name="Session.Card.Time" parent="None">
-    <item name="android:layout_marginTop">@dimen/session_card_padding_vertical</item>
-    <item name="android:layout_marginEnd">@dimen/session_card_padding_horizontal</item>
+  <style name="Schedule.Card.Talk.Time" parent="None">
     <item name="android:gravity">end|center_vertical</item>
-    <item name="android:textAppearance">@style/TextAppearance.Session.Card.Time</item>
+    <item name="android:textAppearance">@style/TextAppearance.Schedule.Card.Talk.Time</item>
     <item name="android:lines">1</item>
   </style>
 
-  <style name="TextAppearance.Session.Card.Time" parent="TextAppearance.AppCompat.Body1">
+  <style name="TextAppearance.Schedule.Card.Talk.Time" parent="TextAppearance.AppCompat.Body1">
     <item name="android:textColor">@color/session_card_time_text</item>
     <item name="android:textSize">@dimen/session_card_time_text</item>
   </style>
 
-  <style name="Session.Card.Title" parent="None">
-    <item name="android:layout_marginStart">@dimen/session_card_padding_horizontal</item>
+  <style name="Schedule.Card.Talk.Track" parent="None">
+    <item name="android:layout_marginStart">@dimen/session_card_element_margin_single</item>
+    <item name="android:gravity">start|center_vertical</item>
+    <item name="android:textAppearance">@style/TextAppearance.Schedule.Card.Talk.Track</item>
+    <item name="android:lines">1</item>
+  </style>
+
+  <style name="TextAppearance.Schedule.Card.Talk.Track" parent="TextAppearance.AppCompat.Caption">
+    <item name="android:textColor">@color/session_card_track_text</item>
+    <item name="android:textSize">@dimen/session_card_track_text</item>
+  </style>
+
+  <style name="Schedule.Card.Talk.Title" parent="None">
     <item name="android:layout_marginTop">@dimen/session_card_title_margin_top</item>
-    <item name="android:layout_marginEnd">@dimen/session_card_padding_horizontal</item>
-    <item name="android:textAppearance">@style/TextAppearance.Session.Card.Title</item>
+    <item name="android:textAppearance">@style/TextAppearance.Schedule.Card.Talk.Title</item>
     <item name="android:ellipsize">end</item>
     <item name="android:maxLines">3</item>
   </style>
 
-  <style name="TextAppearance.Session.Card.Title" parent="TextAppearance.AppCompat.Title">
+  <style name="TextAppearance.Schedule.Card.Talk.Title" parent="TextAppearance.AppCompat.Title">
     <item name="android:textColor">@color/session_card_title_text</item>
     <item name="android:textSize">@dimen/session_card_title_text</item>
   </style>
 
-  <style name="Session.Card.Speakers" parent="None">
-    <item name="android:layout_marginStart">@dimen/session_card_padding_horizontal</item>
+  <style name="Schedule.Card.Talk.Speakers" parent="None">
     <item name="android:layout_marginTop">@dimen/session_card_speakers_margin_top</item>
-    <item name="android:layout_marginEnd">@dimen/session_card_padding_horizontal</item>
     <item name="android:gravity">start|center_vertical</item>
-    <item name="android:textAppearance">@style/TextAppearance.Session.Card.Speakers</item>
+    <item name="android:textAppearance">@style/TextAppearance.Schedule.Card.Talk.Speakers</item>
     <item name="android:ellipsize">end</item>
     <item name="android:maxLines">2</item>
   </style>
 
-  <style name="TextAppearance.Session.Card.Speakers" parent="TextAppearance.AppCompat.Body1">
+  <style name="TextAppearance.Schedule.Card.Talk.Speakers" parent="TextAppearance.AppCompat.Body1">
     <item name="android:textColor">@color/session_card_speakers_text</item>
     <item name="android:textSize">@dimen/session_card_speakers_text</item>
   </style>
 
-  <style name="Session.Card.Favorite" parent="None">
+  <style name="Schedule.Card.Talk.Favorite" parent="None">
     <item name="android:layout_marginStart">@dimen/session_card_element_margin_single</item>
     <item name="android:layout_marginTop">@dimen/session_card_speakers_margin_top</item>
-    <item name="android:padding">@dimen/session_card_favorite_padding</item>
     <item name="android:src">@drawable/ic_star_empty_20dp</item>
     <item name="android:background">@drawable/selector_clickable_unbound</item>
     <item name="android:textAppearance">?android:attr/textAppearanceButton</item>
