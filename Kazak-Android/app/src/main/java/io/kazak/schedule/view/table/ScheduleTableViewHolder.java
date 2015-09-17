@@ -23,7 +23,7 @@ public class ScheduleTableViewHolder extends TableViewHolder<Pair<Talk, Room>, R
     @Override
     public void updateWith(Pair<Talk, Room> item, Room row, Date start, Date end, boolean isPlaceholder) {
         super.updateWith(item, row, start, end, isPlaceholder);
-        talkView.updateWith(item.first);
+        cardView.updateWith(item.first);
     }
 
     TalkCardView getCardView() {

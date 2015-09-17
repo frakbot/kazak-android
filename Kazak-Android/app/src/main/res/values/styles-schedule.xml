@@ -19,17 +19,6 @@
     <item name="cardCornerRadius">@dimen/session_card_corner_radius</item>
   </style>
 
-  <style name="Schedule.Card.Track" parent="None">
-    <item name="android:layout_marginStart">@dimen/session_card_padding_horizontal</item>
-    <item name="android:layout_marginTop">@dimen/session_card_padding_vertical</item>
-    <item name="android:layout_marginEnd">@dimen/session_card_element_margin_single</item>
-    <item name="android:gravity">start|center_vertical</item>
-    <item name="android:background">@drawable/shape_track_label_background</item>
-    <item name="android:textAppearance">@style/TextAppearance.Schedule.Card.Track</item>
-    <item name="android:drawablePadding">@dimen/session_card_track_drawable_padding</item>
-    <item name="android:lines">1</item>
-  </style>
-
   <style name="Schedule.Card.Talk" />
 
   <style name="Schedule.Card.Talk.Content" parent="None">

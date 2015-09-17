@@ -429,8 +429,11 @@ public class TalkView extends ViewGroup {
 
     private void updateTrackWith(@NonNull Track track) {
         trackView.setText(track.name().toUpperCase(Locale.getDefault()));
-        trackView.setTextColor(track.color());
-        trackBgPaint.setColor(track.color());
+        if (track.color() != null) {
+            int trackColor = track.color().getIntValue();
+            trackView.setTextColor(trackColor);
+            trackBgPaint.setColor(trackColor);
+        }
         invalidate(trackDrawableBounds);
         invalidate(toRect(trackLineBounds));
     }
