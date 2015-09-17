@@ -6,6 +6,7 @@ import android.app.Notification
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import io.kazak.KazakApplication
 import io.kazak.model.Session
 import io.kazak.repository.DataRepository
@@ -19,11 +20,13 @@ public class EventAlarmService : IntentService(javaClass<EventAlarmService>().ge
         private val NOTIFICATION_INTERVAL_MINUTES = 10
     }
 
-    var dataRepository: DataRepository? = null
+    val dataRepository: DataRepository
+
+    init {
+        dataRepository = KazakApplication.injector().getDataRepository()
+    }
 
     override fun onHandleIntent(intent: Intent) {
-        dataRepository = KazakApplication.injector().getDataRepository()
-
         val notificationCreator = NotificationCreator(this)
         val notifier = Notifier.from(this)
 
@@ -48,7 +51,7 @@ public class EventAlarmService : IntentService(javaClass<EventAlarmService>().ge
     }
 
     private fun sortByStartingTime(sessions: List<Session>): List<Session> {
-        return sessions.sortBy { it.timeSlot().start }
+        return sessions.sortedBy { it.timeSlot().start }
     }
 
     private fun startingIn(now: Date, notificationInterval: Date, session: Session): Boolean {
