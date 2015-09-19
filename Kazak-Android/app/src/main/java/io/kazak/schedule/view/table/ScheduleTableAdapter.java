@@ -39,6 +39,7 @@ public class ScheduleTableAdapter extends TableTreeAdapter<Pair<Talk, Room>, Roo
 
     @Nullable
     private ScheduleEventView.Listener listener;
+    private boolean firstViewHolderCreated;
 
     public ScheduleTableAdapter(@NonNull Context context) {
         super(TALK_DATA_HANDLER);
@@ -46,11 +47,15 @@ public class ScheduleTableAdapter extends TableTreeAdapter<Pair<Talk, Room>, Roo
     }
 
     public void setListener(@Nullable ScheduleEventView.Listener listener) {
+        if (firstViewHolderCreated) {
+            throw new DeveloperError("The listener can only be set before the first ViewHolder is created.");
+        }
         this.listener = listener;
     }
 
     @Override
     public ScheduleTalkTableViewHolder onCreateViewHolder(@Nullable ViewGroup parent, int viewType) {
+        firstViewHolderCreated = true;
         switch (viewType) {
             case VIEW_TYPE_NORMAL:
                 return createNormalViewHolder(parent);
