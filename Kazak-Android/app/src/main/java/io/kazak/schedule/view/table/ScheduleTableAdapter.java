@@ -159,7 +159,7 @@ public class ScheduleTableAdapter extends TableTreeAdapter<Pair<Talk, Room>, Roo
             return lhs.compareTo(rhs);
         }
 
-    };
+    }
 
     private static final class RoomComparator implements Comparator<Room>, Serializable {
 
