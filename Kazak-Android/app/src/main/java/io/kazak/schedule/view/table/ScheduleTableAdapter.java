@@ -24,6 +24,7 @@ import io.kazak.model.Id;
 import io.kazak.model.Room;
 import io.kazak.model.Talk;
 import io.kazak.model.TimeSlot;
+import io.kazak.schedule.view.ScheduleEventView;
 import io.kazak.schedule.view.TalkCardView;
 import io.kazak.schedule.view.table.base.RangePosition;
 import io.kazak.schedule.view.table.base.TableDataHandler;
@@ -36,13 +37,25 @@ public class ScheduleTableAdapter extends TableTreeAdapter<Pair<Talk, Room>, Roo
 
     private final LayoutInflater inflater;
 
+    @Nullable
+    private ScheduleEventView.Listener listener;
+    private boolean firstViewHolderCreated;
+
     public ScheduleTableAdapter(@NonNull Context context) {
         super(TALK_DATA_HANDLER);
         this.inflater = LayoutInflater.from(context);
     }
 
+    public void setListener(@Nullable ScheduleEventView.Listener listener) {
+        if (firstViewHolderCreated) {
+            throw new DeveloperError("The listener can only be set before the first ViewHolder is created.");
+        }
+        this.listener = listener;
+    }
+
     @Override
     public ScheduleTalkTableViewHolder onCreateViewHolder(@Nullable ViewGroup parent, int viewType) {
+        firstViewHolderCreated = true;
         switch (viewType) {
             case VIEW_TYPE_NORMAL:
                 return createNormalViewHolder(parent);
@@ -55,7 +68,7 @@ public class ScheduleTableAdapter extends TableTreeAdapter<Pair<Talk, Room>, Roo
 
     @NonNull
     public ScheduleTalkTableViewHolder createNormalViewHolder(@Nullable ViewGroup parent) {
-        return new ScheduleTalkTableViewHolder((TalkCardView) inflater.inflate(R.layout.view_schedule_talk_card, parent, false), this);
+        return new ScheduleTalkTableViewHolder((TalkCardView) inflater.inflate(R.layout.view_schedule_talk_card, parent, false), this, listener);
     }
 
     @NonNull
@@ -151,7 +164,7 @@ public class ScheduleTableAdapter extends TableTreeAdapter<Pair<Talk, Room>, Roo
             return lhs.compareTo(rhs);
         }
 
-    };
+    }
 
     private static final class RoomComparator implements Comparator<Room>, Serializable {
 

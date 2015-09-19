@@ -5,8 +5,6 @@ import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
-import io.kazak.schedule.view.ScheduleEventView;
-
 public class TableViewHolder<ITEM, ROW, BOUND> extends RecyclerView.ViewHolder {
 
     private ITEM item;
@@ -24,7 +22,7 @@ public class TableViewHolder<ITEM, ROW, BOUND> extends RecyclerView.ViewHolder {
     }
 
     @CallSuper
-    public void updateWith(ITEM newItem, ROW newRow, BOUND newStart, BOUND newEnd, boolean newIsPlaceholder, ScheduleEventView.Listener listener) {
+    public void updateWith(ITEM newItem, ROW newRow, BOUND newStart, BOUND newEnd, boolean newIsPlaceholder) {
         item = newItem;
         row = newRow;
         start = newStart;
