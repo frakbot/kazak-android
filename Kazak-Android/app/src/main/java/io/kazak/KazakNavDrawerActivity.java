@@ -98,6 +98,7 @@ public abstract class KazakNavDrawerActivity extends KazakActivity implements Na
     public boolean onNavigationItemSelected(final MenuItem item) {
         if (item.getItemId() == getNavigationDrawerMenuIdForThisActivity()) {
             // Do nothing: we're already there
+            drawerLayout.closeDrawer(navigationView);
             return true;
         }
 
@@ -151,6 +152,8 @@ public abstract class KazakNavDrawerActivity extends KazakActivity implements Na
 
         @Override
         public void onDrawerClosed(View drawerView) {
+            drawerLayout.setDrawerListener(null);
+
             switch (item.getItemId()) {
                 case R.id.menu_nav_schedule:
                     navigate().toSchedule();
