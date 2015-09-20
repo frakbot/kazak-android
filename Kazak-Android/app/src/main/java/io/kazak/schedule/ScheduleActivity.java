@@ -5,15 +5,18 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 
 import javax.inject.Inject;
 import java.util.List;
 
+import io.kazak.BuildConfig;
 import io.kazak.KazakApplication;
 import io.kazak.R;
 import io.kazak.base.DeveloperError;
@@ -60,9 +63,16 @@ public class ScheduleActivity extends AppCompatActivity implements ScheduleEvent
 
         setupScheduleView();
         setupAppBar();
+        setupNavigationDrawer();
         hackToHideNavDrawerHeaderRipple();
 
         subscribeToSchedule();
+    }
+
+    private void setupNavigationDrawer() {
+        if (BuildConfig.DEBUG) {
+            navigationView.inflateMenu(R.menu.drawer_debug);
+        }
     }
 
     private void setupScheduleView() {
@@ -120,6 +130,17 @@ public class ScheduleActivity extends AppCompatActivity implements ScheduleEvent
     protected void onDestroy() {
         super.onDestroy();
         subscriptions.clear();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                drawerLayout.openDrawer(GravityCompat.START);
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     private void updateWith(@NonNull ScheduleTableAdapter.Data data) {

@@ -5,4 +5,6 @@
   <string name="debug_activity_button_multiple_notifications">Test multiple notifications</string>
   <string name="debug_activity_button_event_alarm_service">Test event alarm service</string>
 
+  <string name="menu_nav_debug">Debug</string>
+
 </resources>
