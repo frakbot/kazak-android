@@ -1,7 +1,6 @@
 package io.kazak;
 
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.support.annotation.CallSuper;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -17,33 +16,30 @@ public abstract class KazakActivity extends AppCompatActivity {
 
     @Override
     @CallSuper
-    public void onCreate(Bundle savedInstanceState, PersistableBundle persistentState) {
-        super.onCreate(savedInstanceState, persistentState);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         navigator = new Navigator(this);
     }
 
     @Override
-    @CallSuper
     public void setContentView(int layoutResID) {
         super.setContentView(layoutResID);
         findAppbar();
     }
 
     @Override
-    @CallSuper
     public void setContentView(View view) {
         super.setContentView(view);
         findAppbar();
     }
 
     @Override
-    @CallSuper
     public void setContentView(View view, ViewGroup.LayoutParams params) {
         super.setContentView(view, params);
         findAppbar();
     }
 
-    private void findAppbar() {
+    protected final void findAppbar() {
         appbar = (Toolbar) findViewById(R.id.appbar);
         if (appbar != null) {
             setSupportActionBar(appbar);
