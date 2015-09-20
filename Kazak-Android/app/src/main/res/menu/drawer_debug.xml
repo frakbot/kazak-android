@@ -4,7 +4,7 @@
   <group android:id="@+id/menu_footer">
 
     <item
-      android:id="@+id/menu_nav_debug"
+      android:id="@id/menu_nav_debug"
       android:title="@string/menu_nav_debug"
       android:icon="@drawable/ic_nav_debug_24dp" />
 
