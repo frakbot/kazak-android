@@ -87,7 +87,7 @@ public abstract class TableTreeAdapter<ITEM, ROW, BOUND, VH extends TableViewHol
         endMarker.releaseMarker();
     }
 
-    public class Data {
+    public final class Data {
 
         @NonNull
         private final List<ITEM> items;
