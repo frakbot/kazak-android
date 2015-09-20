@@ -1,0 +1,13 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+  <Preference
+    android:key="@string/pref_key_version_number"
+    android:title="@string/pref_title_version_number"
+    android:selectable="false" />
+
+  <Preference
+    android:key="@string/pref_key_version_build_time"
+    android:title="@string/pref_title_version_build_time"
+    android:selectable="false" />
+
+</PreferenceScreen>

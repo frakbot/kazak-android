@@ -27,7 +27,6 @@
         <action android:name="android.intent.action.MAIN" />
         <category android:name="android.intent.category.LAUNCHER" />
       </intent-filter>
-
     </activity>
 
     <activity
@@ -37,6 +36,21 @@
     <activity
       android:name="io.kazak.map.VenueMapActivity"
       android:label="@string/activity_title_venue_map" />
+
+    <activity
+      android:name="io.kazak.settings.SettingsActivity"
+      android:label="@string/activity_title_settings"
+      android:parentActivityName="io.kazak.schedule.ScheduleActivity">
+
+      <meta-data
+        android:name="android.support.PARENT_ACTIVITY"
+        android:value="io.kazak.schedule.ScheduleActivity" />
+
+      <intent-filter>
+        <action android:name="android.intent.action.MAIN" />
+        <category android:name="android.intent.category.NOTIFICATION_PREFERENCES" />
+      </intent-filter>
+    </activity>
 
     <receiver android:name="io.kazak.notifications.EventAlarmReceiver">
       <intent-filter>

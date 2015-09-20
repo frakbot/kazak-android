@@ -1,0 +1,10 @@
+<resources>
+
+  <string name="activity_title_settings">Settings</string>
+
+  <string name="pref_key_version_number">version_number</string>
+  <string name="pref_key_version_build_time">version_build_time</string>
+  <string name="pref_title_version_number">Version</string>
+  <string name="pref_title_version_build_time">Built on</string>
+
+</resources>
