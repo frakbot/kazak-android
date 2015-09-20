@@ -77,16 +77,16 @@ public abstract class TableAdapterAbs<ITEM, ROW, BOUND, VH extends TableViewHold
         ITEM item = getItem(position);
         holder.updateWith(
                 item,
-                dataHandler.getRowFor(item),
-                dataHandler.getStartFor(item),
-                dataHandler.getEndFor(item),
-                dataHandler.isPlaceholder(item));
+                dataHandler.getRowFor(item, position, this),
+                dataHandler.getStartFor(item, position, this),
+                dataHandler.getEndFor(item, position, this),
+                dataHandler.isPlaceholder(item, position, this));
     }
 
     @Override
     public int getItemViewType(int position) {
         ITEM item = getItem(position);
-        return dataHandler.isPlaceholder(item) ? VIEW_TYPE_PLACEHOLDER : VIEW_TYPE_NORMAL;
+        return dataHandler.isPlaceholder(item, position, this) ? VIEW_TYPE_PLACEHOLDER : VIEW_TYPE_NORMAL;
     }
 
     @Override

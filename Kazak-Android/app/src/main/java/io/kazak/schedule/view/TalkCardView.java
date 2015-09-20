@@ -1,12 +1,15 @@
 package io.kazak.schedule.view;
 
 import android.content.Context;
+import android.databinding.BindingAdapter;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.CardView;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
+
+import org.jetbrains.annotations.NotNull;
 
 import io.kazak.R;
 import io.kazak.model.Talk;
@@ -41,6 +44,15 @@ public class TalkCardView extends CardView implements ScheduleEventView<Talk> {
                 }
             }
         });
+    }
+
+    public void setFavorite(boolean isFavorite) {
+        //TODO show favorite state
+    }
+
+    @BindingAdapter({"bind:event", "bind:listener"})
+    public static void bind(@NotNull TalkCardView talkCardView, @NonNull Talk talk, @Nullable ScheduleEventView.Listener listener) {
+        talkCardView.updateWith(talk, listener);
     }
 
 }
