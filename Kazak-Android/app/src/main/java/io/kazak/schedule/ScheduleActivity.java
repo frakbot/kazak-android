@@ -64,21 +64,33 @@ public class ScheduleActivity extends AppCompatActivity implements ScheduleEvent
         setupScheduleView();
         setupAppBar();
         setupNavigationDrawer();
-        hackToHideNavDrawerHeaderRipple();
 
         subscribeToSchedule();
-    }
-
-    private void setupNavigationDrawer() {
-        if (BuildConfig.DEBUG) {
-            navigationView.inflateMenu(R.menu.drawer_debug);
-        }
     }
 
     private void setupScheduleView() {
         scheduleView.setListener(this);
         scheduleView.setRoomsRuler((RulerView) findViewById(R.id.rooms_ruler));
         scheduleView.setTimeRuler((RulerView) findViewById(R.id.time_ruler));
+    }
+
+    private void setupAppBar() {
+        setSupportActionBar(toolbar);
+        toolbar.setNavigationOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        drawerLayout.openDrawer(navigationView);
+                    }
+                }
+        );
+    }
+
+    private void setupNavigationDrawer() {
+        if (BuildConfig.DEBUG) {
+            navigationView.inflateMenu(R.menu.drawer_debug);
+        }
+        hackToHideNavDrawerHeaderRipple();
     }
 
     private void hackToHideNavDrawerHeaderRipple() {
@@ -90,18 +102,6 @@ public class ScheduleActivity extends AppCompatActivity implements ScheduleEvent
                     @Override
                     public void onClick(View v) {
                         // Do nothing
-                    }
-                }
-        );
-    }
-
-    private void setupAppBar() {
-        setSupportActionBar(toolbar);
-        toolbar.setNavigationOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        drawerLayout.openDrawer(navigationView);
                     }
                 }
         );
