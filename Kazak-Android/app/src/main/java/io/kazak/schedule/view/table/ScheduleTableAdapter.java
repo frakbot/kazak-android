@@ -1,10 +1,14 @@
 package io.kazak.schedule.view.table;
 
 import android.content.Context;
+import android.databinding.DataBindingUtil;
+import android.databinding.ViewDataBinding;
+import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.util.Pair;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import java.io.Serializable;
@@ -13,86 +17,84 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
-import io.kazak.R;
-import io.kazak.base.DeveloperError;
+import io.kazak.BR;
+import io.kazak.model.Event;
 import io.kazak.model.Id;
 import io.kazak.model.Room;
-import io.kazak.model.Talk;
+import io.kazak.model.Session;
 import io.kazak.model.TimeSlot;
+import io.kazak.schedule.view.EventViewType;
+import io.kazak.schedule.view.ScheduleBindingState;
 import io.kazak.schedule.view.ScheduleEventView;
-import io.kazak.schedule.view.TalkCardView;
 import io.kazak.schedule.view.table.base.RangePosition;
 import io.kazak.schedule.view.table.base.TableDataHandler;
 import io.kazak.schedule.view.table.base.TableTreeAdapter;
 
-public class ScheduleTableAdapter extends TableTreeAdapter<Pair<Talk, Room>, Room, Date, ScheduleTalkTableViewHolder> {
+public class ScheduleTableAdapter extends TableTreeAdapter<Pair<Event, Room>, Room, Date, ScheduleTableViewHolder> {
 
-    private static final TableDataHandler<Pair<Talk, Room>, Room, Date> TALK_DATA_HANDLER = new TalkDataHandler();
+    private static final EventDataHandler EVENT_DATA_HANDLER = new EventDataHandler();
     private static final Comparator<Room> ROOM_COMPARATOR = new RoomComparator();
 
     private final LayoutInflater inflater;
 
-    @Nullable
-    private ScheduleEventView.Listener listener;
-    private boolean firstViewHolderCreated;
+    @NonNull
+    private final ScheduleBindingState sharedBindingState = new ScheduleBindingState();
 
     public ScheduleTableAdapter(@NonNull Context context) {
-        super(TALK_DATA_HANDLER);
+        super(EVENT_DATA_HANDLER);
         this.inflater = LayoutInflater.from(context);
     }
 
-    public void setListener(@Nullable ScheduleEventView.Listener listener) {
-        if (firstViewHolderCreated) {
-            throw new DeveloperError("The listener can only be set before the first ViewHolder is created.");
-        }
-        this.listener = listener;
+    public void setListener(@Nullable ScheduleEventView.Listener newListener) {
+        sharedBindingState.setListener(newListener);
     }
 
     @Override
-    public ScheduleTalkTableViewHolder onCreateViewHolder(@Nullable ViewGroup parent, int viewType) {
-        firstViewHolderCreated = true;
-        switch (viewType) {
-            case VIEW_TYPE_NORMAL:
-                return createNormalViewHolder(parent);
-            case VIEW_TYPE_PLACEHOLDER:
-                return createPlaceholderViewHolder(parent);
-            default:
-                throw new DeveloperError("Unknown view type: %d", viewType);
-        }
+    public int getItemViewType(int position) {
+        Event event = getItem(position).first;
+        return EventViewType.valueOf(event).getLayoutRes();
+    }
+
+    @Override
+    public ScheduleTableViewHolder onCreateViewHolder(@Nullable ViewGroup parent, int viewType) {
+        return createViewHolderForLayout(parent, viewType);
     }
 
     @NonNull
-    public ScheduleTalkTableViewHolder createNormalViewHolder(@Nullable ViewGroup parent) {
-        return new ScheduleTalkTableViewHolder((TalkCardView) inflater.inflate(R.layout.view_schedule_talk_card, parent, false), this, listener);
+    public ScheduleTableViewHolder createViewHolderForLayout(@Nullable ViewGroup parent, @LayoutRes int layoutRes) {
+        ViewDataBinding binding = DataBindingUtil.inflate(inflater, layoutRes, parent, false);
+        binding.setVariable(BR.state, sharedBindingState);
+        return new ScheduleTableViewHolder(this, binding);
     }
 
     @NonNull
-    public ScheduleTalkTableViewHolder createPlaceholderViewHolder(@Nullable ViewGroup parent) {
-        return createNormalViewHolder(parent); //TODO create the placeholder view for real
+    public View getMaxHeightReferenceView(@NonNull EventViewType eventViewType, int timeSlotDurationMinutes) {
+        ScheduleTableViewHolder viewHolder = createViewHolderForLayout(null, eventViewType.getLayoutRes());
+        viewHolder.updateWith(eventViewType.getMaxHeightReference().call(timeSlotDurationMinutes));
+        return viewHolder.itemView;
+    }
+
+    public void updateWith(@NonNull List<? extends Id> newFavorites) {
+        sharedBindingState.setFavorites(newFavorites);
     }
 
     @NonNull
-    public ScheduleTalkTableViewHolder createMaxHeightReferenceViewHolder() {
-        return createNormalViewHolder(null);
-    }
-
-    public void updateWith(@NonNull List<? extends Id> favorites) {
-        //TODO: use favorites data to render cells.
-    }
-
-    @NonNull
-    public Data createSortedData(@NonNull List<Talk> talks) {
-        List<Pair<Talk, Room>> talkRoomPairs = new ArrayList<>();
+    public Data createSortedData(@NonNull List<? extends Event> events) {
+        List<Pair<Event, Room>> talkRoomPairs = new ArrayList<>();
         TreeMap<Room, TreeSet<RangePosition<Date>>> map = new TreeMap<>(ROOM_COMPARATOR);
         Date minTime = null;
         Date maxTime = null;
-        for (Talk talk : talks) {
-            TimeSlot timeSlot = talk.getTimeSlot();
+        List<Event> eventsWithoutRooms = new ArrayList<>();
+        Set<Room> rooms = new HashSet<>();
+        for (Event event : events) {
+            TimeSlot timeSlot = event.timeSlot();
             Date startTime = timeSlot.getStart();
             Date endTime = timeSlot.getEnd();
             if (minTime == null || minTime.compareTo(startTime) > 0) {
@@ -101,37 +103,57 @@ public class ScheduleTableAdapter extends TableTreeAdapter<Pair<Talk, Room>, Roo
             if (maxTime == null || maxTime.compareTo(endTime) < 0) {
                 maxTime = endTime;
             }
-            for (Room room : talk.getRooms()) {
-                TreeSet<RangePosition<Date>> row = map.get(room);
-                if (row == null) {
-                    row = new TreeSet<>();
-                    map.put(room, row);
+            if (event instanceof Session) {
+                Session session = (Session) event;
+                for (Room room : session.rooms()) {
+                    rooms.add(room);
+                    addToItems(talkRoomPairs, map, event, room);
                 }
-                int position = talkRoomPairs.size();
-                row.add(createRangePosition(startTime, endTime, position));
-                talkRoomPairs.add(new Pair<>(talk, room));
+            } else {
+                eventsWithoutRooms.add(event);
+            }
+        }
+        for (Event event : eventsWithoutRooms) {
+            for (Room room : rooms) {
+                addToItems(talkRoomPairs, map, event, room);
             }
         }
         return new Data(talkRoomPairs, map, minTime, maxTime);
     }
 
-    private static final class TalkDataHandler implements TableDataHandler<Pair<Talk, Room>, Room, Date>, Serializable {
+    private void addToItems(
+            @NonNull List<Pair<Event, Room>> items,
+            @NonNull TreeMap<Room, TreeSet<RangePosition<Date>>> map,
+            @NonNull Event event,
+            @NonNull Room room) {
+        TreeSet<RangePosition<Date>> row = map.get(room);
+        if (row == null) {
+            row = new TreeSet<>();
+            map.put(room, row);
+        }
+        TimeSlot timeSlot = event.timeSlot();
+        int position = items.size();
+        row.add(createRangePosition(timeSlot.getStart(), timeSlot.getEnd(), position));
+        items.add(new Pair<>(event, room));
+    }
+
+    private static final class EventDataHandler implements TableDataHandler<Pair<Event, Room>, Room, Date>, Serializable {
 
         private final DateFormat timeFormatter = new SimpleDateFormat("HH:mm", Locale.US);
 
         @Override
-        public Room getRowFor(Pair<Talk, Room> item) {
+        public Room getRowFor(Pair<Event, Room> item) {
             return item.second;
         }
 
         @Override
-        public Date getStartFor(Pair<Talk, Room> item) {
-            return item.first.getTimeSlot().getStart();
+        public Date getStartFor(Pair<Event, Room> item) {
+            return item.first.timeSlot().getStart();
         }
 
         @Override
-        public Date getEndFor(Pair<Talk, Room> item) {
-            return item.first.getTimeSlot().getEnd();
+        public Date getEndFor(Pair<Event, Room> item) {
+            return item.first.timeSlot().getEnd();
         }
 
         @Override
@@ -145,8 +167,8 @@ public class ScheduleTableAdapter extends TableTreeAdapter<Pair<Talk, Room>, Roo
         }
 
         @Override
-        public boolean isPlaceholder(Pair<Talk, Room> item) {
-            return false; //TODO
+        public boolean isPlaceholder(Pair<Event, Room> item) {
+            return EventViewType.valueOf(item.first).isPlaceholder();
         }
 
         @Override

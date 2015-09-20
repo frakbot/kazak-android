@@ -8,23 +8,18 @@ import android.support.annotation.Nullable;
 import android.support.annotation.StyleRes;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
+import android.view.View;
 
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import io.kazak.R;
+import io.kazak.model.Event;
 import io.kazak.model.Id;
-import io.kazak.model.Room;
 import io.kazak.model.Schedule;
-import io.kazak.model.Speaker;
-import io.kazak.model.Speakers;
-import io.kazak.model.Talk;
-import io.kazak.model.TimeSlot;
+import io.kazak.schedule.view.EventViewType;
 import io.kazak.schedule.view.ScheduleEventView;
-import io.kazak.schedule.view.TalkCardView;
 import io.kazak.schedule.view.table.base.Ruler;
 import io.kazak.schedule.view.table.base.TableItemPaddingDecoration;
 import io.kazak.schedule.view.table.base.TableLayoutManager;
@@ -32,7 +27,6 @@ import io.kazak.schedule.view.table.base.TableLayoutManager;
 public class ScheduleTableView extends RecyclerView {
 
     private static final int UNSPECIFIED_MEASURE_SPEC = MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED);
-    private static final Id NO_ID = new Id("");
 
     private final ScheduleTableAdapter adapter;
     private final TableLayoutManager layoutManager;
@@ -63,7 +57,7 @@ public class ScheduleTableView extends RecyclerView {
         adapter = new ScheduleTableAdapter(context);
 
         int timeSlotDurationMilliseconds = (int) TimeUnit.MINUTES.toMillis(timeSlotDurationMinutes);
-        int rowHeightPx = computeRowHeight(timeSlotUnitWidthPx, timeSlotDurationMinutes);
+        int rowHeightPx = computeRowHeight(timeSlotUnitWidthPx, timeSlotDurationMilliseconds);
         layoutManager = new TableLayoutManager(
                 rowHeightPx, timeSlotUnitWidthPx, timeSlotDurationMilliseconds, itemsPaddingHorizontal, itemsPaddingVertical);
 
@@ -87,16 +81,16 @@ public class ScheduleTableView extends RecyclerView {
 
     @NonNull
     public ScheduleTableAdapter.Data createAdapterData(@NonNull Schedule schedule) {
-        return createAdapterData(getTalksFrom(schedule));
+        return createAdapterData(getEventsFrom(schedule));
     }
 
     @NonNull
-    public ScheduleTableAdapter.Data createAdapterData(@NonNull List<Talk> talks) {
-        return adapter.createSortedData(talks);
+    public ScheduleTableAdapter.Data createAdapterData(@NonNull List<? extends Event> events) {
+        return adapter.createSortedData(events);
     }
 
     @NonNull
-    private static List<Talk> getTalksFrom(@NonNull Schedule schedule) {
+    private static List<? extends Event> getEventsFrom(@NonNull Schedule schedule) {
         if (schedule.getDays().isEmpty()) {
             return Collections.emptyList();
         } else {
@@ -104,36 +98,15 @@ public class ScheduleTableView extends RecyclerView {
         }
     }
 
-    private int computeRowHeight(int timeSlotUnitWidthPx, int timeSlotDurationMinutes) {
-        ScheduleTalkTableViewHolder viewHolder = adapter.createMaxHeightReferenceViewHolder();
-        TalkCardView cardView = viewHolder.getCardView();
-
-        cardView.updateWith(createMaxHeightReferenceTalk(timeSlotDurationMinutes), null);
-
+    private int computeRowHeight(int timeSlotUnitWidthPx, int timeSlotDurationMilliseconds) {
         int widthMeasureSpec = MeasureSpec.makeMeasureSpec(timeSlotUnitWidthPx, MeasureSpec.EXACTLY);
-        cardView.measure(widthMeasureSpec, UNSPECIFIED_MEASURE_SPEC);
-
-        return cardView.getMeasuredHeight();
-    }
-
-    @NonNull
-    private Talk createMaxHeightReferenceTalk(int timeSlotDurationMinutes) {
-        Date start = new Date();
-        Date end = new Date(start.getTime() + TimeUnit.MINUTES.toMillis(timeSlotDurationMinutes));
-        List<Speaker> speakerList = Arrays.asList(createDummySpeaker("Speaker1"), createDummySpeaker("Speaker2"));
-        return new Talk(
-                NO_ID,
-                "1\n2\n3",
-                "description",
-                new TimeSlot(start, end),
-                Collections.singletonList(new Room(NO_ID, "Room")),
-                new Speakers(speakerList),
-                null);
-    }
-
-    @NonNull
-    private static Speaker createDummySpeaker(String speakerName) {
-        return new Speaker(NO_ID, speakerName, null, null, null, null);
+        int rowHeight = 0;
+        for (EventViewType eventViewType : EventViewType.values()) {
+            View view = adapter.getMaxHeightReferenceView(eventViewType, timeSlotDurationMilliseconds);
+            view.measure(widthMeasureSpec, UNSPECIFIED_MEASURE_SPEC);
+            rowHeight = Math.max(rowHeight, view.getMeasuredHeight());
+        }
+        return rowHeight;
     }
 
     public void setRoomsRuler(@Nullable Ruler ruler) {
