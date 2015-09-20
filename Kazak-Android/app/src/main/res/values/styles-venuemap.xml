@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+  <style name="VenueMap" parent="None" />
+
+  <style name="VenueMap.Toolbar" parent="None">
+    <item tools:ignore="PrivateResource" name="android:minHeight">?attr/actionBarSize</item>
+    <item name="navigationIcon">@drawable/ic_menu_white</item>
+    <item name="android:background" tools:ignore="PrivateResource">?attr/colorPrimary</item>
+    <item name="android:elevation" tools:ignore="NewApi">@dimen/toolbar_elevation</item>
+  </style>
+
+</resources>
