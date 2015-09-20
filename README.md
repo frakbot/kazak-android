@@ -5,6 +5,10 @@
 
 Issue tracker: [youtrack.kazak.io](http://youtrack.kazak.io/issues)
 
+## Getting started
+
+To be able to build the app, you need to prepare your local repo for it. Please follow the instructions on the [project wiki](https://github.com/novoda/kazak-android/wiki/%5BWIP%5D-Getting-started).
+
 ## Core team
 
 [Benjamin Augustin](http://github.com/Dorvaryn)
