@@ -61,6 +61,8 @@ public class ScheduleActivity extends AppCompatActivity implements ScheduleEvent
         setupScheduleView();
         setupAppBar();
         hackToHideNavDrawerHeaderRipple();
+
+        subscribeToSchedule();
     }
 
     private void setupScheduleView() {
@@ -95,12 +97,6 @@ public class ScheduleActivity extends AppCompatActivity implements ScheduleEvent
         );
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        subscribeToSchedule();
-    }
-
     private void subscribeToSchedule() {
         subscriptions.add(
                 dataRepository.getSchedule()
@@ -121,8 +117,8 @@ public class ScheduleActivity extends AppCompatActivity implements ScheduleEvent
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
+    protected void onDestroy() {
+        super.onDestroy();
         subscriptions.clear();
     }
 
