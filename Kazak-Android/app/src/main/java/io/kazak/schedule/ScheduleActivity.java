@@ -137,6 +137,11 @@ public class ScheduleActivity extends KazakNavDrawerActivity implements Schedule
                 .show();
     }
 
+    @Override
+    protected int getNavigationDrawerMenuIdForThisActivity() {
+        return R.id.menu_nav_schedule;
+    }
+
     private class ScheduleObserver implements Observer<ScheduleTableAdapter.Data> {
 
         @Override

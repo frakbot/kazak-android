@@ -2,6 +2,7 @@ package io.kazak;
 
 import android.annotation.SuppressLint;
 import android.support.annotation.CallSuper;
+import android.support.annotation.IdRes;
 import android.support.annotation.LayoutRes;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
@@ -12,7 +13,7 @@ import android.view.Window;
 
 import io.kazak.base.DeveloperError;
 
-public class KazakNavDrawerActivity extends KazakActivity implements NavigationView.OnNavigationItemSelectedListener {
+public abstract class KazakNavDrawerActivity extends KazakActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
@@ -65,7 +66,7 @@ public class KazakNavDrawerActivity extends KazakActivity implements NavigationV
         if (BuildConfig.DEBUG) {
             navigationView.inflateMenu(R.menu.drawer_debug);
         }
-        navigationView.setCheckedItem(R.id.menu_nav_schedule);
+        navigationView.setCheckedItem(getNavigationDrawerMenuIdForThisActivity());
         navigationView.setNavigationItemSelectedListener(this);
         hackToHideNavDrawerHeaderRipple();
     }
@@ -87,9 +88,14 @@ public class KazakNavDrawerActivity extends KazakActivity implements NavigationV
     @Override
     @CallSuper
     public boolean onNavigationItemSelected(MenuItem item) {
+        if (item.getItemId() == getNavigationDrawerMenuIdForThisActivity()) {
+            // Do nothing: we're already there
+            return true;
+        }
+
         switch (item.getItemId()) {
             case R.id.menu_nav_schedule:
-                // Do nothing: we're already there
+                navigate().toSchedule();
                 break;
             case R.id.menu_nav_arrival_info:
                 navigate().toArrivalInfo();
@@ -110,6 +116,9 @@ public class KazakNavDrawerActivity extends KazakActivity implements NavigationV
         drawerLayout.closeDrawer(navigationView);
         return true;
     }
+
+    @IdRes
+    protected abstract int getNavigationDrawerMenuIdForThisActivity();
 
     protected final void openNavigationDrawer() {
         drawerLayout.openDrawer(navigationView);

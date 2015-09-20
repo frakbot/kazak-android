@@ -37,6 +37,11 @@ public class VenueMapActivity extends KazakNavDrawerActivity {
         );
     }
 
+    @Override
+    protected int getNavigationDrawerMenuIdForThisActivity() {
+        return R.id.menu_nav_venue_map;
+    }
+
     private void setupMap() {
         ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.venue_map))
                 .getMapAsync(new MapEventsListener());
