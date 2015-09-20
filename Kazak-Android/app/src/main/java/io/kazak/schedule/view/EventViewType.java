@@ -24,9 +24,9 @@ public enum EventViewType {
 
     TALK(R.layout.view_schedule_talk_card, false, createMaxHeightTalk())/*,
     //TODO add layouts for all event types
-    CEREMONY(EventType.CEREMONY, R.layout.view_schedule_ceremony),
-    COFFEE_BREAK(EventType.COFFEE_BREAK, R.layout.view_schedule_break),
-    PLACEHOLDER(EventType.PLACEHOLDER, R.layout.view_schedule_placeholder)*/;
+    CEREMONY(...),
+    COFFEE_BREAK(...),
+    PLACEHOLDER(...)*/;
 
     private static final Id NO_ID = new Id("");
 
