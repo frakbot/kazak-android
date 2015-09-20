@@ -1,9 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-  <item
-    android:id="@+id/menu_nav_schedule"
-    android:title="@string/menu_nav_schedule"
-    android:icon="@drawable/ic_nav_schedule" />
+  <group android:id="@+id/menu_sections">
+
+    <item
+      android:id="@+id/menu_nav_schedule"
+      android:title="@string/menu_nav_schedule"
+      android:icon="@drawable/ic_nav_schedule_24dp" />
+
+    <item
+      android:id="@+id/menu_nav_get_to_the_venue"
+      android:title="@string/menu_nav_get_to_the_venue"
+      android:icon="@drawable/ic_nav_arrival_info_24dp" />
+
+    <item
+      android:id="@+id/menu_nav_floor_plan"
+      android:title="@string/menu_nav_floor_plan"
+      android:icon="@drawable/ic_nav_floor_plan_24dp" />
+
+  </group>
+
+  <group android:id="@+id/menu_footer">
+
+    <item
+      android:id="@+id/menu_nav_settings"
+      android:title="@string/menu_nav_settings"
+      android:icon="@drawable/ic_nav_settings_24dp" />
+
+  </group>
 
 </menu>
