@@ -34,7 +34,6 @@ import io.kazak.schedule.view.EventViewType;
 import io.kazak.schedule.view.ScheduleBindingState;
 import io.kazak.schedule.view.ScheduleEventView;
 import io.kazak.schedule.view.table.base.RangePosition;
-import io.kazak.schedule.view.table.base.TableAdapterAbs;
 import io.kazak.schedule.view.table.base.TableDataHandler;
 import io.kazak.schedule.view.table.base.TableTreeAdapter;
 
@@ -143,23 +142,18 @@ public class ScheduleTableAdapter extends TableTreeAdapter<Pair<Event, Room>, Ro
         private final DateFormat timeFormatter = new SimpleDateFormat("HH:mm", Locale.US);
 
         @Override
-        public Room getRowFor(Pair<Event, Room> item, int position, TableAdapterAbs<Pair<Event, Room>, Room, Date, ?> adapter) {
+        public Room getRowFor(Pair<Event, Room> item) {
             return item.second;
         }
 
         @Override
-        public Date getStartFor(Pair<Event, Room> item, int position, TableAdapterAbs<Pair<Event, Room>, Room, Date, ?> adapter) {
+        public Date getStartFor(Pair<Event, Room> item) {
             return item.first.timeSlot().getStart();
         }
 
         @Override
-        public Date getEndFor(Pair<Event, Room> item, int position, TableAdapterAbs<Pair<Event, Room>, Room, Date, ?> adapter) {
+        public Date getEndFor(Pair<Event, Room> item) {
             return item.first.timeSlot().getEnd();
-        }
-
-        @Override
-        public boolean isPlaceholder(Pair<Event, Room> item, int position, TableAdapterAbs<Pair<Event, Room>, Room, Date, ?> adapter) {
-            return EventViewType.valueOf(item.first).isPlaceholder();
         }
 
         @Override
@@ -170,6 +164,11 @@ public class ScheduleTableAdapter extends TableTreeAdapter<Pair<Event, Room>, Ro
         @Override
         public Date sum(Date start, int units) {
             return new Date(start.getTime() + units);
+        }
+
+        @Override
+        public boolean isPlaceholder(Pair<Event, Room> item) {
+            return EventViewType.valueOf(item.first).isPlaceholder();
         }
 
         @Override
