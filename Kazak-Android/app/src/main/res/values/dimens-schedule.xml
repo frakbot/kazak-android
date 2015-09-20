@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-  <dimen name="schedule_toolbar_wrapper_elevation">6dp</dimen>
+  <dimen name="schedule_toolbar_wrapper_elevation">@dimen/toolbar_elevation</dimen>
 
   <dimen name="session_card_corner_radius">@dimen/cardview_default_radius</dimen>
   <dimen name="session_card_padding_horizontal">12dp</dimen>
