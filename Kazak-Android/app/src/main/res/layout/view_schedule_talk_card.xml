@@ -21,6 +21,6 @@
     android:layout_height="wrap_content"
     bind:event="@{event}"
     bind:listener="@{state.listener}"
-    bind:setFavorite="@{state.favorites.contains(event.id())}"/>
+    bind:setFavorite="@{state.favorites.contains(event.id)}"/>
 
 </layout>
