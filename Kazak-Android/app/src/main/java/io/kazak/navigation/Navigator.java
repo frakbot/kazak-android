@@ -1,10 +1,9 @@
 package io.kazak.navigation;
 
 import android.app.Activity;
+import android.app.TaskStackBuilder;
 import android.content.Intent;
 import android.support.annotation.NonNull;
-import android.support.v4.app.NavUtils;
-import android.support.v4.app.TaskStackBuilder;
 
 import io.kazak.DebugActivity;
 import io.kazak.map.VenueMapActivity;
@@ -56,14 +55,19 @@ public class Navigator {
         activityContext.startActivity(intent);
     }
 
-    public void navigateToParent() {
-        Intent intent = NavUtils.getParentActivityIntent(activityContext);
-        if (NavUtils.shouldUpRecreateTask(activityContext, intent)) {
+    public void upToParent() {
+        Intent intent = activityContext.getParentActivityIntent();
+        if (intent == null) {
+            activityContext.finish();
+            return;
+        }
+
+        if (activityContext.shouldUpRecreateTask(intent)) {
             TaskStackBuilder.create(activityContext)
                     .addParentStack(activityContext)
                     .startActivities();
         } else {
-            NavUtils.navigateUpTo(activityContext, intent);
+            activityContext.navigateUpTo(intent);
         }
     }
 
