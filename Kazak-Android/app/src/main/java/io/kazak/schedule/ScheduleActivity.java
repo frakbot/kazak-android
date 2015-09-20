@@ -93,6 +93,7 @@ public class ScheduleActivity extends AppCompatActivity implements ScheduleEvent
         if (BuildConfig.DEBUG) {
             navigationView.inflateMenu(R.menu.drawer_debug);
         }
+        navigationView.setCheckedItem(R.id.menu_nav_schedule);
         navigationView.setNavigationItemSelectedListener(this);
         hackToHideNavDrawerHeaderRipple();
     }

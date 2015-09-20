@@ -6,17 +6,20 @@
     <item
       android:id="@+id/menu_nav_schedule"
       android:title="@string/menu_nav_schedule"
-      android:icon="@drawable/ic_nav_schedule_24dp" />
+      android:icon="@drawable/ic_nav_schedule_24dp"
+      android:checkable="true" />
 
     <item
       android:id="@+id/menu_nav_get_to_the_venue"
       android:title="@string/menu_nav_get_to_the_venue"
-      android:icon="@drawable/ic_nav_arrival_info_24dp" />
+      android:icon="@drawable/ic_nav_arrival_info_24dp"
+      android:checkable="true" />
 
     <item
       android:id="@+id/menu_nav_floor_plan"
       android:title="@string/menu_nav_floor_plan"
-      android:icon="@drawable/ic_nav_floor_plan_24dp" />
+      android:icon="@drawable/ic_nav_floor_plan_24dp"
+      android:checkable="true" />
 
   </group>
 
