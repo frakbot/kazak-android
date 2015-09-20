@@ -3,7 +3,6 @@ package io.kazak.schedule.view.table;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.support.annotation.AttrRes;
-import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StyleRes;
@@ -11,42 +10,26 @@ import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.View;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import io.kazak.R;
 import io.kazak.model.Event;
 import io.kazak.model.Id;
-import io.kazak.model.Room;
 import io.kazak.model.Schedule;
-import io.kazak.model.Speaker;
-import io.kazak.model.Speakers;
-import io.kazak.model.Talk;
-import io.kazak.model.TimeSlot;
+import io.kazak.schedule.view.EventViewType;
 import io.kazak.schedule.view.ScheduleEventView;
-import io.kazak.schedule.view.table.ScheduleTableAdapter.Layout;
 import io.kazak.schedule.view.table.base.Ruler;
 import io.kazak.schedule.view.table.base.TableItemPaddingDecoration;
 import io.kazak.schedule.view.table.base.TableLayoutManager;
-import rx.functions.Func0;
 
 public class ScheduleTableView extends RecyclerView {
 
-    @LayoutRes
-    private static final int LAYOUT_TALK = R.layout.view_schedule_talk_card;
-
     private static final int UNSPECIFIED_MEASURE_SPEC = MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED);
-    private static final Id NO_ID = new Id("");
 
     private final ScheduleTableAdapter adapter;
     private final TableLayoutManager layoutManager;
-
-    @NonNull
-    private final List<Layout<?>> supportedLayouts;
 
     public ScheduleTableView(Context context) {
         this(context, null);
@@ -74,9 +57,7 @@ public class ScheduleTableView extends RecyclerView {
         adapter = new ScheduleTableAdapter(context);
 
         int timeSlotDurationMilliseconds = (int) TimeUnit.MINUTES.toMillis(timeSlotDurationMinutes);
-        supportedLayouts = createSupportedLayoutsList(timeSlotDurationMilliseconds);
-
-        int rowHeightPx = computeRowHeight(timeSlotUnitWidthPx);
+        int rowHeightPx = computeRowHeight(timeSlotUnitWidthPx, timeSlotDurationMilliseconds);
         layoutManager = new TableLayoutManager(
                 rowHeightPx, timeSlotUnitWidthPx, timeSlotDurationMilliseconds, itemsPaddingHorizontal, itemsPaddingVertical);
 
@@ -105,7 +86,7 @@ public class ScheduleTableView extends RecyclerView {
 
     @NonNull
     public ScheduleTableAdapter.Data createAdapterData(@NonNull List<? extends Event> events) {
-        return adapter.createSortedData(events, supportedLayouts);
+        return adapter.createSortedData(events);
     }
 
     @NonNull
@@ -117,20 +98,15 @@ public class ScheduleTableView extends RecyclerView {
         }
     }
 
-    private int computeRowHeight(int timeSlotUnitWidthPx) {
+    private int computeRowHeight(int timeSlotUnitWidthPx, int timeSlotDurationMilliseconds) {
         int widthMeasureSpec = MeasureSpec.makeMeasureSpec(timeSlotUnitWidthPx, MeasureSpec.EXACTLY);
         int rowHeight = 0;
-        for (Layout<?> layout : supportedLayouts) {
-            View view = adapter.getMaxHeightReferenceView(layout);
+        for (EventViewType eventViewType : EventViewType.values()) {
+            View view = adapter.getMaxHeightReferenceView(eventViewType, timeSlotDurationMilliseconds);
             view.measure(widthMeasureSpec, UNSPECIFIED_MEASURE_SPEC);
             rowHeight = Math.max(rowHeight, view.getMeasuredHeight());
         }
         return rowHeight;
-    }
-
-    @NonNull
-    private static Speaker createDummySpeaker(String speakerName) {
-        return new Speaker(NO_ID, speakerName, null, null, null, null);
     }
 
     public void setRoomsRuler(@Nullable Ruler ruler) {
@@ -139,36 +115,6 @@ public class ScheduleTableView extends RecyclerView {
 
     public void setTimeRuler(@Nullable Ruler ruler) {
         layoutManager.setBoundsRuler(ruler);
-    }
-
-    @NonNull
-    private List<Layout<?>> createSupportedLayoutsList(int timeSlotDurationMilliseconds) {
-        List<Layout<?>> layouts = new ArrayList<>(1);
-
-        layouts.add(new Layout<>(Talk.class, LAYOUT_TALK, false, createMaxHeightTalk(timeSlotDurationMilliseconds)));
-        //TODO add layouts for all event types
-
-        return layouts;
-    }
-
-    @NonNull
-    private Func0<Talk> createMaxHeightTalk(final int timeSlotDurationMinutes) {
-        return new Func0<Talk>() {
-            @Override
-            public Talk call() {
-                Date start = new Date();
-                Date end = new Date(start.getTime() + TimeUnit.MINUTES.toMillis(timeSlotDurationMinutes));
-                List<Speaker> speakerList = Arrays.asList(createDummySpeaker("Speaker1"), createDummySpeaker("Speaker2"));
-                return new Talk(
-                        NO_ID,
-                        "1\n2\n3",
-                        "description",
-                        new TimeSlot(start, end),
-                        Collections.singletonList(new Room(NO_ID, "Room")),
-                        new Speakers(speakerList),
-                        null);
-            }
-        };
     }
 
 }

@@ -15,7 +15,6 @@ import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashSet;
@@ -26,19 +25,18 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 
 import io.kazak.BR;
-import io.kazak.base.DeveloperError;
 import io.kazak.model.Event;
 import io.kazak.model.Id;
 import io.kazak.model.Room;
 import io.kazak.model.Session;
 import io.kazak.model.TimeSlot;
+import io.kazak.schedule.view.EventViewType;
 import io.kazak.schedule.view.ScheduleBindingState;
 import io.kazak.schedule.view.ScheduleEventView;
 import io.kazak.schedule.view.table.base.RangePosition;
 import io.kazak.schedule.view.table.base.TableAdapterAbs;
 import io.kazak.schedule.view.table.base.TableDataHandler;
 import io.kazak.schedule.view.table.base.TableTreeAdapter;
-import rx.functions.Func0;
 
 public class ScheduleTableAdapter extends TableTreeAdapter<Pair<Event, Room>, Room, Date, ScheduleTableViewHolder> {
 
@@ -46,9 +44,6 @@ public class ScheduleTableAdapter extends TableTreeAdapter<Pair<Event, Room>, Ro
     private static final Comparator<Room> ROOM_COMPARATOR = new RoomComparator();
 
     private final LayoutInflater inflater;
-
-    @NonNull
-    private List<Layout<?>> layoutsForItems = Collections.emptyList();
 
     @NonNull
     private final ScheduleBindingState sharedBindingState = new ScheduleBindingState();
@@ -64,7 +59,8 @@ public class ScheduleTableAdapter extends TableTreeAdapter<Pair<Event, Room>, Ro
 
     @Override
     public int getItemViewType(int position) {
-        return layoutsForItems.get(position).layoutRes;
+        Event event = getItem(position).first;
+        return EventViewType.valueOf(event).getLayoutRes();
     }
 
     @Override
@@ -80,9 +76,9 @@ public class ScheduleTableAdapter extends TableTreeAdapter<Pair<Event, Room>, Ro
     }
 
     @NonNull
-    public View getMaxHeightReferenceView(@NonNull Layout<?> layout) {
-        ScheduleTableViewHolder viewHolder = createViewHolderForLayout(null, layout.layoutRes);
-        viewHolder.updateWith(layout.maxHeightReference.call());
+    public View getMaxHeightReferenceView(@NonNull EventViewType eventViewType, int timeSlotDurationMinutes) {
+        ScheduleTableViewHolder viewHolder = createViewHolderForLayout(null, eventViewType.getLayoutRes());
+        viewHolder.updateWith(eventViewType.getMaxHeightReference().call(timeSlotDurationMinutes));
         return viewHolder.itemView;
     }
 
@@ -90,27 +86,13 @@ public class ScheduleTableAdapter extends TableTreeAdapter<Pair<Event, Room>, Ro
         sharedBindingState.setFavorites(newFavorites);
     }
 
-    @Override
-    public void updateWith(@NonNull Data data) {
-        if (!(data instanceof ScheduleTableData)) {
-            throw new DeveloperError("Data must be of type: %s.", ScheduleTableData.class.getSimpleName());
-        }
-        updateWith((ScheduleTableData) data);
-    }
-
-    public void updateWith(@NonNull ScheduleTableData data) {
-        layoutsForItems = data.layoutsForItems;
-        super.updateWith(data);
-    }
-
     @NonNull
-    public ScheduleTableData createSortedData(@NonNull List<? extends Event> events, @NonNull List<Layout<?>> layouts) {
+    public Data createSortedData(@NonNull List<? extends Event> events) {
         List<Pair<Event, Room>> talkRoomPairs = new ArrayList<>();
         TreeMap<Room, TreeSet<RangePosition<Date>>> map = new TreeMap<>(ROOM_COMPARATOR);
         Date minTime = null;
         Date maxTime = null;
         List<Event> eventsWithoutRooms = new ArrayList<>();
-        List<Layout<?>> newLayoutsForItems = new ArrayList<>();
         Set<Room> rooms = new HashSet<>();
         for (Event event : events) {
             TimeSlot timeSlot = event.timeSlot();
@@ -125,10 +107,8 @@ public class ScheduleTableAdapter extends TableTreeAdapter<Pair<Event, Room>, Ro
             if (event instanceof Session) {
                 Session session = (Session) event;
                 for (Room room : session.rooms()) {
-                    boolean added = addToItems(talkRoomPairs, map, newLayoutsForItems, layouts, event, room);
-                    if (added) {
-                        rooms.add(room);
-                    }
+                    rooms.add(room);
+                    addToItems(talkRoomPairs, map, event, room);
                 }
             } else {
                 eventsWithoutRooms.add(event);
@@ -136,22 +116,17 @@ public class ScheduleTableAdapter extends TableTreeAdapter<Pair<Event, Room>, Ro
         }
         for (Event event : eventsWithoutRooms) {
             for (Room room : rooms) {
-                addToItems(talkRoomPairs, map, newLayoutsForItems, layouts, event, room);
+                addToItems(talkRoomPairs, map, event, room);
             }
         }
-        return new ScheduleTableData(talkRoomPairs, map, minTime, maxTime, newLayoutsForItems);
+        return new Data(talkRoomPairs, map, minTime, maxTime);
     }
 
-    private boolean addToItems(
+    private void addToItems(
             @NonNull List<Pair<Event, Room>> items,
             @NonNull TreeMap<Room, TreeSet<RangePosition<Date>>> map,
-            @NonNull List<Layout<?>> newLayoutsForItems, @NonNull List<Layout<?>> layouts,
-            @NonNull Event event, @NonNull Room room) {
-        Layout layout = getLayoutFor(event, layouts);
-        if (layout == null) {
-            return false;
-        }
-        newLayoutsForItems.add(layout);
+            @NonNull Event event,
+            @NonNull Room room) {
         TreeSet<RangePosition<Date>> row = map.get(room);
         if (row == null) {
             row = new TreeSet<>();
@@ -161,19 +136,6 @@ public class ScheduleTableAdapter extends TableTreeAdapter<Pair<Event, Room>, Ro
         int position = items.size();
         row.add(createRangePosition(timeSlot.getStart(), timeSlot.getEnd(), position));
         items.add(new Pair<>(event, room));
-        return true;
-    }
-
-    @Nullable
-    @LayoutRes
-    private static Layout<?> getLayoutFor(@NonNull Event event, @NonNull List<Layout<?>> layouts) {
-        Class<?> eventClass = event.getClass();
-        for (Layout<?> layout : layouts) {
-            if (layout.layoutClass.isAssignableFrom(eventClass)) {
-                return layout;
-            }
-        }
-        return null;
     }
 
     private static final class EventDataHandler implements TableDataHandler<Pair<Event, Room>, Room, Date>, Serializable {
@@ -197,11 +159,7 @@ public class ScheduleTableAdapter extends TableTreeAdapter<Pair<Event, Room>, Ro
 
         @Override
         public boolean isPlaceholder(Pair<Event, Room> item, int position, TableAdapterAbs<Pair<Event, Room>, Room, Date, ?> adapter) {
-            try {
-                return ((ScheduleTableAdapter) adapter).layoutsForItems.get(position).isPlaceholder;
-            } catch (ClassCastException e) {
-                throw new DeveloperError(e, "Only adapters of type %s are supported.", ScheduleTableAdapter.class.getSimpleName());
-            }
+            return EventViewType.valueOf(item.first).isPlaceholder();
         }
 
         @Override
@@ -236,43 +194,6 @@ public class ScheduleTableAdapter extends TableTreeAdapter<Pair<Event, Room>, Ro
         @Override
         public int compare(@NonNull Room lhs, @NonNull Room rhs) {
             return lhs.getName().compareToIgnoreCase(rhs.getName());
-        }
-
-    }
-
-    public static final class Layout<T extends Event> {
-
-        @NonNull
-        private final Class<T> layoutClass;
-
-        @LayoutRes
-        private final int layoutRes;
-
-        private final boolean isPlaceholder;
-
-        private final Func0<T> maxHeightReference;
-
-        public Layout(@NonNull Class<T> layoutClass, @LayoutRes int layoutRes, boolean isPlaceholder, @NonNull Func0<T> maxHeightReference) {
-            this.layoutClass = layoutClass;
-            this.layoutRes = layoutRes;
-            this.isPlaceholder = isPlaceholder;
-            this.maxHeightReference = maxHeightReference;
-        }
-
-    }
-
-    public class ScheduleTableData extends Data {
-
-        private final List<Layout<?>> layoutsForItems;
-
-        public ScheduleTableData(
-                @NonNull List<Pair<Event, Room>> list,
-                @NonNull TreeMap<Room, TreeSet<RangePosition<Date>>> positions,
-                @Nullable Date minStart,
-                @Nullable Date maxEnd,
-                @NonNull List<Layout<?>> layoutsForItems) {
-            super(list, positions, minStart, maxEnd);
-            this.layoutsForItems = layoutsForItems;
         }
 
     }
