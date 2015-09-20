@@ -14,5 +14,5 @@ public class DeveloperError : RuntimeException {
 
 }
 
-@suppress("NOTHING_TO_INLINE")
+@Suppress("NOTHING_TO_INLINE")
 private inline fun String.Companion.format(format: String, vararg args: Any) = lang.String.format(format, args)
