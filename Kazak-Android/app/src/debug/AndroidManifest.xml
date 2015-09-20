@@ -11,7 +11,14 @@
     <activity
       android:name="io.kazak.DebugActivity"
       android:label="@string/debug_activity_title"
-      android:exported="false" />
+      android:exported="false"
+      android:parentActivityName="io.kazak.schedule.ScheduleActivity">
+
+      <intent-filter>
+        <action android:name="android.intent.action.MAIN" />
+        <category android:name="android.intent.category.NOTIFICATION_PREFERENCES" />
+      </intent-filter>
+    </activity>
 
   </application>
 
