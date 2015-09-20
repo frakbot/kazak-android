@@ -1,5 +1,5 @@
 # Kazak
-![Build Status](https://ci.stylingandroid.com/jenkins/buildStatus/icon?job=kazak-app "Build Status")
+[![](https://ci.novoda.com/buildStatus/icon?job=kazak-android)](https://ci.novoda.com/job/kazak-android/lastBuild/console)
 
 **Kazak** is a next-gen tech conference schedule platform created by members of the community. The project is made of two main parts, an **Android app** and a **cloud backend**.
 
