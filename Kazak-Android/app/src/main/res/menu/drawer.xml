@@ -10,15 +10,15 @@
       android:checkable="true" />
 
     <item
-      android:id="@+id/menu_nav_get_to_the_venue"
-      android:title="@string/menu_nav_get_to_the_venue"
+      android:id="@+id/menu_nav_arrival_info"
+      android:title="@string/menu_nav_arrival_info"
       android:icon="@drawable/ic_nav_arrival_info_24dp"
       android:checkable="true" />
 
     <item
-      android:id="@+id/menu_nav_floor_plan"
-      android:title="@string/menu_nav_floor_plan"
-      android:icon="@drawable/ic_nav_floor_plan_24dp"
+      android:id="@+id/menu_nav_venue_map"
+      android:title="@string/menu_nav_venue_map"
+      android:icon="@drawable/ic_nav_venue_map_24dp"
       android:checkable="true" />
 
   </group>

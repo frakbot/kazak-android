@@ -10,8 +10,8 @@
   <string name="action_retry">RETRY</string>
 
   <string name="menu_nav_schedule">Schedule</string>
-  <string name="menu_nav_get_to_the_venue">Arrival info</string>
-  <string name="menu_nav_floor_plan">Venue map</string>
+  <string name="menu_nav_arrival_info">Arrival info</string>
+  <string name="menu_nav_venue_map">Venue map</string>
   <string name="menu_nav_settings">Settings</string>
 
   <string name="session_notification_starting_by">By %s</string>

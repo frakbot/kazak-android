@@ -144,10 +144,10 @@ public class ScheduleActivity extends AppCompatActivity implements ScheduleEvent
             case R.id.menu_nav_schedule:
                 // Do nothing: we're already there
                 break;
-            case R.id.menu_nav_get_to_the_venue:
+            case R.id.menu_nav_arrival_info:
                 navigator.toArrivalInfo();
                 break;
-            case R.id.menu_nav_floor_plan:
+            case R.id.menu_nav_venue_map:
                 navigator.toVenueMap();
                 break;
             case R.id.menu_nav_settings:
