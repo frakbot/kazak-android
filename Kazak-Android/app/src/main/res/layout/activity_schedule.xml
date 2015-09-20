@@ -26,7 +26,7 @@
         android:id="@+id/time_ruler"
         style="@style/Schedule.Ruler.Time"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/ruler_default_size"/>
+        android:layout_height="@dimen/ruler_default_size" />
 
     </LinearLayout>
 
@@ -40,7 +40,7 @@
         android:id="@+id/rooms_ruler"
         style="@style/Schedule.Ruler.Rooms"
         android:layout_width="@dimen/ruler_default_size"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent" />
 
       <io.kazak.schedule.view.table.ScheduleTableView
         android:id="@+id/schedule"

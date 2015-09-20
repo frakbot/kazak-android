@@ -1,10 +1,11 @@
 package io.kazak;
 
-import android.app.Activity;
 import android.app.Notification;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 
@@ -20,19 +21,28 @@ import io.kazak.model.Speaker;
 import io.kazak.model.Speakers;
 import io.kazak.model.Talk;
 import io.kazak.model.TimeSlot;
+import io.kazak.navigation.Navigator;
 import io.kazak.notifications.EventAlarmService;
 import io.kazak.notifications.NotificationCreator;
 import io.kazak.notifications.Notifier;
 
 @SuppressWarnings("checkstyle:magicnumber")
-public class DebugActivity extends Activity {
+public class DebugActivity extends AppCompatActivity {
 
     private NotificationCreator notificationCreator;
+
+    private Toolbar toolbar;
+    private Navigator navigator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        navigator = new Navigator(this);
+
         setContentView(R.layout.activity_debug);
+
+        toolbar = (Toolbar) findViewById(R.id.appbar);
+        setupAppBar();
 
         Button buttonSingleNotification = (Button) findViewById(R.id.button_test_single_notification);
         buttonSingleNotification.setOnClickListener(
@@ -66,6 +76,18 @@ public class DebugActivity extends Activity {
         );
 
         notificationCreator = new NotificationCreator(this);
+    }
+
+    private void setupAppBar() {
+        setSupportActionBar(toolbar);
+        toolbar.setNavigationOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        navigator.navigateToParent();
+                    }
+                }
+        );
     }
 
     private void testSingleNotification() {
