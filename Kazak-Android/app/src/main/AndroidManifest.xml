@@ -40,6 +40,7 @@
     <activity
       android:name="io.kazak.settings.SettingsActivity"
       android:label="@string/activity_title_settings"
+      android:theme="@style/Theme.Kazak.OpaqueStatusBar"
       android:parentActivityName="io.kazak.schedule.ScheduleActivity">
 
       <intent-filter>

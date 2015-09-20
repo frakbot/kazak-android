@@ -11,6 +11,7 @@
     <activity
       android:name="io.kazak.DebugActivity"
       android:label="@string/debug_activity_title"
+      android:theme="@style/Theme.Kazak.OpaqueStatusBar"
       android:exported="false"
       android:parentActivityName="io.kazak.schedule.ScheduleActivity">
 
