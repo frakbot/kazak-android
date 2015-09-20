@@ -67,7 +67,12 @@ public class AndroidJsonRepository(val assets: AssetManager, val files: File) : 
                 )
                 it.onCompleted()
             } catch (e: IOException) {
-                it.onError(DeveloperError(message = "Assets schedule.json not found -- have you read the Getting Started wiki page?", cause = e))
+                it.onError(
+                        DeveloperError(
+                                message = "schedule.json not found or corrupted -- have you read the Getting Started wiki page?",
+                                cause = e
+                        )
+                )
             }
         }
     }
