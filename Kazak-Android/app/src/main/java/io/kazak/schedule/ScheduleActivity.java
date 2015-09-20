@@ -141,6 +141,36 @@ public class ScheduleActivity extends AppCompatActivity implements ScheduleEvent
         startActivity(intent);
     }
 
+    @SuppressWarnings("ThrowableResultOfMethodCallIgnored")
+    private void handleSyncError(SyncEvent syncEvent) {
+        Throwable error = syncEvent.getError();
+        Log.e("Kazak", "Failed to load schedule", error);
+        if (error instanceof DeveloperError) {
+            showSyncDeveloperError(error);
+        } else {
+            showSyncError();
+        }
+    }
+
+    private void showSyncDeveloperError(Throwable error) {
+        String message = getString(R.string.developer_error_loading_schedule, error.getMessage());
+        Snackbar.make(contentRootView, message, Snackbar.LENGTH_INDEFINITE)
+                .show();
+    }
+
+    private void showSyncError() {
+        Snackbar.make(contentRootView, R.string.error_loading_schedule, Snackbar.LENGTH_LONG)
+                .setAction(
+                        R.string.action_retry, new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                subscribeToSchedule();
+                            }
+                        }
+                )
+                .show();
+    }
+
     private class ScheduleObserver implements Observer<ScheduleTableAdapter.Data> {
 
         @Override
@@ -195,17 +225,7 @@ public class ScheduleActivity extends AppCompatActivity implements ScheduleEvent
         public void onNext(SyncEvent syncEvent) {
             switch (syncEvent.getState()) {
                 case ERROR:
-                    Log.e("Kazak", "Failed to load schedule", syncEvent.getError());
-                    Snackbar.make(contentRootView, R.string.error_loading_schedule, Snackbar.LENGTH_LONG)
-                            .setAction(
-                                    R.string.action_retry, new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
-                                            subscribeToSchedule();
-                                        }
-                                    }
-                            )
-                            .show();
+                    handleSyncError(syncEvent);
                     break;
                 case IDLE:
                     //Display empty screen if no data
@@ -217,6 +237,7 @@ public class ScheduleActivity extends AppCompatActivity implements ScheduleEvent
                     throw new DeveloperError("Sync event '" + syncEvent.getState() + "' is not supported");
             }
         }
+
     }
 
 }
