@@ -9,8 +9,6 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 
-import org.jetbrains.annotations.NotNull;
-
 import io.kazak.R;
 import io.kazak.model.Talk;
 
@@ -51,7 +49,7 @@ public class TalkCardView extends CardView implements ScheduleEventView<Talk> {
     }
 
     @BindingAdapter({"bind:event", "bind:listener"})
-    public static void bind(@NotNull TalkCardView talkCardView, @NonNull Talk talk, @Nullable ScheduleEventView.Listener listener) {
+    public static void bind(@NonNull TalkCardView talkCardView, @NonNull Talk talk, @Nullable ScheduleEventView.Listener listener) {
         talkCardView.updateWith(talk, listener);
     }
 
