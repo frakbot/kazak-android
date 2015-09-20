@@ -17,9 +17,11 @@ import javax.inject.Inject;
 import java.util.List;
 
 import io.kazak.BuildConfig;
+import io.kazak.DebugActivity;
 import io.kazak.KazakApplication;
 import io.kazak.R;
 import io.kazak.base.DeveloperError;
+import io.kazak.map.VenueMapActivity;
 import io.kazak.model.Id;
 import io.kazak.repository.DataRepository;
 import io.kazak.repository.event.SyncEvent;
@@ -27,12 +29,13 @@ import io.kazak.schedule.view.ScheduleEventView;
 import io.kazak.schedule.view.table.ScheduleTableAdapter;
 import io.kazak.schedule.view.table.ScheduleTableView;
 import io.kazak.schedule.view.table.base.RulerView;
+import io.kazak.settings.SettingsActivity;
 import io.kazak.talk.TalkDetailsActivity;
 import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.subscriptions.CompositeSubscription;
 
-public class ScheduleActivity extends AppCompatActivity implements ScheduleEventView.Listener {
+public class ScheduleActivity extends AppCompatActivity implements ScheduleEventView.Listener, NavigationView.OnNavigationItemSelectedListener {
 
     private final CompositeSubscription subscriptions;
 
@@ -90,6 +93,7 @@ public class ScheduleActivity extends AppCompatActivity implements ScheduleEvent
         if (BuildConfig.DEBUG) {
             navigationView.inflateMenu(R.menu.drawer_debug);
         }
+        navigationView.setNavigationItemSelectedListener(this);
         hackToHideNavDrawerHeaderRipple();
     }
 
@@ -133,14 +137,30 @@ public class ScheduleActivity extends AppCompatActivity implements ScheduleEvent
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(MenuItem item) {
+        // TODO use navigator here
         switch (item.getItemId()) {
-            case android.R.id.home:
-                drawerLayout.openDrawer(GravityCompat.START);
-                return true;
+            case R.id.menu_nav_schedule:
+                // Do nothing: we're already there
+                break;
+            case R.id.menu_nav_get_to_the_venue:
+                // TODO open the "Arrival info" activity
+                break;
+            case R.id.menu_nav_floor_plan:
+                startActivity(new Intent(this, VenueMapActivity.class));
+                break;
+            case R.id.menu_nav_settings:
+                startActivity(new Intent(this, SettingsActivity.class));
+                break;
+            case R.id.menu_nav_debug:
+                startActivity(new Intent(this, DebugActivity.class));
+                break;
+            default:
+                return super.onOptionsItemSelected(item);
         }
 
-        return super.onOptionsItemSelected(item);
+        drawerLayout.closeDrawer(GravityCompat.START);
+        return true;
     }
 
     private void updateWith(@NonNull ScheduleTableAdapter.Data data) {
