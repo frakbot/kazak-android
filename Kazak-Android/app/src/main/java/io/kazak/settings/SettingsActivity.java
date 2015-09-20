@@ -10,14 +10,17 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 
 import io.kazak.R;
+import io.kazak.navigation.Navigator;
 
 public class SettingsActivity extends AppCompatActivity {
 
     private Toolbar toolbar;
+    private Navigator navigator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        navigator = new Navigator(this);
         setContentView(R.layout.activity_settings);
         toolbar = (Toolbar) findViewById(R.id.appbar);
         setupAppBar();
@@ -29,22 +32,10 @@ public class SettingsActivity extends AppCompatActivity {
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        navigateToParent();
+                        navigator.navigateToParent();
                     }
                 }
         );
-    }
-
-    private void navigateToParent() {
-        // TODO use navigator
-        Intent intent = NavUtils.getParentActivityIntent(this);
-        if (NavUtils.shouldUpRecreateTask(this, intent)) {
-            TaskStackBuilder.create(this)
-                    .addParentStack(this)
-                    .startActivities();
-        } else {
-            NavUtils.navigateUpTo(this, intent);
-        }
     }
 
     public static class InfoPreferenceFragment extends PreferenceFragmentCompat {

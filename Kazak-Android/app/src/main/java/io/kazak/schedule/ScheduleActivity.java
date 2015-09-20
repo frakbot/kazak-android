@@ -139,7 +139,6 @@ public class ScheduleActivity extends AppCompatActivity implements ScheduleEvent
 
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        // TODO use navigator here
         switch (item.getItemId()) {
             case R.id.menu_nav_schedule:
                 // Do nothing: we're already there
