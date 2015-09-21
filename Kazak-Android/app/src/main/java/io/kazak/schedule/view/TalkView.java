@@ -26,6 +26,7 @@ import java.util.Locale;
 import io.kazak.R;
 import io.kazak.base.DeveloperError;
 import io.kazak.model.Color;
+import io.kazak.model.Id;
 import io.kazak.model.Talk;
 import io.kazak.model.TimeSlot;
 import io.kazak.model.Track;
@@ -447,10 +448,13 @@ public class TalkView extends ViewGroup {
             trackView.setTextColor(trackColor);
             trackBgPaint.setColor(trackColor);
         }
-        // TODO trackDrawable = getTrackDrawableFor(track.id())
-        trackDrawable = null;
+        trackDrawable = getTrackDrawableFor(track.id());
         invalidate(trackDrawableBounds);
         invalidate(toRect(trackLineBounds));
+    }
+
+    private Drawable getTrackDrawableFor(Id id) {
+        return null;        // TODO map to the icons! (possibly using an enum or something)
     }
 
     private static Rect toRect(RectF rectF) {
