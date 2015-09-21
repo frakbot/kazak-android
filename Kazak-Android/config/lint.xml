@@ -3,4 +3,8 @@
   <issue id="GradleDependency" severity="informational" />
   <issue id="OldTargetApi" severity="informational" />
   <issue id="PrivateResource" severity="informational" />
+  <issue id="InvalidPackage">
+    <ignore regexp=".*com.google.repacked.*" />
+    <ignore regexp=".*android.databinding.*" />
+  </issue>
 </lint>

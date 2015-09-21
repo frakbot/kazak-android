@@ -3,6 +3,7 @@
   xmlns:tools="http://schemas.android.com/tools"
   package="io.kazak">
 
+  <!-- The ignore is for fullBackupContent with minSdkVersion < 23 -->
   <application
     android:allowBackup="false"
     android:fullBackupContent="false"
@@ -13,13 +14,7 @@
       android:label="@string/debug_activity_title"
       android:theme="@style/Theme.Kazak.OpaqueStatusBar"
       android:exported="false"
-      android:parentActivityName="io.kazak.schedule.ScheduleActivity">
-
-      <intent-filter>
-        <action android:name="android.intent.action.MAIN" />
-        <category android:name="android.intent.category.NOTIFICATION_PREFERENCES" />
-      </intent-filter>
-    </activity>
+      android:parentActivityName="io.kazak.schedule.ScheduleActivity" />
 
   </application>
 
