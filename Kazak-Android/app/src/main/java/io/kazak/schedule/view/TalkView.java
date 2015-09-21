@@ -343,7 +343,7 @@ public class TalkView extends ViewGroup {
             speakersLeft = clientLeft + getLeftMarginFor(speakersView);
             favoriteLeft = clientRight + drawableOpticalBalanceOffsetPx - getRightMarginFor(favoriteView) - favoriteWidth;
         } else {
-            // [FAVORITE] - [SPEAKERS]  
+            // [FAVORITE] - [SPEAKERS]
             speakersLeft = clientRight - speakersWidth + getRightMarginFor(speakersView);
             favoriteLeft = clientLeft - drawableOpticalBalanceOffsetPx + getLeftMarginFor(favoriteView);
         }
@@ -448,6 +448,7 @@ public class TalkView extends ViewGroup {
             trackBgPaint.setColor(trackColor);
         }
         // TODO trackDrawable = getTrackDrawableFor(track.id())
+        trackDrawable = null;
         invalidate(trackDrawableBounds);
         invalidate(toRect(trackLineBounds));
     }
