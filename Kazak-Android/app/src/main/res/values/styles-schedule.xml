@@ -5,7 +5,7 @@
 
   <style name="Schedule.Toolbar" parent="None">
     <item name="android:minHeight" tools:ignore="PrivateResource">?attr/actionBarSize</item>
-    <item name="navigationIcon">@drawable/ic_menu_white</item>
+    <item name="navigationIcon">@drawable/ic_menu_24dp</item>
   </style>
 
   <style name="Schedule.ToolbarWrapper" parent="None">
