@@ -5,27 +5,40 @@
   android:layout_width="match_parent"
   android:layout_height="match_parent"
   android:orientation="vertical"
-  android:padding="8dp"
   tools:ignore="HardcodedText">
+
+  <android.support.v7.widget.Toolbar
+    android:id="@+id/appbar"
+    style="@style/Debug.Toolbar"
+    android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" />
 
   <Button
     android:id="@+id/button_test_single_notification"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:layout_marginLeft="16dp"
+    android:layout_marginTop="8dp"
+    android:layout_marginRight="16dp"
     android:text="@string/debug_activity_button_single_notification" />
 
   <Button
     android:id="@+id/button_test_multiple_notifications"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:layout_marginLeft="16dp"
     android:layout_marginTop="8dp"
+    android:layout_marginRight="16dp"
     android:text="@string/debug_activity_button_multiple_notifications" />
 
   <Button
     android:id="@+id/button_test_event_alarm_service"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:layout_marginLeft="16dp"
     android:layout_marginTop="8dp"
+    android:layout_marginRight="16dp"
     android:text="@string/debug_activity_button_event_alarm_service" />
 
 </LinearLayout>

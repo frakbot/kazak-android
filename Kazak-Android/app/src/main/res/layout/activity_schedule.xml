@@ -1,64 +1,47 @@
-<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
-  xmlns:app="http://schemas.android.com/apk/res-auto"
-  android:id="@+id/navigation_drawer"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
-  android:fitsSystemWindows="true">
+  android:orientation="vertical">
 
   <LinearLayout
+    style="@style/Schedule.ToolbarWrapper"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="wrap_content">
 
-    <LinearLayout
-      style="@style/Schedule.ToolbarWrapper"
+    <android.support.v7.widget.Toolbar
+      android:id="@+id/appbar"
+      style="@style/Schedule.Toolbar"
+      android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
       android:layout_width="match_parent"
-      android:layout_height="wrap_content">
+      android:layout_height="wrap_content" />
 
-      <android.support.v7.widget.Toolbar
-        android:id="@+id/appbar"
-        style="@style/Schedule.Toolbar"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-      <io.kazak.schedule.view.table.base.RulerView
-        android:id="@+id/time_ruler"
-        style="@style/Schedule.Ruler.Time"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/ruler_default_size"/>
-
-    </LinearLayout>
-
-    <LinearLayout
-      android:id="@+id/content_root"
+    <io.kazak.schedule.view.table.base.RulerView
+      android:id="@+id/time_ruler"
+      style="@style/Schedule.Ruler.Time"
       android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      android:orientation="horizontal">
-
-      <io.kazak.schedule.view.table.base.RulerView
-        android:id="@+id/rooms_ruler"
-        style="@style/Schedule.Ruler.Rooms"
-        android:layout_width="@dimen/ruler_default_size"
-        android:layout_height="match_parent"/>
-
-      <io.kazak.schedule.view.table.ScheduleTableView
-        android:id="@+id/schedule"
-        style="@style/Schedule"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1" />
-
-    </LinearLayout>
+      android:layout_height="@dimen/ruler_default_size" />
 
   </LinearLayout>
 
-  <android.support.design.widget.NavigationView
-    android:id="@+id/drawer_menu"
-    android:layout_width="wrap_content"
+  <LinearLayout
+    android:id="@+id/content_root"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_gravity="start"
-    app:headerLayout="@layout/drawer_header"
-    app:menu="@menu/drawer" />
+    android:orientation="horizontal">
 
-</android.support.v4.widget.DrawerLayout>
+    <io.kazak.schedule.view.table.base.RulerView
+      android:id="@+id/rooms_ruler"
+      style="@style/Schedule.Ruler.Rooms"
+      android:layout_width="@dimen/ruler_default_size"
+      android:layout_height="match_parent" />
+
+    <io.kazak.schedule.view.table.ScheduleTableView
+      android:id="@+id/schedule"
+      style="@style/Schedule"
+      android:layout_width="0dp"
+      android:layout_height="match_parent"
+      android:layout_weight="1" />
+
+  </LinearLayout>
+
+</LinearLayout>

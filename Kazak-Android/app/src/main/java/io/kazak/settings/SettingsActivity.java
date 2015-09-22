@@ -1,50 +1,30 @@
 package io.kazak.settings;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.NavUtils;
-import android.support.v4.app.TaskStackBuilder;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.preference.PreferenceFragmentCompat;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
 
+import io.kazak.KazakActivity;
 import io.kazak.R;
 
-public class SettingsActivity extends AppCompatActivity {
-
-    private Toolbar toolbar;
+public class SettingsActivity extends KazakActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
-        toolbar = (Toolbar) findViewById(R.id.appbar);
         setupAppBar();
     }
 
     private void setupAppBar() {
-        setSupportActionBar(toolbar);
-        toolbar.setNavigationOnClickListener(
+        getSupportAppBar().setNavigationOnClickListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        navigateToParent();
+                        navigate().upToParent();
                     }
                 }
         );
-    }
-
-    private void navigateToParent() {
-        // TODO use navigator
-        Intent intent = NavUtils.getParentActivityIntent(this);
-        if (NavUtils.shouldUpRecreateTask(this, intent)) {
-            TaskStackBuilder.create(this)
-                    .addParentStack(this)
-                    .startActivities();
-        } else {
-            NavUtils.navigateUpTo(this, intent);
-        }
     }
 
     public static class InfoPreferenceFragment extends PreferenceFragmentCompat {

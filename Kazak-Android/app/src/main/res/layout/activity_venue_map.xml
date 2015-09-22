@@ -1,7 +1,21 @@
-<fragment xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:tools="http://schemas.android.com/tools"
-  android:id="@+id/venue_map"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
-  android:name="com.google.android.gms.maps.SupportMapFragment"
-  tools:context="io.kazak.map.VenueMapActivity" />
+  android:orientation="vertical"
+  tools:context="io.kazak.map.VenueMapActivity">
+
+  <android.support.v7.widget.Toolbar
+    android:id="@+id/appbar"
+    style="@style/VenueMap.Toolbar"
+    android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" />
+
+  <fragment
+    android:id="@+id/venue_map"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:name="com.google.android.gms.maps.SupportMapFragment" />
+
+</LinearLayout>

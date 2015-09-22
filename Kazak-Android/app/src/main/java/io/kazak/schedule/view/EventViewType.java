@@ -40,8 +40,7 @@ public enum EventViewType {
         String name = eventType.name();
         try {
             return EventViewType.valueOf(name);
-        }
-        catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException e) {
             throw new DeveloperError(e, "No %s for %s with name %s.", EventViewType.class.getSimpleName(), EventType.class.getSimpleName(), name);
         }
     }

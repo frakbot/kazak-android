@@ -3,6 +3,7 @@
   xmlns:tools="http://schemas.android.com/tools"
   package="io.kazak">
 
+  <!-- The ignore is for fullBackupContent with minSdkVersion < 23 -->
   <application
     android:allowBackup="false"
     android:fullBackupContent="false"
@@ -11,7 +12,9 @@
     <activity
       android:name="io.kazak.DebugActivity"
       android:label="@string/debug_activity_title"
-      android:exported="false" />
+      android:theme="@style/Theme.Kazak.OpaqueStatusBar"
+      android:exported="false"
+      android:parentActivityName="io.kazak.schedule.ScheduleActivity" />
 
   </application>
 

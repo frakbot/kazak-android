@@ -1,7 +1,7 @@
 package io.kazak.map;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -11,9 +11,10 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 
 import io.kazak.BuildConfig;
+import io.kazak.KazakNavDrawerActivity;
 import io.kazak.R;
 
-public class VenueMapActivity extends AppCompatActivity {
+public class VenueMapActivity extends KazakNavDrawerActivity {
 
     private GoogleMap map; // Might be null if Google Play services APK is not available.
 
@@ -21,7 +22,24 @@ public class VenueMapActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_venue_map);
+        setupAppBar();
         setupMap();
+    }
+
+    private void setupAppBar() {
+        getSupportAppBar().setNavigationOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        openNavigationDrawer();
+                    }
+                }
+        );
+    }
+
+    @Override
+    protected int getNavigationDrawerMenuIdForThisActivity() {
+        return R.id.menu_nav_venue_map;
     }
 
     private void setupMap() {

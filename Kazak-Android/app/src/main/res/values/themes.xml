@@ -7,4 +7,8 @@
     <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
   </style>
 
+  <style name="Theme.Kazak.OpaqueStatusBar">
+    <item name="android:statusBarColor" tools:ignore="NewApi">@color/color_status_bar_opaque</item>
+  </style>
+
 </resources>

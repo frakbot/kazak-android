@@ -1,27 +1,17 @@
 package io.kazak.schedule;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
 
 import javax.inject.Inject;
 import java.util.List;
 
-import io.kazak.BuildConfig;
-import io.kazak.DebugActivity;
 import io.kazak.KazakApplication;
+import io.kazak.KazakNavDrawerActivity;
 import io.kazak.R;
 import io.kazak.base.DeveloperError;
-import io.kazak.map.VenueMapActivity;
 import io.kazak.model.Id;
 import io.kazak.repository.DataRepository;
 import io.kazak.repository.event.SyncEvent;
@@ -29,13 +19,11 @@ import io.kazak.schedule.view.ScheduleEventView;
 import io.kazak.schedule.view.table.ScheduleTableAdapter;
 import io.kazak.schedule.view.table.ScheduleTableView;
 import io.kazak.schedule.view.table.base.RulerView;
-import io.kazak.settings.SettingsActivity;
-import io.kazak.talk.TalkDetailsActivity;
 import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.subscriptions.CompositeSubscription;
 
-public class ScheduleActivity extends AppCompatActivity implements ScheduleEventView.Listener, NavigationView.OnNavigationItemSelectedListener {
+public class ScheduleActivity extends KazakNavDrawerActivity implements ScheduleEventView.Listener {
 
     private final CompositeSubscription subscriptions;
 
@@ -43,9 +31,6 @@ public class ScheduleActivity extends AppCompatActivity implements ScheduleEvent
     DataRepository dataRepository;
 
     private View contentRootView;
-    private DrawerLayout drawerLayout;
-    private NavigationView navigationView;
-    private Toolbar toolbar;
     private ScheduleTableView scheduleView;
 
     public ScheduleActivity() {
@@ -55,18 +40,15 @@ public class ScheduleActivity extends AppCompatActivity implements ScheduleEvent
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         KazakApplication.injector().inject(this);
         setContentView(R.layout.activity_schedule);
 
         contentRootView = findViewById(R.id.content_root);
-        drawerLayout = (DrawerLayout) findViewById(R.id.navigation_drawer);
-        navigationView = (NavigationView) findViewById(R.id.drawer_menu);
-        toolbar = (Toolbar) findViewById(R.id.appbar);
         scheduleView = (ScheduleTableView) findViewById(R.id.schedule);
 
         setupScheduleView();
         setupAppBar();
-        setupNavigationDrawer();
 
         subscribeToSchedule();
     }
@@ -78,35 +60,11 @@ public class ScheduleActivity extends AppCompatActivity implements ScheduleEvent
     }
 
     private void setupAppBar() {
-        setSupportActionBar(toolbar);
-        toolbar.setNavigationOnClickListener(
+        getSupportAppBar().setNavigationOnClickListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        drawerLayout.openDrawer(navigationView);
-                    }
-                }
-        );
-    }
-
-    private void setupNavigationDrawer() {
-        if (BuildConfig.DEBUG) {
-            navigationView.inflateMenu(R.menu.drawer_debug);
-        }
-        navigationView.setCheckedItem(R.id.menu_nav_schedule);
-        navigationView.setNavigationItemSelectedListener(this);
-        hackToHideNavDrawerHeaderRipple();
-    }
-
-    private void hackToHideNavDrawerHeaderRipple() {
-        // TODO remove this when the issue is fixed
-        // See https://code.google.com/p/android/issues/detail?id=176400
-        View navigationHeader = findViewById(R.id.navigation_header);
-        ((View) navigationHeader.getParent()).setOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        // Do nothing
+                        openNavigationDrawer();
                     }
                 }
         );
@@ -137,33 +95,6 @@ public class ScheduleActivity extends AppCompatActivity implements ScheduleEvent
         subscriptions.clear();
     }
 
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        // TODO use navigator here
-        switch (item.getItemId()) {
-            case R.id.menu_nav_schedule:
-                // Do nothing: we're already there
-                break;
-            case R.id.menu_nav_get_to_the_venue:
-                // TODO open the "Arrival info" activity
-                break;
-            case R.id.menu_nav_floor_plan:
-                startActivity(new Intent(this, VenueMapActivity.class));
-                break;
-            case R.id.menu_nav_settings:
-                startActivity(new Intent(this, SettingsActivity.class));
-                break;
-            case R.id.menu_nav_debug:
-                startActivity(new Intent(this, DebugActivity.class));
-                break;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-
-        drawerLayout.closeDrawer(GravityCompat.START);
-        return true;
-    }
-
     private void updateWith(@NonNull ScheduleTableAdapter.Data data) {
         scheduleView.updateWith(data);
     }
@@ -174,15 +105,12 @@ public class ScheduleActivity extends AppCompatActivity implements ScheduleEvent
 
     @Override
     public void onTalkClicked(Id talkId) {
-        Intent intent = new Intent(this, TalkDetailsActivity.class);
-        intent.putExtra(TalkDetailsActivity.EXTRA_TALK_ID, talkId.getId());
-        startActivity(intent);
+        navigate().toSessionDetails(talkId);
     }
 
     @SuppressWarnings("ThrowableResultOfMethodCallIgnored")
     private void handleSyncError(SyncEvent syncEvent) {
         Throwable error = syncEvent.getError();
-        Log.e("Kazak", "Failed to load schedule", error);
         if (error instanceof DeveloperError) {
             showSyncDeveloperError(error);
         } else {
@@ -207,6 +135,11 @@ public class ScheduleActivity extends AppCompatActivity implements ScheduleEvent
                         }
                 )
                 .show();
+    }
+
+    @Override
+    protected int getNavigationDrawerMenuIdForThisActivity() {
+        return R.id.menu_nav_schedule;
     }
 
     private class ScheduleObserver implements Observer<ScheduleTableAdapter.Data> {
