@@ -1,6 +1,5 @@
 package io.kazak;
 
-import android.app.Activity;
 import android.app.Notification;
 import android.content.Intent;
 import android.os.Bundle;
@@ -25,14 +24,17 @@ import io.kazak.notifications.NotificationCreator;
 import io.kazak.notifications.Notifier;
 
 @SuppressWarnings("checkstyle:magicnumber")
-public class DebugActivity extends Activity {
+public class DebugActivity extends KazakActivity {
 
     private NotificationCreator notificationCreator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_debug);
+
+        setupAppBar();
 
         Button buttonSingleNotification = (Button) findViewById(R.id.button_test_single_notification);
         buttonSingleNotification.setOnClickListener(
@@ -66,6 +68,17 @@ public class DebugActivity extends Activity {
         );
 
         notificationCreator = new NotificationCreator(this);
+    }
+
+    private void setupAppBar() {
+        getSupportAppBar().setNavigationOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        navigate().upToParent();
+                    }
+                }
+        );
     }
 
     private void testSingleNotification() {

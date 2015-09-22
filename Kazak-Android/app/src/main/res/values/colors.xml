@@ -4,6 +4,7 @@
   <color name="color_primary">#88c53f</color>
   <color name="color_primary_dark">#64a02b</color>
   <color name="color_status_bar">#33000000</color>
+  <color name="color_status_bar_opaque">#508022</color>
 
   <color name="text_primary">#de000000</color>
   <color name="text_primary_display">#8a000000</color>
