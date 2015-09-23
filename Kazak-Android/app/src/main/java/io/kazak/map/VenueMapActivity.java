@@ -1,6 +1,7 @@
 package io.kazak.map;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -15,6 +16,7 @@ import io.kazak.R;
 
 public class VenueMapActivity extends NavigationDrawerActivity {
 
+    @Nullable
     private GoogleMap map; // Might be null if Google Play services APK is not available.
 
     @Override
@@ -43,6 +45,9 @@ public class VenueMapActivity extends NavigationDrawerActivity {
         }
 
         private void setInitialMapPositionAndZoom() {
+            if (map == null) {
+                return;
+            }
             LatLng latLng = new LatLng(BuildConfig.VENUE_LOCATION_LAT, BuildConfig.VENUE_LOCATION_LON);
             CameraUpdate update = CameraUpdateFactory.newLatLngZoom(latLng, BuildConfig.VENUE_LOCATION_MAP_ZOOM);
             map.moveCamera(update);
