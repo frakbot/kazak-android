@@ -10,10 +10,10 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 
 import io.kazak.BuildConfig;
-import io.kazak.KazakNavDrawerActivity;
+import io.kazak.NavigationDrawerActivity;
 import io.kazak.R;
 
-public class VenueMapActivity extends KazakNavDrawerActivity {
+public class VenueMapActivity extends NavigationDrawerActivity {
 
     private GoogleMap map; // Might be null if Google Play services APK is not available.
 

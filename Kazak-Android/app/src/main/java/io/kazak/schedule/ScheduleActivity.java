@@ -9,7 +9,7 @@ import javax.inject.Inject;
 import java.util.List;
 
 import io.kazak.KazakApplication;
-import io.kazak.KazakNavDrawerActivity;
+import io.kazak.NavigationDrawerActivity;
 import io.kazak.R;
 import io.kazak.base.DeveloperError;
 import io.kazak.model.Id;
@@ -23,7 +23,7 @@ import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.subscriptions.CompositeSubscription;
 
-public class ScheduleActivity extends KazakNavDrawerActivity implements ScheduleEventView.Listener {
+public class ScheduleActivity extends NavigationDrawerActivity implements ScheduleEventView.Listener {
 
     private final CompositeSubscription subscriptions;
 

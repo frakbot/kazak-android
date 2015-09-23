@@ -14,7 +14,7 @@ import android.view.Window;
 
 import io.kazak.base.DeveloperError;
 
-public abstract class KazakNavDrawerActivity extends KazakActivity implements NavigationView.OnNavigationItemSelectedListener {
+public abstract class NavigationDrawerActivity extends KazakActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private static final String EXTRA_FROM_NAV_DRAWER = BuildConfig.APPLICATION_ID + ".extra.from_nav_drawer";
     private static final Bundle EXTRAS_FROM_NAV_DRAWER;
