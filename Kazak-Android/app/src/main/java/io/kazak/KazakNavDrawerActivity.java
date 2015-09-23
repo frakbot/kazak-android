@@ -56,7 +56,7 @@ public abstract class KazakNavDrawerActivity extends KazakActivity implements Na
         findAndSetAppbar();
     }
 
-    @SuppressLint("InflateParams")
+    @SuppressLint("InflateParams")      // Inflating root content view, we don't have layout params for it
     private void ensureDrawerLayout() {
         if (drawerLayout != null) {
             return;
