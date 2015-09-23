@@ -14,12 +14,13 @@ import android.view.Window;
 
 import io.kazak.base.DeveloperError;
 
-public abstract class KazakNavDrawerActivity extends KazakActivity implements NavigationView.OnNavigationItemSelectedListener {
+public abstract class NavigationDrawerActivity extends KazakActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private static final String EXTRA_FROM_NAV_DRAWER = BuildConfig.APPLICATION_ID + ".extra.from_nav_drawer";
-    private static final Bundle EXTRAS_FROM_NAV_DRAWER = new Bundle(1);
+    private static final Bundle EXTRAS_FROM_NAV_DRAWER;
 
     static {
+        EXTRAS_FROM_NAV_DRAWER = new Bundle(1);
         EXTRAS_FROM_NAV_DRAWER.putBoolean(EXTRA_FROM_NAV_DRAWER, true);
     }
 
@@ -33,7 +34,7 @@ public abstract class KazakNavDrawerActivity extends KazakActivity implements Na
         ensureDrawerLayout();
         rootContainer.removeAllViews();
         getLayoutInflater().inflate(layoutResID, rootContainer, true);
-        findAppbar();
+        findAndSetAppbar();
     }
 
     @Override
@@ -52,10 +53,10 @@ public abstract class KazakNavDrawerActivity extends KazakActivity implements Na
         } else {
             rootContainer.addView(view, params);
         }
-        findAppbar();
+        findAndSetAppbar();
     }
 
-    @SuppressLint("InflateParams")
+    @SuppressLint("InflateParams")      // Inflating root content view, we don't have layout params for it
     private void ensureDrawerLayout() {
         if (drawerLayout != null) {
             return;

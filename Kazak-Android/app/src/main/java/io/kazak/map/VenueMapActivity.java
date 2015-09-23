@@ -1,7 +1,7 @@
 package io.kazak.map;
 
 import android.os.Bundle;
-import android.view.View;
+import android.support.annotation.Nullable;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -11,30 +11,19 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 
 import io.kazak.BuildConfig;
-import io.kazak.KazakNavDrawerActivity;
+import io.kazak.NavigationDrawerActivity;
 import io.kazak.R;
 
-public class VenueMapActivity extends KazakNavDrawerActivity {
+public class VenueMapActivity extends NavigationDrawerActivity {
 
+    @Nullable
     private GoogleMap map; // Might be null if Google Play services APK is not available.
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_venue_map);
-        setupAppBar();
         setupMap();
-    }
-
-    private void setupAppBar() {
-        getSupportAppBar().setNavigationOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        openNavigationDrawer();
-                    }
-                }
-        );
     }
 
     @Override
@@ -56,6 +45,9 @@ public class VenueMapActivity extends KazakNavDrawerActivity {
         }
 
         private void setInitialMapPositionAndZoom() {
+            if (map == null) {
+                return;
+            }
             LatLng latLng = new LatLng(BuildConfig.VENUE_LOCATION_LAT, BuildConfig.VENUE_LOCATION_LON);
             CameraUpdate update = CameraUpdateFactory.newLatLngZoom(latLng, BuildConfig.VENUE_LOCATION_MAP_ZOOM);
             map.moveCamera(update);
