@@ -17,9 +17,10 @@ import io.kazak.base.DeveloperError;
 public abstract class KazakNavDrawerActivity extends KazakActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private static final String EXTRA_FROM_NAV_DRAWER = BuildConfig.APPLICATION_ID + ".extra.from_nav_drawer";
-    private static final Bundle EXTRAS_FROM_NAV_DRAWER = new Bundle(1);
+    private static final Bundle EXTRAS_FROM_NAV_DRAWER;
 
     static {
+        EXTRAS_FROM_NAV_DRAWER = new Bundle(1);
         EXTRAS_FROM_NAV_DRAWER.putBoolean(EXTRA_FROM_NAV_DRAWER, true);
     }
 
