@@ -23,8 +23,10 @@ import io.kazak.notifications.EventAlarmService;
 import io.kazak.notifications.NotificationCreator;
 import io.kazak.notifications.Notifier;
 
-@SuppressWarnings("checkstyle:magicnumber")
 public class DebugActivity extends KazakActivity {
+
+    private static final int TIMESLOT_DURATION_MINUTES = 10;
+    private static final int TALKS_COUNT = 3;
 
     private NotificationCreator notificationCreator;
 
@@ -73,7 +75,7 @@ public class DebugActivity extends KazakActivity {
     }
 
     private void testMultipleNotifications() {
-        createAndNotifyTalksCount(3);
+        createAndNotifyTalksCount(TALKS_COUNT);
     }
 
     private void createAndNotifyTalksCount(int count) {
@@ -102,7 +104,7 @@ public class DebugActivity extends KazakActivity {
 
     private TimeSlot createTalkTimeSlot() {
         Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.MINUTE, 10);
+        calendar.add(Calendar.MINUTE, TIMESLOT_DURATION_MINUTES);
         Date startDate = calendar.getTime();
 
         calendar.add(Calendar.HOUR, 1);
