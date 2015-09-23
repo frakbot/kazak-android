@@ -33,7 +33,7 @@ public abstract class KazakNavDrawerActivity extends KazakActivity implements Na
         ensureDrawerLayout();
         rootContainer.removeAllViews();
         getLayoutInflater().inflate(layoutResID, rootContainer, true);
-        findAppbar();
+        findAndSetAppbar();
     }
 
     @Override
@@ -52,7 +52,7 @@ public abstract class KazakNavDrawerActivity extends KazakActivity implements Na
         } else {
             rootContainer.addView(view, params);
         }
-        findAppbar();
+        findAndSetAppbar();
     }
 
     @SuppressLint("InflateParams")

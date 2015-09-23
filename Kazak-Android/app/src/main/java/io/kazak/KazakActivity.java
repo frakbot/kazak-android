@@ -2,6 +2,8 @@ package io.kazak;
 
 import android.os.Bundle;
 import android.support.annotation.CallSuper;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -24,32 +26,34 @@ public abstract class KazakActivity extends AppCompatActivity {
     @Override
     public void setContentView(int layoutResID) {
         super.setContentView(layoutResID);
-        findAppbar();
+        findAndSetAppbar();
     }
 
     @Override
     public void setContentView(View view) {
         super.setContentView(view);
-        findAppbar();
+        findAndSetAppbar();
     }
 
     @Override
     public void setContentView(View view, ViewGroup.LayoutParams params) {
         super.setContentView(view, params);
-        findAppbar();
+        findAndSetAppbar();
     }
 
-    protected final void findAppbar() {
+    protected final void findAndSetAppbar() {
         appbar = (Toolbar) findViewById(R.id.appbar);
         if (appbar != null) {
             setSupportActionBar(appbar);
         }
     }
 
+    @NonNull
     protected final Navigator navigate() {
         return navigator;
     }
 
+    @Nullable
     protected final Toolbar getSupportAppBar() {
         return appbar;
     }
