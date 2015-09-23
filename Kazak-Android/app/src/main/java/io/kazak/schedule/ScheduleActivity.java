@@ -48,7 +48,6 @@ public class ScheduleActivity extends KazakNavDrawerActivity implements Schedule
         scheduleView = (ScheduleTableView) findViewById(R.id.schedule);
 
         setupScheduleView();
-        setupAppBar();
 
         subscribeToSchedule();
     }
@@ -57,17 +56,6 @@ public class ScheduleActivity extends KazakNavDrawerActivity implements Schedule
         scheduleView.setListener(this);
         scheduleView.setRoomsRuler((RulerView) findViewById(R.id.rooms_ruler));
         scheduleView.setTimeRuler((RulerView) findViewById(R.id.time_ruler));
-    }
-
-    private void setupAppBar() {
-        getSupportAppBar().setNavigationOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        openNavigationDrawer();
-                    }
-                }
-        );
     }
 
     private void subscribeToSchedule() {
@@ -87,6 +75,11 @@ public class ScheduleActivity extends KazakNavDrawerActivity implements Schedule
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(new SyncEventObserver())
         );
+    }
+
+    @Override
+    protected void onAppbarNavigationClick() {
+        openNavigationDrawer();
     }
 
     @Override

@@ -34,8 +34,6 @@ public class DebugActivity extends KazakActivity {
 
         setContentView(R.layout.activity_debug);
 
-        setupAppBar();
-
         Button buttonSingleNotification = (Button) findViewById(R.id.button_test_single_notification);
         buttonSingleNotification.setOnClickListener(
                 new View.OnClickListener() {
@@ -68,17 +66,6 @@ public class DebugActivity extends KazakActivity {
         );
 
         notificationCreator = new NotificationCreator(this);
-    }
-
-    private void setupAppBar() {
-        getSupportAppBar().setNavigationOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        navigate().upToParent();
-                    }
-                }
-        );
     }
 
     private void testSingleNotification() {

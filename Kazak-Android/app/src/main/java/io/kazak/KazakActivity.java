@@ -45,7 +45,17 @@ public abstract class KazakActivity extends AppCompatActivity {
         appbar = (Toolbar) findViewById(R.id.appbar);
         if (appbar != null) {
             setSupportActionBar(appbar);
+            appbar.setNavigationOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onAppbarNavigationClick();
+                }
+            });
         }
+    }
+
+    protected void onAppbarNavigationClick() {
+        navigate().upToParent();
     }
 
     @NonNull

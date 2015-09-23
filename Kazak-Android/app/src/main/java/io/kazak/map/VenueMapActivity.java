@@ -1,7 +1,6 @@
 package io.kazak.map;
 
 import android.os.Bundle;
-import android.view.View;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -22,19 +21,7 @@ public class VenueMapActivity extends KazakNavDrawerActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_venue_map);
-        setupAppBar();
         setupMap();
-    }
-
-    private void setupAppBar() {
-        getSupportAppBar().setNavigationOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        openNavigationDrawer();
-                    }
-                }
-        );
     }
 
     @Override
