@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/feedback_title"
+        style="@style/Feedback.Title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_marginBottom="16dp"
+        android:text="@string/your_feedback"/>
+
+    <ImageView
+        android:id="@+id/feedback_close"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        />
+
+    <TextView
+        android:id="@+id/feedback_rating"
+        style="@style/Feedback.Item"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/feedback_title"
+        android:layout_alignParentLeft="true"
+        android:layout_marginBottom="16dp"
+        android:text="@string/your_rating"/>
+
+    <RatingBar
+        android:id="@+id/feedback_rating_bar"
+        style="?android:attr/ratingBarStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_toRightOf="@id/feedback_rating"
+        android:layout_alignBottom="@id/feedback_rating"/>
+
+    <EditText
+        android:id="@+id/feedback_edittext"
+        style="@style/Feedback.Item"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/feedback_rating"
+        android:layout_marginBottom="16dp"
+        android:hint="@string/feedback"/>
+
+    <Button
+        android:id="@+id/feedback_send"
+        style="@style/Feedback.Button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/feedback_edittext"
+        android:text="@string/send_feedback"/>
+
+</RelativeLayout>

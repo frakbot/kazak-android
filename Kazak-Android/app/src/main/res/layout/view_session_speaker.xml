@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<io.kazak.session.view.SessionSpeakerView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/speaker_details"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/session_spacing_vertical">
+
+    <ImageView
+        android:id="@+id/avatar"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginRight="@dimen/session_spacing_horizontal"
+        tools:src="@drawable/ic_nav_schedule" />
+
+    <TextView
+        android:id="@+id/name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/avatar"
+        android:layout_alignParentTop="true"
+        android:fontFamily="sans-serif"
+        android:textSize="16sp"
+        android:textColor="#212121"
+        tools:text="Author name" />
+
+    <TextView
+        android:id="@+id/jobtitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/avatar"
+        android:layout_below="@id/name"
+        android:fontFamily="sans-serif-light"
+        android:textSize="14sp"
+        android:textColor="#de212121"
+        tools:text="Job title" />
+
+</io.kazak.session.view.SessionSpeakerView>

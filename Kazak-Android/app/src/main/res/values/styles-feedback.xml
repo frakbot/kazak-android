@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Feedback.Title" parent="None">
+        <item name="android:textColor">@color/text_dark_gray</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:fontFamily">sans-serif</item>
+    </style>
+
+    <style name="Feedback.Item" parent="None">
+        <item name="android:textColorHint">@color/text_light_gray</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:fontFamily">sans-serif</item>
+    </style>
+
+    <style name="Feedback.Button" parent="None">
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:background">@drawable/btn_feedback</item>
+    </style>
+</resources>

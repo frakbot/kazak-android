@@ -19,7 +19,7 @@ import io.kazak.model.Session;
 import io.kazak.model.Talk;
 import io.kazak.model.Track;
 import io.kazak.schedule.ScheduleActivity;
-import io.kazak.talk.TalkDetailsActivity;
+import io.kazak.session.SessionActivity;
 
 public class NotificationCreator {
 
@@ -125,8 +125,8 @@ public class NotificationCreator {
 
     private PendingIntent createPendingIntentForSingleSession(Id talkId) {
         TaskStackBuilder taskBuilder = createBaseTaskStackBuilder();
-        Intent talkDetailIntent = new Intent(context, TalkDetailsActivity.class);
-        talkDetailIntent.putExtra(TalkDetailsActivity.EXTRA_TALK_ID, talkId.toString());
+        Intent talkDetailIntent = new Intent(context, SessionActivity.class);
+        talkDetailIntent.putExtra(SessionActivity.EXTRA_SESSION_ID, talkId.toString());
         taskBuilder.addNextIntent(talkDetailIntent);
 
         return taskBuilder.getPendingIntent(0, PendingIntent.FLAG_CANCEL_CURRENT);

@@ -11,4 +11,10 @@
     <item name="android:statusBarColor" tools:ignore="NewApi">@color/color_status_bar_opaque</item>
   </style>
 
+  <style name="Theme.Kazak.Session" parent="Theme.AppCompat.Light.NoActionBar">
+    <item name="colorPrimary">@color/color_primary_session</item>
+    <item name="colorPrimaryDark">@color/color_primary_dark_session</item>
+    <item name="colorAccent">@color/color_primary_session</item>
+  </style>
+
 </resources>
