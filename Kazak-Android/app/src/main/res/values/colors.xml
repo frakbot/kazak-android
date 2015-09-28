@@ -15,6 +15,9 @@
   <color name="text_primary_dark_display">#8affffff</color>
   <color name="text_secondary">#8a000000</color>
 
+  <color name="text_dark_gray">#de212121</color>
+  <color name="text_light_gray">#66000000</color>
+
   <color name="selectable_pressed">#25000000</color>
 
   <color name="notification_led_color">@color/color_primary</color>

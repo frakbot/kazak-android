@@ -26,6 +26,8 @@ import android.content.Context;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -40,7 +42,8 @@ import io.kazak.model.Talk;
 
 public class SessionContentView extends LinearLayout {
 
-    private LinearLayout speakerContainer;
+    private FeedbackView feedbackView;
+    private ViewGroup speakersContainer;
     private TextView topics;
     private TextView description;
     private LayoutInflater layoutInflater;
@@ -57,6 +60,8 @@ public class SessionContentView extends LinearLayout {
     protected void onFinishInflate() {
         super.onFinishInflate();
 
+        feedbackView = (FeedbackView) findViewById(R.id.session_feedback);
+        speakersContainer = (ViewGroup) findViewById(R.id.session_speakers);
         topics = (TextView) findViewById(R.id.session_topics);
         description = (TextView) findViewById(R.id.session_description);
 
@@ -80,32 +85,34 @@ public class SessionContentView extends LinearLayout {
                 throw new DeveloperError("Session type not supported: "+session.type());
         }
 
-        updateWithSpeakers(speakers);
         topics.setText(session.name());
         description.setText(session.description());
+        updateWithSpeakers(speakers);
+        setupFeedbackCard();
     }
 
     private void updateWithSpeakers(@Nullable Speakers speakersObj){
-        // Remove speaker views if any.
-        for (int i = getChildCount() - 1; i >= 0; i--) {
-            if (getChildAt(i) instanceof SessionSpeakerView) {
-                removeViewAt(i);
-            }
-        }
+        speakersContainer.removeAllViews();
 
         if (speakersObj == null) {
+            speakersContainer.setVisibility(View.GONE);
             return;
         }
 
-        // Add speaker views if any.
         final List<Speaker> speakers = speakersObj.getSpeakers();
         for (int i = 0; i < speakers.size(); i++) {
             SessionSpeakerView speakerDetailsView =
                     (SessionSpeakerView) layoutInflater.inflate(
                             R.layout.view_session_speaker, this, false);
             speakerDetailsView.updateWith(speakers.get(i));
-            // Add the speakers in order at the top of this LinearLayout.
-            addView(speakerDetailsView, i);
+            speakersContainer.addView(speakerDetailsView);
         }
+        speakersContainer.setVisibility(View.VISIBLE);
+    }
+
+    private void setupFeedbackCard() {
+        // TODO: check if show the feedback card or post a
+        //       runnable when at the time it should be checked.
+        //feedbackView.setVisibility(View.VISIBLE);
     }
 }
