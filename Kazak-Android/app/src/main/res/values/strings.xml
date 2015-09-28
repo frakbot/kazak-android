@@ -23,4 +23,9 @@
     <item quantity="other">%d sessions are about to start.</item>
   </plurals>
 
+  <string name="your_feedback">Your feedback</string>
+  <string name="your_rating">Your rating</string>
+  <string name="feedback">Feedback</string>
+  <string name="send_feedback">SEND FEEDBACK</string>
+
 </resources>
