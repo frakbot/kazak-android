@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <dimen name="session_spacing_horizontal">16dp</dimen>
+  <dimen name="session_spacing_vertical">25dp</dimen>
+  <dimen name="session_fab_margins">16dp</dimen>
+</resources>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<io.kazak.session.view.SessionContentView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/session_content"
+    style="@style/Session"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:showIn="@layout/activity_session">
+
+    <io.kazak.session.view.FeedbackView
+        android:id="@+id/session_feedback"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/session_spacing_horizontal"
+        android:visibility="gone"/>
+
+    <LinearLayout
+        android:id="@+id/session_speakers"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone"/>
+
+    <TextView
+        android:id="@+id/session_topics"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:text="Topics!!!" />
+
+    <TextView
+        android:id="@+id/session_description"
+        style="@style/Session.Description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:text="Summary!!!" />
+
+</io.kazak.session.view.SessionContentView>

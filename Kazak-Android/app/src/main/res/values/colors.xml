@@ -6,11 +6,17 @@
   <color name="color_status_bar">#33000000</color>
   <color name="color_status_bar_opaque">#508022</color>
 
+  <color name="color_primary_session">#2cc0cd</color>
+  <color name="color_primary_dark_session">#2399a4</color>
+
   <color name="text_primary">#de000000</color>
   <color name="text_primary_display">#8a000000</color>
   <color name="text_primary_dark">#deffffff</color>
   <color name="text_primary_dark_display">#8affffff</color>
   <color name="text_secondary">#8a000000</color>
+
+  <color name="text_dark_gray">#de212121</color>
+  <color name="text_light_gray">#66000000</color>
 
   <color name="selectable_pressed">#25000000</color>
 
