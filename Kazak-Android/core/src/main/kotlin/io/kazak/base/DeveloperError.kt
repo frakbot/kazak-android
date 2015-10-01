@@ -1,12 +1,10 @@
 package io.kazak.base
 
-import java.lang
-
 public class DeveloperError : RuntimeException {
 
-    public constructor(cause: Throwable, message: String, vararg messageArgs: Any) : super(String.format(message, *messageArgs), cause)
+    public constructor(cause: Throwable, message: String, vararg messageArgs: Any) : super(format(message, *messageArgs), cause)
 
-    public constructor(message: String, vararg messageArgs: Any) : super(String.format(message, *messageArgs))
+    public constructor(message: String, vararg messageArgs: Any) : super(format(message, *messageArgs))
 
     public constructor(cause: Throwable) : super(cause)
 
@@ -14,5 +12,4 @@ public class DeveloperError : RuntimeException {
 
 }
 
-@Suppress("NOTHING_TO_INLINE")
-private inline fun String.Companion.format(format: String, vararg args: Any) = lang.String.format(format, args)
+private fun format(format: String, vararg args: Any): String = java.lang.String.format(format, args)
