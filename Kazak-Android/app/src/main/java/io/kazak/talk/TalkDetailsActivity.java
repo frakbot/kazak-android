@@ -6,8 +6,7 @@ import android.os.PersistableBundle;
 
 import io.kazak.BuildConfig;
 import io.kazak.KazakActivity;
-
-import static io.kazak.base.BasePackage.safeTrim;
+import io.kazak.base.StringUtilsKt;
 
 public class TalkDetailsActivity extends KazakActivity {
 
@@ -22,7 +21,7 @@ public class TalkDetailsActivity extends KazakActivity {
     }
 
     private String extractTalkIdFrom(Intent intent) {
-        return safeTrim(intent.getStringExtra(EXTRA_TALK_ID));
+        return StringUtilsKt.safeTrim(intent.getStringExtra(EXTRA_TALK_ID));
     }
 
     private void updateWith(String talkId) {

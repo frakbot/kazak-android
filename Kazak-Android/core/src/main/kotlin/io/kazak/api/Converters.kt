@@ -74,7 +74,7 @@ private fun asScheduleInternal(jsonTalks: List<JsonEvent>, asEvent: (JsonEvent) 
     val talks = jsonTalks.map {
         asEvent(it)
     }.filterNotNull().groupBy {
-        calendar.setTime(it.timeSlot().start)
+        calendar.time = it.timeSlot().start
         calendar.get(Calendar.DAY_OF_YEAR)
     }.map {
         val date = it.getValue().get(0).timeSlot().start // TODO: improve this

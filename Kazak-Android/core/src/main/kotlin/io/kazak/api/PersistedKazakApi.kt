@@ -29,6 +29,6 @@ public class PersistedKazakApi(val remoteApi: JsonKazakApi, val jsonRepository: 
                 .subscribeOn(Schedulers.io())
     }
 
-    private fun toJsonEvents(it: String): List<JsonEvent> = gson.fromJson(it, object : TypeToken<List<JsonEvent>>() {}.getType())
+    private fun toJsonEvents(it: String): List<JsonEvent> = gson.fromJson(it, object : TypeToken<List<JsonEvent>>() {}.type)
 
 }
