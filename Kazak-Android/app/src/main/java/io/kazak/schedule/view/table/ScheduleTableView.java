@@ -10,14 +10,12 @@ import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.View;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import io.kazak.R;
 import io.kazak.model.Event;
-import io.kazak.model.EventType;
 import io.kazak.model.Id;
 import io.kazak.model.Schedule;
 import io.kazak.schedule.view.EventViewType;
@@ -96,14 +94,7 @@ public class ScheduleTableView extends RecyclerView {
         if (schedule.getDays().isEmpty()) {
             return Collections.emptyList();
         } else {
-            final List<Event> events = schedule.getDays().get(0).getEvents();
-            List<Event> supportedEvents = new ArrayList<>();
-            for (Event event : events) {
-                if (event.type() == EventType.TALK || event.type() == EventType.COFFEE_BREAK || event.type() == EventType.CEREMONY) {
-                    supportedEvents.add(event);
-                }
-            }
-            return supportedEvents; //TODO
+            return schedule.getDays().get(0).getEvents(); //TODO
         }
     }
 

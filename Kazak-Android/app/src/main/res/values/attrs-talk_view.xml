@@ -22,6 +22,13 @@
     <attr name="android:drawablePadding" />
   </declare-styleable>
 
+  <declare-styleable name="PlaceHolderView">
+    <attr name="trackSymbolSize" />
+    <attr name="trackLineHeight" />
+    <attr name="trackLineCornerRadius" />
+    <attr name="drawableOpticalBalanceOffset" />
+    <attr name="android:drawablePadding" />
+  </declare-styleable>
 
   <attr name="talkViewDefaultStyle" format="reference" />
 

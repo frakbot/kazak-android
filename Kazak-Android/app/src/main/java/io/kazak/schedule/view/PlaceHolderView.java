@@ -22,10 +22,10 @@ import java.util.Locale;
 
 import io.kazak.R;
 import io.kazak.base.DeveloperError;
-import io.kazak.model.Ceremony;
+import io.kazak.model.Placeholder;
 import io.kazak.model.TimeSlot;
 
-public class CeremonyView extends ViewGroup {
+public class PlaceHolderView extends ViewGroup {
 
     private static final String TIMESLOT_BOUND_PATTERN = "HH:mm";
     private static final String TIMESLOT_TEMPLATE = "%1$s—%2$s";
@@ -41,24 +41,24 @@ public class CeremonyView extends ViewGroup {
     private TextView timeView;
     private TextView titleView;
 
-    public CeremonyView(Context context, AttributeSet attrs) {
+    public PlaceHolderView(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public CeremonyView(Context context, AttributeSet attrs, @AttrRes int defStyleAttr) {
+    public PlaceHolderView(Context context, AttributeSet attrs, @AttrRes int defStyleAttr) {
         this(context, attrs, defStyleAttr, R.style.CeremonyViewDefaultStyle);
     }
 
-    public CeremonyView(Context context, AttributeSet attrs, @AttrRes int defStyleAttr, @StyleRes int defStyleRes) {
+    public PlaceHolderView(Context context, AttributeSet attrs, @AttrRes int defStyleAttr, @StyleRes int defStyleRes) {
         super(context, attrs, defStyleAttr);
 
         dateFormat = new SimpleDateFormat(TIMESLOT_BOUND_PATTERN, Locale.UK);
         trackLineBounds = new RectF();
         trackBgPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 
-        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.CeremonyView, defStyleAttr, defStyleRes);
-        trackLineHeightPx = a.getDimensionPixelSize(R.styleable.CeremonyView_trackLineHeight, 0);
-        trackLineCornerRadiusPx = a.getDimensionPixelSize(R.styleable.CeremonyView_trackLineCornerRadius, 0);
+        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.PlaceHolderView, defStyleAttr, defStyleRes);
+        trackLineHeightPx = a.getDimensionPixelSize(R.styleable.PlaceHolderView_trackLineHeight, 0);
+        trackLineCornerRadiusPx = a.getDimensionPixelSize(R.styleable.PlaceHolderView_trackLineCornerRadius, 0);
         a.recycle();
 
         super.setWillNotDraw(false);
@@ -80,7 +80,7 @@ public class CeremonyView extends ViewGroup {
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
-        LayoutInflater.from(getContext()).inflate(R.layout.merge_schedule_ceremony_view_contents, this);
+        LayoutInflater.from(getContext()).inflate(R.layout.merge_schedule_placeholder_view_contents, this);
         timeView = (TextView) findViewById(R.id.session_time);
         titleView = (TextView) findViewById(R.id.session_title);
     }
@@ -176,7 +176,6 @@ public class CeremonyView extends ViewGroup {
         int clientLeft = left + getPaddingLeft();
         int clientTop = top + getPaddingTop();
         int clientRight = right - getPaddingRight();
-        int clientBottom = bottom - getPaddingBottom();
 
         // Layout first row: [TIME] --- [TRACK LABEL]? - [TRACK DRAWABLE]?
         int firstRowBottom = obtainFristRowBottomAndLayout(clientLeft, clientTop, clientRight, isLtr);
@@ -271,10 +270,10 @@ public class CeremonyView extends ViewGroup {
     }
 
     @UiThread
-    public void updateWith(Ceremony talk) {
+    public void updateWith(Placeholder placeholder) {
         // TODO delegate to custom views
-        updateTimeWith(talk.timeSlot());
-        updateTitleWith(talk.name());
+        updateTimeWith(placeholder.timeSlot());
+        updateTitleWith(placeholder.name());
     }
 
 

@@ -15,6 +15,7 @@ import io.kazak.model.CoffeeBreak;
 import io.kazak.model.Event;
 import io.kazak.model.EventType;
 import io.kazak.model.Id;
+import io.kazak.model.Placeholder;
 import io.kazak.model.Room;
 import io.kazak.model.Speaker;
 import io.kazak.model.Speakers;
@@ -27,9 +28,7 @@ public enum EventViewType {
     TALK(R.layout.view_schedule_talk_card, false, createMaxHeightTalk()),
     COFFEE_BREAK(R.layout.view_schedule_coffee_break_card, false, createMaxHeightCoffeeBreak()),
     CEREMONY(R.layout.view_schedule_ceremony_card, false, createMaxHeightCeremony()),
-    /*,
-    //TODO add layouts for all event types
-    PLACEHOLDER(...)*/;
+    PLACEHOLDER(R.layout.view_schedule_placeholder_card, false, createMaxHeightPlaceholder());
 
     private static final Id NO_ID = new Id("");
     private static final String DUMMY_NAME = "1\n2\n3";
@@ -117,6 +116,24 @@ public enum EventViewType {
                 Date start = new Date();
                 Date end = new Date(start.getTime() + timeSlotDurationMilliseconds);
                 return new Ceremony(
+                        NO_ID,
+                        DUMMY_NAME,
+                        DUMMY_DESCRIPTION,
+                        new TimeSlot(start, end),
+                        Collections.singletonList(new Room(NO_ID, "Room"))
+                );
+            }
+        };
+    }
+
+    @NonNull
+    private static Func1<Integer, Placeholder> createMaxHeightPlaceholder() {
+        return new Func1<Integer, Placeholder>() {
+            @Override
+            public Placeholder call(@NonNull Integer timeSlotDurationMilliseconds) {
+                Date start = new Date();
+                Date end = new Date(start.getTime() + timeSlotDurationMilliseconds);
+                return new Placeholder(
                         NO_ID,
                         DUMMY_NAME,
                         DUMMY_DESCRIPTION,

@@ -26,6 +26,8 @@
 
   <style name="Schedule.Card.Ceremony" />
 
+  <style name="Schedule.Card.Placeholder" />
+
   <!--Coffee break-->
   <style name="Schedule.Card.CoffeeBreak.Content" parent="None">
     <item name="android:paddingStart">@dimen/session_card_padding_horizontal</item>
@@ -40,11 +42,31 @@
   <style name="Schedule.Card.CoffeeBreak.Title" parent="Schedule.Card.Talk.Title" />
 
   <!--Ceremony-->
-  <style name="Schedule.Card.Ceremony.Content" parent="Schedule.Card.Talk.Content" />
+  <style name="Schedule.Card.Ceremony.Content" parent="None">
+    <item name="android:paddingStart">@dimen/session_card_padding_horizontal</item>
+    <item name="android:paddingTop">@dimen/session_card_padding_vertical</item>
+    <item name="android:paddingEnd">@dimen/session_card_padding_horizontal</item>
+    <item name="android:paddingBottom">@dimen/session_card_padding_vertical</item>
+    <item name="android:drawablePadding">@dimen/session_card_track_drawable_padding</item>
+  </style>
 
   <style name="Schedule.Card.Ceremony.Time" parent="Schedule.Card.Talk.Time" />
 
   <style name="Schedule.Card.Ceremony.Title" parent="Schedule.Card.Talk.Title" />
+
+  <!--Placeholder-->
+  <style name="Schedule.Card.Placeholder.Content" parent="None">
+    <item name="android:paddingStart">@dimen/session_card_padding_horizontal</item>
+    <item name="android:paddingTop">@dimen/session_card_padding_vertical</item>
+    <item name="android:paddingEnd">@dimen/session_card_padding_horizontal</item>
+    <item name="android:paddingBottom">@dimen/session_card_padding_vertical</item>
+    <item name="android:drawablePadding">@dimen/session_card_track_drawable_padding</item>
+  </style>
+
+  <style name="Schedule.Card.Placeholder.Time" parent="Schedule.Card.Talk.Time" />
+
+  <style name="Schedule.Card.Placeholder.Title" parent="Schedule.Card.Talk.Title" />
+
 
   <!--Talk-->
   <style name="Schedule.Card.Talk.Content" parent="None">
