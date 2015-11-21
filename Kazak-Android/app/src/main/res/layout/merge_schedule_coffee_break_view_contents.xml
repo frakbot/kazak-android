@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent">
+
+  <TextView
+    android:id="@+id/session_time"
+    style="@style/Schedule.Card.Talk.Time"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    tools:text="12:10—12:45" />
+
+  <TextView
+    android:id="@+id/track_label"
+    style="@style/Schedule.Card.Talk.Track"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    tools:text="CODE QUALITY" />
+
+  <TextView
+    android:id="@+id/session_title"
+    style="@style/Schedule.Card.Talk.Title"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:text="Jump around, or how the animation system works in Android" />
+
+</merge>
+

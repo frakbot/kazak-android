@@ -10,6 +10,7 @@ import java.util.List;
 
 import io.kazak.R;
 import io.kazak.base.DeveloperError;
+import io.kazak.model.CoffeeBreak;
 import io.kazak.model.Event;
 import io.kazak.model.EventType;
 import io.kazak.model.Id;
@@ -22,10 +23,11 @@ import rx.functions.Func1;
 
 public enum EventViewType {
 
-    TALK(R.layout.view_schedule_talk_card, false, createMaxHeightTalk())/*,
+    TALK(R.layout.view_schedule_talk_card, false, createMaxHeightTalk()),
+    COFFEE_BREAK(R.layout.view_schedule_coffee_break_card, false, createMaxHeightCoffeeBreak()),
+    /*,
     //TODO add layouts for all event types
     CEREMONY(...),
-    COFFEE_BREAK(...),
     PLACEHOLDER(...)*/;
 
     private static final Id NO_ID = new Id("");
@@ -88,6 +90,18 @@ public enum EventViewType {
                         Collections.singletonList(new Room(NO_ID, "Room")),
                         new Speakers(speakerList),
                         null);
+            }
+        };
+    }
+
+    @NonNull
+    private static Func1<Integer, CoffeeBreak> createMaxHeightCoffeeBreak() {
+        return new Func1<Integer, CoffeeBreak>() {
+            @Override
+            public CoffeeBreak call(@NonNull Integer timeSlotDurationMilliseconds) {
+                Date start = new Date();
+                Date end = new Date(start.getTime() + timeSlotDurationMilliseconds);
+                return new CoffeeBreak(NO_ID, "1\n2\n3", "description", new TimeSlot(start, end));
             }
         };
     }

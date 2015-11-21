@@ -20,6 +20,7 @@
   </style>
 
   <style name="Schedule.Card.Talk" />
+  <style name="Schedule.Card.CoffeeBreak" />
 
   <style name="Schedule.Card.Talk.Content" parent="None">
     <item name="android:paddingStart">@dimen/session_card_padding_horizontal</item>
