@@ -1,13 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+  <attr name="trackSymbolSize" format="dimension|reference" />
+  <attr name="trackLineHeight" format="dimension|reference" />
+  <attr name="trackLineCornerRadius" format="dimension|reference" />
+  <attr name="drawableOpticalBalanceOffset" format="dimension|reference" />
+
   <declare-styleable name="TalkView">
-    <attr name="trackSymbolSize" format="dimension|reference" />
-    <attr name="trackLineHeight" format="dimension|reference" />
-    <attr name="trackLineCornerRadius" format="dimension|reference" />
-    <attr name="drawableOpticalBalanceOffset" format="dimension|reference" />
+    <attr name="trackSymbolSize"/>
+    <attr name="trackLineHeight" />
+    <attr name="trackLineCornerRadius" />
+    <attr name="drawableOpticalBalanceOffset" />
     <attr name="android:drawablePadding" />
   </declare-styleable>
+
+  <declare-styleable name="CeremonyView">
+    <attr name="trackSymbolSize" />
+    <attr name="trackLineHeight" />
+    <attr name="trackLineCornerRadius"  />
+    <attr name="drawableOpticalBalanceOffset" />
+    <attr name="android:drawablePadding" />
+  </declare-styleable>
+
 
   <attr name="talkViewDefaultStyle" format="reference" />
 

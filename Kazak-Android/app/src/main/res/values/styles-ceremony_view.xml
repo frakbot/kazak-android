@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+  <style name="CeremonyViewDefaultStyle">
+    <item name="trackSymbolSize">@dimen/talk_view_default_track_symbol_size</item>
+    <item name="drawableOpticalBalanceOffset">@dimen/talk_view_default_optical_balance_offset</item>
+    <item name="android:drawablePadding">@dimen/talk_view_default_track_drawable_padding</item>
+  </style>
+
+</resources>

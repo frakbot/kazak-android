@@ -6,18 +6,18 @@
 
   <TextView
     android:id="@+id/session_time"
-    style="@style/Schedule.Card.CoffeeBreak.Time"
+    style="@style/Schedule.Card.Ceremony.Time"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     tools:text="12:10—12:45" />
 
-
   <TextView
     android:id="@+id/session_title"
-    style="@style/Schedule.Card.CoffeeBreak.Title"
+    style="@style/Schedule.Card.Ceremony.Title"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     tools:text="Jump around, or how the animation system works in Android" />
+
 
 </merge>
 

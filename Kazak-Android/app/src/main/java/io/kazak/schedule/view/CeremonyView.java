@@ -1,6 +1,12 @@
 package io.kazak.schedule.view;
 
 import android.content.Context;
+import android.content.res.TypedArray;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.Rect;
+import android.graphics.RectF;
+import android.graphics.Region;
 import android.support.annotation.AttrRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.StyleRes;
@@ -17,10 +23,10 @@ import java.util.Locale;
 
 import io.kazak.R;
 import io.kazak.base.DeveloperError;
-import io.kazak.model.CoffeeBreak;
+import io.kazak.model.Ceremony;
 import io.kazak.model.TimeSlot;
 
-public class CoffeeBreakView extends ViewGroup {
+public class CeremonyView extends ViewGroup {
 
     private static final String TIMESLOT_BOUND_PATTERN = "HH:mm";
     private static final String TIMESLOT_TEMPLATE = "%1$s—%2$s";
@@ -28,21 +34,35 @@ public class CoffeeBreakView extends ViewGroup {
 
     private final DateFormat dateFormat;
 
+    private final Rect trackDrawableBounds;
+    private final Paint trackBgPaint;
+    private final RectF trackLineBounds;
+    private final int trackLineHeightPx;
+    private final int trackLineCornerRadiusPx;
+
     private TextView timeView;
     private TextView titleView;
 
-    public CoffeeBreakView(Context context, AttributeSet attrs) {
+    public CeremonyView(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public CoffeeBreakView(Context context, AttributeSet attrs, @AttrRes int defStyleAttr) {
-        this(context, attrs, defStyleAttr, R.style.CoffeeBreakViewDefaultStyle);
+    public CeremonyView(Context context, AttributeSet attrs, @AttrRes int defStyleAttr) {
+        this(context, attrs, defStyleAttr, R.style.CeremonyViewDefaultStyle);
     }
 
-    public CoffeeBreakView(Context context, AttributeSet attrs, @AttrRes int defStyleAttr, @StyleRes int defStyleRes) {
+    public CeremonyView(Context context, AttributeSet attrs, @AttrRes int defStyleAttr, @StyleRes int defStyleRes) {
         super(context, attrs, defStyleAttr);
 
         dateFormat = new SimpleDateFormat(TIMESLOT_BOUND_PATTERN, Locale.UK);
+        trackDrawableBounds = new Rect();
+        trackLineBounds = new RectF();
+        trackBgPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+
+        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.CeremonyView, defStyleAttr, defStyleRes);
+        trackLineHeightPx = a.getDimensionPixelSize(R.styleable.CeremonyView_trackLineHeight, 0);
+        trackLineCornerRadiusPx = a.getDimensionPixelSize(R.styleable.CeremonyView_trackLineCornerRadius, 0);
+        a.recycle();
 
         super.setWillNotDraw(false);
         super.setClipToPadding(false);
@@ -63,8 +83,7 @@ public class CoffeeBreakView extends ViewGroup {
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
-        LayoutInflater.from(getContext()).inflate(R.layout.merge_schedule_coffee_break_view_contents, this);
-
+        LayoutInflater.from(getContext()).inflate(R.layout.merge_schedule_ceremony_view_contents, this);
         timeView = (TextView) findViewById(R.id.session_time);
         titleView = (TextView) findViewById(R.id.session_title);
     }
@@ -113,6 +132,8 @@ public class CoffeeBreakView extends ViewGroup {
         measureChildWithMargins(timeView, availableWidth);
     }
 
+
+
     private void measureChildWithMargins(@NonNull View child, int availableWidth) {
         int maxChildWidth = availableWidth - getHorizontalMarginsFor(child);
         int widthMeasureSpec = MeasureSpec.makeMeasureSpec(maxChildWidth, MeasureSpec.AT_MOST);
@@ -158,16 +179,18 @@ public class CoffeeBreakView extends ViewGroup {
         int clientLeft = left + getPaddingLeft();
         int clientTop = top + getPaddingTop();
         int clientRight = right - getPaddingRight();
+        int clientBottom = bottom - getPaddingBottom();
 
         // Layout first row: [TIME] --- [TRACK LABEL]? - [TRACK DRAWABLE]?
-        int firstRowBottom = obtainFirstRowBottomAndLayout(clientLeft, clientTop, clientRight, isLtr);
+        int firstRowBottom = obtainFristRowBottomAndLayout(clientLeft, clientTop, clientRight, isLtr);
 
         // Measure the second row of content: [TITLE]
         layoutSecondRow(clientLeft, clientRight, firstRowBottom);
 
+        updateTrackLineBounds();
     }
 
-    private int obtainFirstRowBottomAndLayout(int clientLeft, int clientTop, int clientRight, boolean isLtr) {
+    private int obtainFristRowBottomAndLayout(int clientLeft, int clientTop, int clientRight, boolean isLtr) {
         int timeLeft;
         int timeTop = clientTop + getTopMarginFor(timeView);
         int timeRight;
@@ -175,11 +198,9 @@ public class CoffeeBreakView extends ViewGroup {
         int timeHeight = timeView.getMeasuredHeight();
 
         if (isLtr) {
-            // [TIME]---[TRACK LABEL]?-[TRACK DRAWABLE]?
             timeLeft = clientLeft + getLeftMarginFor(timeView);
             timeRight = Math.min(timeLeft + timeMeasuredWidth, clientRight - getRightMarginFor(timeView));
         } else {
-            // [TRACK DRAWABLE]?-[TRACK LABEL]?---[TIME]
             timeRight = clientRight + getRightMarginFor(timeView);
             timeLeft = Math.max(timeRight - timeMeasuredWidth, clientLeft + getLeftMarginFor(timeView));
         }
@@ -231,12 +252,35 @@ public class CoffeeBreakView extends ViewGroup {
         return getLayoutDirection() == LAYOUT_DIRECTION_LTR;
     }
 
-    @UiThread
-    public void updateWith(CoffeeBreak coffeeBreak) {
-        // TODO delegate to custom views
-        updateTimeWith(coffeeBreak.timeSlot());
-        updateTitleWith(coffeeBreak.name());
+    private void updateTrackLineBounds() {
+        // The bounds are double the line height so that we can draw the bottom half of
+        // the line outside of the clip path we define in onDraw(), to hide the bottom
+        // rounded corners for the track line and pretend it only has them on the top edge
+        trackLineBounds.set(0f, 0f, (float) getWidth(), trackLineHeightPx * 2);
     }
+
+    @Override
+    protected void onDraw(Canvas canvas) {
+        drawTrackLineOn(canvas);
+        super.onDraw(canvas);
+    }
+
+    private void drawTrackLineOn(Canvas canvas) {
+        canvas.save();
+        // This is to hide the bottom edge's rounded corners
+        canvas.clipRect(0f, 0f, getWidth(), trackLineHeightPx, Region.Op.INTERSECT);
+        canvas.drawRoundRect(trackLineBounds, trackLineCornerRadiusPx, trackLineCornerRadiusPx, trackBgPaint);
+        canvas.restore();
+    }
+
+    @UiThread
+    public void updateWith(Ceremony talk) {
+        // TODO delegate to custom views
+        updateTimeWith(talk.timeSlot());
+        updateTitleWith(talk.name());
+    }
+
+
 
     private void updateTimeWith(TimeSlot timeSlot) {
         String startTime = dateFormat.format(timeSlot.getStart());
@@ -247,5 +291,6 @@ public class CoffeeBreakView extends ViewGroup {
     private void updateTitleWith(String talkName) {
         titleView.setText(talkName);
     }
+
 
 }

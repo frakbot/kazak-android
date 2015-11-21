@@ -99,7 +99,7 @@ public class ScheduleTableView extends RecyclerView {
             final List<Event> events = schedule.getDays().get(0).getEvents();
             List<Event> supportedEvents = new ArrayList<>();
             for (Event event : events) {
-                if (event.type() == EventType.TALK || event.type() == EventType.COFFEE_BREAK) {
+                if (event.type() == EventType.TALK || event.type() == EventType.COFFEE_BREAK || event.type() == EventType.CEREMONY) {
                     supportedEvents.add(event);
                 }
             }

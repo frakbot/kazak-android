@@ -10,6 +10,7 @@ import java.util.List;
 
 import io.kazak.R;
 import io.kazak.base.DeveloperError;
+import io.kazak.model.Ceremony;
 import io.kazak.model.CoffeeBreak;
 import io.kazak.model.Event;
 import io.kazak.model.EventType;
@@ -25,12 +26,14 @@ public enum EventViewType {
 
     TALK(R.layout.view_schedule_talk_card, false, createMaxHeightTalk()),
     COFFEE_BREAK(R.layout.view_schedule_coffee_break_card, false, createMaxHeightCoffeeBreak()),
+    CEREMONY(R.layout.view_schedule_ceremony_card, false, createMaxHeightCeremony()),
     /*,
     //TODO add layouts for all event types
-    CEREMONY(...),
     PLACEHOLDER(...)*/;
 
     private static final Id NO_ID = new Id("");
+    private static final String DUMMY_NAME = "1\n2\n3";
+    private static final String DUMMY_DESCRIPTION = "description";
 
     @NonNull
     public static EventViewType valueOf(@NonNull Event event) {
@@ -84,7 +87,7 @@ public enum EventViewType {
                 List<Speaker> speakerList = Arrays.asList(createDummySpeaker("Speaker1"), createDummySpeaker("Speaker2"));
                 return new Talk(
                         NO_ID,
-                        "1\n2\n3",
+                        DUMMY_NAME,
                         "description",
                         new TimeSlot(start, end),
                         Collections.singletonList(new Room(NO_ID, "Room")),
@@ -101,7 +104,25 @@ public enum EventViewType {
             public CoffeeBreak call(@NonNull Integer timeSlotDurationMilliseconds) {
                 Date start = new Date();
                 Date end = new Date(start.getTime() + timeSlotDurationMilliseconds);
-                return new CoffeeBreak(NO_ID, "1\n2\n3", "description", new TimeSlot(start, end));
+                return new CoffeeBreak(NO_ID, DUMMY_NAME, DUMMY_DESCRIPTION, new TimeSlot(start, end));
+            }
+        };
+    }
+
+    @NonNull
+    private static Func1<Integer, Ceremony> createMaxHeightCeremony() {
+        return new Func1<Integer, Ceremony>() {
+            @Override
+            public Ceremony call(@NonNull Integer timeSlotDurationMilliseconds) {
+                Date start = new Date();
+                Date end = new Date(start.getTime() + timeSlotDurationMilliseconds);
+                return new Ceremony(
+                        NO_ID,
+                        DUMMY_NAME,
+                        DUMMY_DESCRIPTION,
+                        new TimeSlot(start, end),
+                        Collections.singletonList(new Room(NO_ID, "Room"))
+                );
             }
         };
     }

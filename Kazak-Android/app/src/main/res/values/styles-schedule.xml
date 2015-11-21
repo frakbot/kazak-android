@@ -4,14 +4,14 @@
   <style name="Schedule" parent="None" />
 
   <style name="Schedule.Toolbar" parent="None">
-    <item name="android:minHeight" tools:ignore="PrivateResource">?attr/actionBarSize</item>
+    <item tools:ignore="PrivateResource" name="android:minHeight">?attr/actionBarSize</item>
     <item name="navigationIcon">@drawable/ic_menu_24dp</item>
   </style>
 
   <style name="Schedule.ToolbarWrapper" parent="None">
     <item name="android:orientation">vertical</item>
-    <item name="android:background" tools:ignore="PrivateResource">?attr/colorPrimary</item>
-    <item name="android:elevation" tools:ignore="NewApi">@dimen/schedule_toolbar_wrapper_elevation</item>
+    <item tools:ignore="PrivateResource" name="android:background">?attr/colorPrimary</item>
+    <item tools:ignore="NewApi" name="android:elevation">@dimen/schedule_toolbar_wrapper_elevation</item>
   </style>
 
   <style name="Schedule.Card" parent="CardView">
@@ -19,9 +19,34 @@
     <item name="cardCornerRadius">@dimen/session_card_corner_radius</item>
   </style>
 
+  <!--Event card style-->
   <style name="Schedule.Card.Talk" />
+
   <style name="Schedule.Card.CoffeeBreak" />
 
+  <style name="Schedule.Card.Ceremony" />
+
+  <!--Coffee break-->
+  <style name="Schedule.Card.CoffeeBreak.Content" parent="None">
+    <item name="android:paddingStart">@dimen/session_card_padding_horizontal</item>
+    <item name="android:paddingTop">@dimen/session_card_padding_vertical</item>
+    <item name="android:paddingEnd">@dimen/session_card_padding_horizontal</item>
+    <item name="android:paddingBottom">@dimen/session_card_padding_vertical</item>
+    <item name="android:drawablePadding">@dimen/session_card_track_drawable_padding</item>
+  </style>
+
+  <style name="Schedule.Card.CoffeeBreak.Time" parent="Schedule.Card.Talk.Time" />
+
+  <style name="Schedule.Card.CoffeeBreak.Title" parent="Schedule.Card.Talk.Title" />
+
+  <!--Ceremony-->
+  <style name="Schedule.Card.Ceremony.Content" parent="Schedule.Card.Talk.Content" />
+
+  <style name="Schedule.Card.Ceremony.Time" parent="Schedule.Card.Talk.Time" />
+
+  <style name="Schedule.Card.Ceremony.Title" parent="Schedule.Card.Talk.Title" />
+
+  <!--Talk-->
   <style name="Schedule.Card.Talk.Content" parent="None">
     <item name="android:paddingStart">@dimen/session_card_padding_horizontal</item>
     <item name="android:paddingTop">@dimen/session_card_padding_vertical</item>
@@ -93,7 +118,7 @@
   <style name="Schedule.Ruler.Time" parent="None" />
 
   <style name="Schedule.Ruler.Rooms" parent="None">
-    <item name="android:elevation" tools:ignore="NewApi">@dimen/schedule_ruler_rooms_elevation</item>
+    <item tools:ignore="NewApi" name="android:elevation">@dimen/schedule_ruler_rooms_elevation</item>
     <item name="android:background">@color/rooms_ruler_color</item>
     <item name="tickSize">@dimen/schedule_ruler_rooms_ticks_size</item>
     <item name="orientation">vertical</item>
