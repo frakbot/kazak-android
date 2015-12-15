@@ -59,15 +59,18 @@ public class SessionSpeakerView extends RelativeLayout {
     }
 
     public void updateWith(Speaker speaker) {
-        final URI speakerPic = speaker.getPic();
+        setSpeakerPicture(speaker.getPic());
+        name.setText(speaker.getName());
+        // TODO: set job title.
+        jobTitle.setText(speaker.getCompany());
+    }
+
+    private void setSpeakerPicture(URI speakerPic) {
         //TODO: Provide placeholder
         if (speakerPic != null) {
             imageLoader.load(speakerPic.toString(), avatar);
         } else {
             avatar.setImageResource(R.drawable.ic_nav_schedule);
         }
-        name.setText(speaker.getName());
-        // TODO: set job title.
-        jobTitle.setText(speaker.getCompany());
     }
 }

@@ -117,13 +117,13 @@ public class SessionActivity extends KazakActivity {
         sessionContentView.updateWith(session);
     }
 
-    private void updateFavouriteFabIcon(boolean isFavorite) {
-        if (isFavorite) {
-            favouriteFab.setImageResource(R.drawable.ic_star_filled_20dp);
-        } else {
-            // TODO: the current empty is gray instead of white, not very visible
-            favouriteFab.setImageResource(R.drawable.ic_star_empty_20dp);
-        }
+    private void showFavoriteIconOn() {
+        favouriteFab.setImageResource(R.drawable.ic_star_filled_20dp);
+    }
+
+    private void showNotFavoriteIconOn() {
+        // TODO: the current empty is gray instead of white, not very visible
+        favouriteFab.setImageResource(R.drawable.ic_star_empty_20dp);
     }
 
     private void subscribeToSession(Id sessionId) {
@@ -140,7 +140,7 @@ public class SessionActivity extends KazakActivity {
         );
         subscriptions.add(
                 dataRepository.getFavoriteIds()
-                        .map(asFavouriteBoolean(sessionId))
+                        .map(asFavoriteBoolean(sessionId))
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(new FavouriteObserver())
         );
@@ -172,7 +172,7 @@ public class SessionActivity extends KazakActivity {
         };
     }
 
-    private Func1<List<? extends Id>, Boolean> asFavouriteBoolean(final Id sessionId) {
+    private Func1<List<? extends Id>, Boolean> asFavoriteBoolean(final Id sessionId) {
         return new Func1<List<? extends Id>, Boolean>() {
             @Override
             public Boolean call(List<? extends Id> ids) {
@@ -218,7 +218,11 @@ public class SessionActivity extends KazakActivity {
 
         @Override
         public void onNext(Boolean isFavorite) {
-            updateFavouriteFabIcon(isFavorite);
+            if (isFavorite) {
+                showFavoriteIconOn();
+            } else {
+                showNotFavoriteIconOn();
+            }
         }
 
     }
