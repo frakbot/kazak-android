@@ -106,7 +106,6 @@ public class SessionActivity extends KazakActivity {
         switch (item.getItemId()) {
             case R.id.session_map:
                 navigate().toVenueMap();
-
             default:
                 return super.onOptionsItemSelected(item);
         }

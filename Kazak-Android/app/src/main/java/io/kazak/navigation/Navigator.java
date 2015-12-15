@@ -8,7 +8,6 @@ import android.support.annotation.NonNull;
 import io.kazak.DebugActivity;
 import io.kazak.map.VenueMapActivity;
 import io.kazak.model.Id;
-import io.kazak.model.Session;
 import io.kazak.schedule.ScheduleActivity;
 import io.kazak.session.SessionActivity;
 import io.kazak.settings.SettingsActivity;

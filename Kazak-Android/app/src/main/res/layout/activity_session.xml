@@ -42,8 +42,8 @@
         android:id="@+id/session_favorite_fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="right|bottom"
-        android:layout_marginRight="@dimen/session_fab_margins"
+        android:layout_gravity="end|bottom"
+        android:layout_marginEnd="@dimen/session_fab_margins"
         android:layout_marginBottom="@dimen/session_fab_margins" />
 
 </android.support.design.widget.CoordinatorLayout>
