@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2015, Facebook, Inc.  All rights reserved.
- *
+ * <p/>
  * Facebook, Inc. (“Facebook”) owns all right, title and interest, including all intellectual
  * property and other proprietary rights, in and to its contributions to the Droidcon App software
  * (the “Contributions”). Subject to your compliance with these terms, you are hereby granted a
@@ -9,7 +9,7 @@
  * provided Your Software does not consist solely of the Contributions; and
  * (3) modify the Contributions for your own internal use.
  * Facebook reserves all rights not expressly granted to you in this license agreement.
- *
+ * <p/>
  * THE CONTRIBUTIONS AND DOCUMENTATION, IF ANY, ARE PROVIDED "AS IS" AND ANY EXPRESS OR IMPLIED
  * WARRANTIES (INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
  * FOR A PARTICULAR PURPOSE) ARE DISCLAIMED. IN NO EVENT SHALL FACEBOOK OR ITS AFFILIATES, OFFICERS,
@@ -33,6 +33,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import javax.inject.Inject;
+import java.util.List;
 
 import io.kazak.BuildConfig;
 import io.kazak.KazakActivity;
@@ -44,7 +45,6 @@ import io.kazak.model.Session;
 import io.kazak.repository.DataRepository;
 import io.kazak.repository.event.SyncEvent;
 import io.kazak.session.view.SessionContentView;
-import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Func1;
 import rx.subscriptions.CompositeSubscription;
@@ -106,7 +106,6 @@ public class SessionActivity extends KazakActivity {
         switch (item.getItemId()) {
             case R.id.session_map:
                 navigate().toVenueMap();
-
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -115,11 +114,13 @@ public class SessionActivity extends KazakActivity {
     private void updateWith(Session session) {
         titleView.setText(session.name());
         sessionContentView.updateWith(session);
-        updateFavouriteFab();
     }
 
-    private void updateFavouriteFab() {
-        // TODO: needs code to hookup the fab with the backend
+    private void showFavoriteIconOn() {
+        favouriteFab.setImageResource(R.drawable.ic_star_filled_20dp);
+    }
+
+    private void showNotFavoriteIconOn() {
         // TODO: the current empty is gray instead of white, not very visible
         favouriteFab.setImageResource(R.drawable.ic_star_empty_20dp);
     }
@@ -136,6 +137,13 @@ public class SessionActivity extends KazakActivity {
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(new SyncEventObserver())
         );
+        subscriptions.add(
+                dataRepository.getFavoriteIds()
+                        .map(asFavoriteBoolean(sessionId))
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new FavouriteObserver())
+        );
+
     }
 
     private void showErrorSnackbar() {
@@ -163,17 +171,21 @@ public class SessionActivity extends KazakActivity {
         };
     }
 
-    private class SessionObserver implements Observer<Session> {
+    private Func1<List<? extends Id>, Boolean> asFavoriteBoolean(final Id sessionId) {
+        return new Func1<List<? extends Id>, Boolean>() {
+            @Override
+            public Boolean call(List<? extends Id> ids) {
+                for (Id id : ids) {
+                    if (id.getId().equals(sessionId.getId())) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+        };
+    }
 
-        @Override
-        public void onCompleted() {
-            // No-op
-        }
-
-        @Override
-        public void onError(Throwable e) {
-            throw new IllegalStateException(e);
-        }
+    private class SessionObserver extends SimpleObserver<Session> {
 
         @Override
         public void onNext(Session session) {
@@ -181,17 +193,7 @@ public class SessionActivity extends KazakActivity {
         }
     }
 
-    private class SyncEventObserver implements Observer<SyncEvent> {
-
-        @Override
-        public void onCompleted() {
-            // Ignore
-        }
-
-        @Override
-        public void onError(Throwable e) {
-            throw new IllegalStateException(e);
-        }
+    private class SyncEventObserver extends SimpleObserver<SyncEvent> {
 
         @Override
         public void onNext(SyncEvent syncEvent) {
@@ -210,4 +212,18 @@ public class SessionActivity extends KazakActivity {
             }
         }
     }
+
+    private class FavouriteObserver extends SimpleObserver<Boolean> {
+
+        @Override
+        public void onNext(Boolean isFavorite) {
+            if (isFavorite) {
+                showFavoriteIconOn();
+            } else {
+                showNotFavoriteIconOn();
+            }
+        }
+
+    }
+
 }

@@ -27,5 +27,6 @@
   <string name="your_rating">Your rating</string>
   <string name="feedback">Feedback</string>
   <string name="send_feedback">SEND FEEDBACK</string>
+  <string name="close">Close</string>
 
 </resources>

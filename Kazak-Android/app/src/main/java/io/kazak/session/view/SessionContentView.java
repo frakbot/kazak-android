@@ -39,6 +39,7 @@ import io.kazak.model.Session;
 import io.kazak.model.Speaker;
 import io.kazak.model.Speakers;
 import io.kazak.model.Talk;
+import io.kazak.session.view.speaker.SessionSpeakerView;
 
 public class SessionContentView extends LinearLayout {
 

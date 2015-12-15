@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<io.kazak.session.view.SessionSpeakerView
+<io.kazak.session.view.speaker.SessionSpeakerView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/speaker_details"
@@ -36,4 +36,4 @@
         android:textColor="#de212121"
         tools:text="Job title" />
 
-</io.kazak.session.view.SessionSpeakerView>
+</io.kazak.session.view.speaker.SessionSpeakerView>
