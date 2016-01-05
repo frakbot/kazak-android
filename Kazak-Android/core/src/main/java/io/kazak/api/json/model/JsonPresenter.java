@@ -7,12 +7,18 @@ import org.jetbrains.annotations.Nullable;
 
 public class JsonPresenter {
 
-    @Nullable public final String id;
-    @Nullable public final String name;
-    @Nullable public final String company;
-    @Nullable public final String bio;
-    @Nullable public final URI pic;
-    @Nullable public final List<String> social;
+    @Nullable
+    public final String id;
+    @Nullable
+    public final String name;
+    @Nullable
+    public final String company;
+    @Nullable
+    public final String bio;
+    @Nullable
+    public final URI pic;
+    @Nullable
+    public final List<String> social;
 
     public JsonPresenter(
             @Nullable String id,

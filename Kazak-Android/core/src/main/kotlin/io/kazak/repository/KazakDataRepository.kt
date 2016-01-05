@@ -1,7 +1,12 @@
 package io.kazak.repository
 
 import io.kazak.api.KazakApi
-import io.kazak.model.*
+import io.kazak.model.Event
+import io.kazak.model.FavoriteSessions
+import io.kazak.model.FavoriteStatus
+import io.kazak.model.Id
+import io.kazak.model.Schedule
+import io.kazak.model.Session
 import io.kazak.repository.event.SyncEvent
 import io.kazak.repository.event.SyncState
 import rx.Observable
@@ -42,10 +47,10 @@ public class KazakDataRepository(val api: KazakApi, val favoritesRepository: Fav
         return getFavoriteIds()
                 .flatMap {
                     Observable.from(it)
-                        .flatMap { getEvent(it) }
-                        .filter { it.type().canBeFavorite() }
-                        .cast(Session::class.java)
-                        .toList()
+                            .flatMap { getEvent(it) }
+                            .filter { it.type().canBeFavorite() }
+                            .cast(Session::class.java)
+                            .toList()
                 }
     }
 

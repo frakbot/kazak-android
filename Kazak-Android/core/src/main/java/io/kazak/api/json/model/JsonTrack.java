@@ -4,9 +4,12 @@ import org.jetbrains.annotations.Nullable;
 
 public class JsonTrack {
 
-    @Nullable public final String id;
-    @Nullable public final String name;
-    @Nullable public final String color;
+    @Nullable
+    public final String id;
+    @Nullable
+    public final String name;
+    @Nullable
+    public final String color;
 
     public JsonTrack(
             @Nullable String id,

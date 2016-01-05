@@ -4,10 +4,24 @@ import io.kazak.api.json.model.JsonEvent
 import io.kazak.api.json.model.JsonPresenter
 import io.kazak.api.json.model.JsonRoom
 import io.kazak.api.json.model.JsonTrack
-import io.kazak.model.*
+import io.kazak.model.Ceremony
+import io.kazak.model.CoffeeBreak
+import io.kazak.model.Color
+import io.kazak.model.Day
+import io.kazak.model.Event
+import io.kazak.model.Id
+import io.kazak.model.Placeholder
+import io.kazak.model.Room
+import io.kazak.model.Schedule
+import io.kazak.model.Speaker
+import io.kazak.model.Speakers
+import io.kazak.model.Talk
+import io.kazak.model.TimeSlot
+import io.kazak.model.Track
 import io.kazak.utils.SimpleDateFormatThreadSafe
 import java.text.ParseException
-import java.util.*
+import java.util.Calendar
+import java.util.Date
 
 private val ISO_DATE_FORMATTER = SimpleDateFormatThreadSafe("yyyy-MM-dd'T'HH:mm:ss")
 

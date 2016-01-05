@@ -106,7 +106,6 @@ public class RulerView extends View implements Ruler {
         a.recycle();
     }
 
-
     @Override
     @Deprecated
     public void setWillNotDraw(boolean willNotDraw) {

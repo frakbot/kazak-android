@@ -2,14 +2,21 @@ package io.kazak.repository
 
 import io.kazak.api.KazakApi
 import io.kazak.assertThat
-import io.kazak.model.*
+import io.kazak.model.Day
+import io.kazak.model.Id
+import io.kazak.model.Room
+import io.kazak.model.Schedule
+import io.kazak.model.Speaker
+import io.kazak.model.Speakers
+import io.kazak.model.Talk
+import io.kazak.model.TimeSlot
 import io.kazak.verify
+import org.junit.Before
+import org.junit.Test
 import org.mockito.Mockito
 import rx.subjects.BehaviorSubject
 import java.util.ArrayList
 import java.util.Date
-import org.junit.Before
-import org.junit.Test
 
 public class KazakDataRepositoryTest {
 
