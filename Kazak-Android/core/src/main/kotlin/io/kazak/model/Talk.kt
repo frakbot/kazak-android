@@ -40,7 +40,7 @@ public data class Talk(
 
     fun track(): Track {
         val colors = arrayOf(0xFF2C69CD, 0xFFE91E63, 0xFF009688, 0xFFEF6C00)
-        val colorIndex = (Math.random() * colors.size()).toInt()
+        val colorIndex = (Math.random() * colors.size).toInt()
         val color = Color(colors[colorIndex].toInt())
         return Track(Id("1234"), "LOL", color)
     }

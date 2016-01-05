@@ -7,8 +7,7 @@ import io.kazak.api.json.model.JsonTrack
 import io.kazak.model.*
 import io.kazak.utils.SimpleDateFormatThreadSafe
 import java.text.ParseException
-import java.util.Calendar
-import java.util.Date
+import java.util.*
 
 private val ISO_DATE_FORMATTER = SimpleDateFormatThreadSafe("yyyy-MM-dd'T'HH:mm:ss")
 
@@ -77,8 +76,8 @@ private fun asScheduleInternal(jsonTalks: List<JsonEvent>, asEvent: (JsonEvent) 
         calendar.time = it.timeSlot().start
         calendar.get(Calendar.DAY_OF_YEAR)
     }.map {
-        val date = it.getValue().get(0).timeSlot().start // TODO: improve this
-        Day(date, it.getValue())
+        val date = it.value.get(0).timeSlot().start // TODO: improve this
+        Day(date, it.value)
     }
     return Schedule(talks)
 }
@@ -183,7 +182,7 @@ fun asColor(hexColorString: String?): Color? {
         return null
     }
 
-    if (trimmedHexColorString.length() == RGB_HEX_LENGTH) {
+    if (trimmedHexColorString.length == RGB_HEX_LENGTH) {
         return Color(parseRgbHex(trimmedHexColorString).toInt())
     } else {
         return Color(parseArgbHex(trimmedHexColorString).toInt())
@@ -191,11 +190,11 @@ fun asColor(hexColorString: String?): Color? {
 }
 
 private fun notValid(hexColorString: String): Boolean {
-    return hexColorString.isEmpty() || hexColorString.charAt(0) != HEX_COLOR_PREFIX
+    return hexColorString.isEmpty() || hexColorString[0] != HEX_COLOR_PREFIX
 }
 
 private fun unsupportedFormat(hexColorString: String): Boolean {
-    return hexColorString.length() != RGB_HEX_LENGTH && hexColorString.length() != ARGB_HEX_LENGTH
+    return hexColorString.length != RGB_HEX_LENGTH && hexColorString.length != ARGB_HEX_LENGTH
 }
 
 private fun parseRgbHex(rgbHex: String): Long {

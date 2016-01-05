@@ -31,9 +31,9 @@ public class KazakDataRepository(val api: KazakApi, val favoritesRepository: Fav
     override fun getFavoriteIds(): Observable<List<Id>> {
         return getFavoritesStatuses()
                 .flatMap {
-                    Observable.from(it.statuses.entrySet())
-                            .filter { it.getValue() == FavoriteStatus.FAVORITE }
-                            .map { it.getKey() }
+                    Observable.from(it.statuses.entries)
+                            .filter { it.value == FavoriteStatus.FAVORITE }
+                            .map { it.key }
                             .toList()
                 }
     }
