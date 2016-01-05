@@ -11,4 +11,7 @@
   <Match>
     <Source name="~.*\.kt" />
   </Match>
+  <Match>
+    <Package name="~.*io.kazak.databinding.*" />
+  </Match>
 </FindBugsFilter>
