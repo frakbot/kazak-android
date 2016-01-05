@@ -23,7 +23,7 @@ public interface DataRepository {
 
     fun getFavoritesSyncEvents(): Observable<SyncEvent>
 
-    fun getEvent(id : Id): Observable<Event>
+    fun getEvent(id: Id): Observable<Event>
 
     fun getTalkSyncEvents(): Observable<SyncEvent>
 

@@ -4,8 +4,10 @@ import org.jetbrains.annotations.Nullable;
 
 public class JsonRoom {
 
-    @Nullable public final String id;
-    @Nullable public final String name;
+    @Nullable
+    public final String id;
+    @Nullable
+    public final String name;
 
     public JsonRoom(
             @Nullable String id,

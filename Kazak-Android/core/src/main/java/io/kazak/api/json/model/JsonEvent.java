@@ -6,15 +6,24 @@ import org.jetbrains.annotations.Nullable;
 
 public class JsonEvent {
 
-    @Nullable public final String id;
-    @Nullable public final String name;
-    @Nullable public final String description;
-    @Nullable public final String startDate;
-    @Nullable public final String endDate;
-    @Nullable public final String type;
-    @Nullable public final List<JsonPresenter> presenters;
-    @Nullable public final List<JsonRoom> rooms;
-    @Nullable public final JsonTrack track;
+    @Nullable
+    public final String id;
+    @Nullable
+    public final String name;
+    @Nullable
+    public final String description;
+    @Nullable
+    public final String startDate;
+    @Nullable
+    public final String endDate;
+    @Nullable
+    public final String type;
+    @Nullable
+    public final List<JsonPresenter> presenters;
+    @Nullable
+    public final List<JsonRoom> rooms;
+    @Nullable
+    public final JsonTrack track;
 
     public JsonEvent(
             @Nullable String id,

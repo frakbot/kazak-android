@@ -7,7 +7,7 @@ public enum class EventType {
     PLACEHOLDER;
 
     fun canBeFavorite(): Boolean {
-        return when(this) {
+        return when (this) {
             (TALK) -> true
             (CEREMONY) -> true
             else -> false

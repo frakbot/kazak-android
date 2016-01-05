@@ -9,5 +9,5 @@
     <item name="android:background" tools:ignore="PrivateResource">?attr/colorPrimary</item>
     <item name="android:elevation" tools:ignore="NewApi">@dimen/toolbar_elevation</item>
   </style>
-  
+
 </resources>
