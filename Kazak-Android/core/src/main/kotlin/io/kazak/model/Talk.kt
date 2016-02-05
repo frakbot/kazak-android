@@ -1,6 +1,6 @@
 package io.kazak.model
 
-public data class Talk(
+data class Talk(
         val id: Id,
         val name: String,
         val description: String?,

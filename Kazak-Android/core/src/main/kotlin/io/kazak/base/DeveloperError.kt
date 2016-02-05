@@ -1,14 +1,14 @@
 package io.kazak.base
 
-public class DeveloperError : RuntimeException {
+class DeveloperError : RuntimeException {
 
-    public constructor(cause: Throwable, message: String, vararg messageArgs: Any) : super(format(message, *messageArgs), cause)
+    constructor(cause: Throwable, message: String, vararg messageArgs: Any) : super(format(message, *messageArgs), cause)
 
-    public constructor(message: String, vararg messageArgs: Any) : super(format(message, *messageArgs))
+    constructor(message: String, vararg messageArgs: Any) : super(format(message, *messageArgs))
 
-    public constructor(cause: Throwable) : super(cause)
+    constructor(cause: Throwable) : super(cause)
 
-    public constructor() : super()
+    constructor() : super()
 
 }
 

@@ -1,6 +1,6 @@
 package io.kazak.model
 
-public interface Session : Event {
+interface Session : Event {
 
     fun rooms(): List<Room>
 

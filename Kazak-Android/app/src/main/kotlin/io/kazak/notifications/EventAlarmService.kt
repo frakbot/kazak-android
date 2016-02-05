@@ -13,7 +13,7 @@ import rx.Observable
 import java.util.Calendar
 import java.util.Date
 
-public class EventAlarmService : IntentService(EventAlarmService::class.java.name) {
+class EventAlarmService : IntentService(EventAlarmService::class.java.name) {
 
     companion object {
         private val NOTIFICATION_INTERVAL_MINUTES = 10

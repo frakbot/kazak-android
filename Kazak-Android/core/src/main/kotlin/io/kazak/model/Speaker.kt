@@ -2,7 +2,7 @@ package io.kazak.model
 
 import java.net.URI
 
-public data class Speaker(
+data class Speaker(
         val id: Id,
         val name: String,
         val company: String?,

@@ -1,6 +1,6 @@
 package io.kazak.model
 
-public data class Ceremony(val id: Id, val name: String, val description: String?, val timeSlot: TimeSlot, val rooms: List<Room>) : Session {
+data class Ceremony(val id: Id, val name: String, val description: String?, val timeSlot: TimeSlot, val rooms: List<Room>) : Session {
 
     override fun id(): Id {
         return id

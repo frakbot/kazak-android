@@ -1,6 +1,6 @@
 package io.kazak.model
 
-public interface Event {
+interface Event {
 
     fun id(): Id
 

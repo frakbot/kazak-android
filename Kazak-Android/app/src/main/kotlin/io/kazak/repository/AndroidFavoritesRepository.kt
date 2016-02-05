@@ -6,7 +6,7 @@ import rx.Observable
 import java.io.File
 import java.io.FileWriter
 
-public class AndroidFavoritesRepository(val files: File, val gson: Gson) : FavoriteSessionsRepository {
+class AndroidFavoritesRepository(val files: File, val gson: Gson) : FavoriteSessionsRepository {
 
     private val LOCAL_FILE_NAME = "favorites.json"
 
