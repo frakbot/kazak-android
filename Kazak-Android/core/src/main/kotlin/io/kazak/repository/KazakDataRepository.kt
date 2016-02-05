@@ -81,7 +81,7 @@ class KazakDataRepository(val api: KazakApi, val favoritesRepository: FavoriteSe
     override fun removeFromFavorites(id: Id) {
         getFavoritesStatuses()
                 .map {
-                    it.statuses.remove(id)
+                    it.statuses.keys -= id
                     it.statuses
                 }
                 .map { FavoriteSessions(it) }
