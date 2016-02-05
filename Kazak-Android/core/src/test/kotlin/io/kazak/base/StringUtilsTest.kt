@@ -3,7 +3,7 @@ package io.kazak.base
 import io.kazak.assertThat
 import org.junit.Test
 
-public class StringUtilsTest {
+class StringUtilsTest {
 
     private val ANY_TRIMMED_STRING = "any trimmed string"
     private val ANY_TRIMMABLE_STRING = "   $ANY_TRIMMED_STRING "

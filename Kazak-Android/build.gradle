@@ -5,10 +5,9 @@ buildscript {
         jcenter()
         mavenCentral()
     }
-    ext.kotlin_version = '1.0.0-beta-4584'
+    ext.kotlin_version = '1.0.0-rc-1036'
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.0.0-alpha3'
-        classpath "com.android.databinding:dataBinder:1.0-rc4"
+        classpath 'com.android.tools.build:gradle:1.5.0'
         classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath 'de.undercouch:gradle-download-task:2.1.0'

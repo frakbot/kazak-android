@@ -8,7 +8,7 @@ import java.io.File
 import java.io.FileWriter
 import java.io.IOException
 
-public class AndroidJsonRepository(val assets: AssetManager, val files: File) : JsonRepository {
+class AndroidJsonRepository(val assets: AssetManager, val files: File) : JsonRepository {
 
     companion object {
 

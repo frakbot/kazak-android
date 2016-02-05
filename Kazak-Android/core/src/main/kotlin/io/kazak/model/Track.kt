@@ -1,6 +1,6 @@
 package io.kazak.model
 
-public data class Track(val id: Id, val name: String, val color: Color?) {
+data class Track(val id: Id, val name: String, val color: Color?) {
 
     fun id(): Id {
         return id

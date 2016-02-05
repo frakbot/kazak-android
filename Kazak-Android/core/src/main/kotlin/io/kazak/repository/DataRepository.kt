@@ -7,7 +7,7 @@ import io.kazak.model.Session
 import io.kazak.repository.event.SyncEvent
 import rx.Observable
 
-public interface DataRepository {
+interface DataRepository {
 
     fun getSchedule(): Observable<Schedule>
 

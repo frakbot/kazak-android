@@ -6,7 +6,7 @@ import rx.Observable
 import java.io.File
 import java.io.FileWriter
 
-public class AndroidFavoritesRepository(val files: File, val gson: Gson) : FavoriteSessionsRepository {
+class AndroidFavoritesRepository(val files: File, val gson: Gson) : FavoriteSessionsRepository {
 
     private val LOCAL_FILE_NAME = "favorites.json"
 
@@ -24,7 +24,7 @@ public class AndroidFavoritesRepository(val files: File, val gson: Gson) : Favor
 
     override fun read(): Observable<FavoriteSessions> {
         if (!fileExists(LOCAL_FILE_NAME)) {
-            return Observable.just(FavoriteSessions(emptyMap()))
+            return Observable.just(FavoriteSessions(mutableMapOf()))
         }
         return Observable.create {
             val json = files.listFiles()

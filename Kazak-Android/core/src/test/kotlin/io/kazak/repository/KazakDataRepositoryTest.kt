@@ -18,7 +18,7 @@ import rx.subjects.BehaviorSubject
 import java.util.ArrayList
 import java.util.Date
 
-public class KazakDataRepositoryTest {
+class KazakDataRepositoryTest {
 
     val talkId = Id("TestId")
     val testDate = Date()

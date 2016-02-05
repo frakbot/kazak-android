@@ -3,7 +3,7 @@ package io.kazak.repository
 import io.kazak.model.FavoriteSessions
 import rx.Observable
 
-public interface FavoriteSessionsRepository {
+interface FavoriteSessionsRepository {
 
     fun store(favorites: FavoriteSessions): Observable<Unit>
 

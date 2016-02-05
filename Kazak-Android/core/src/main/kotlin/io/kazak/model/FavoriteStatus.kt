@@ -1,6 +1,6 @@
 package io.kazak.model
 
-public enum class FavoriteStatus {
+enum class FavoriteStatus {
     FAVORITE,
     REMOVED
 }

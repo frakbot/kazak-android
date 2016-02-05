@@ -1,12 +1,7 @@
 package io.kazak.repository
 
 import io.kazak.api.KazakApi
-import io.kazak.model.Event
-import io.kazak.model.FavoriteSessions
-import io.kazak.model.FavoriteStatus
-import io.kazak.model.Id
-import io.kazak.model.Schedule
-import io.kazak.model.Session
+import io.kazak.model.*
 import io.kazak.repository.event.SyncEvent
 import io.kazak.repository.event.SyncState
 import rx.Observable
@@ -14,7 +9,7 @@ import rx.Observer
 import rx.schedulers.Schedulers
 import rx.subjects.BehaviorSubject
 
-public class KazakDataRepository(val api: KazakApi, val favoritesRepository: FavoriteSessionsRepository) : DataRepository {
+class KazakDataRepository(val api: KazakApi, val favoritesRepository: FavoriteSessionsRepository) : DataRepository {
 
     val scheduleCache: BehaviorSubject<Schedule> = BehaviorSubject.create()
     val scheduleSyncCache: BehaviorSubject<SyncEvent> = BehaviorSubject.create()
@@ -74,7 +69,10 @@ public class KazakDataRepository(val api: KazakApi, val favoritesRepository: Fav
 
     override fun addToFavorites(id: Id) {
         getFavoritesStatuses()
-                .map { it.statuses.plus(Pair(id, FavoriteStatus.FAVORITE)) }
+                .map {
+                    it.statuses += Pair(id, FavoriteStatus.FAVORITE)
+                    it.statuses
+                }
                 .map { FavoriteSessions(it) }
                 .doOnNext { favoritesRepository.store(it).subscribe() }
                 .subscribe(SyncObserver(favoritesCache, favoritesSyncCache))
@@ -82,7 +80,10 @@ public class KazakDataRepository(val api: KazakApi, val favoritesRepository: Fav
 
     override fun removeFromFavorites(id: Id) {
         getFavoritesStatuses()
-                .map { it.statuses.minus(id) }
+                .map {
+                    it.statuses.keys -= id
+                    it.statuses
+                }
                 .map { FavoriteSessions(it) }
                 .doOnNext { favoritesRepository.store(it).subscribe() }
                 .subscribe(SyncObserver(favoritesCache, favoritesSyncCache))

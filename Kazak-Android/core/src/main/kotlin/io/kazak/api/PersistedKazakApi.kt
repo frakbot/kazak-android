@@ -9,7 +9,7 @@ import io.kazak.repository.JsonRepository
 import rx.Observable
 import rx.schedulers.Schedulers
 
-public class PersistedKazakApi(val remoteApi: JsonKazakApi, val jsonRepository: JsonRepository, val gson: Gson) : KazakApi {
+class PersistedKazakApi(val remoteApi: JsonKazakApi, val jsonRepository: JsonRepository, val gson: Gson) : KazakApi {
 
     override fun fetchSchedule(): Observable<Schedule> {
         return Observable.concat(fetchLocalSchedule(), fetchRemoteSchedule())

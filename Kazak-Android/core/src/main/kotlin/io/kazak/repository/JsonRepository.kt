@@ -2,7 +2,7 @@ package io.kazak.repository
 
 import rx.Observable
 
-public interface JsonRepository {
+interface JsonRepository {
 
     fun store(json: String): Observable<Unit>
 

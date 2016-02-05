@@ -1,6 +1,6 @@
 package io.kazak.model
 
-public enum class EventType {
+enum class EventType {
     TALK,
     CEREMONY,
     COFFEE_BREAK,
