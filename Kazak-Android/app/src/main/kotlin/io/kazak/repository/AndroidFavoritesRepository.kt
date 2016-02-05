@@ -24,7 +24,7 @@ class AndroidFavoritesRepository(val files: File, val gson: Gson) : FavoriteSess
 
     override fun read(): Observable<FavoriteSessions> {
         if (!fileExists(LOCAL_FILE_NAME)) {
-            return Observable.just(FavoriteSessions(emptyMap()))
+            return Observable.just(FavoriteSessions(mutableMapOf()))
         }
         return Observable.create {
             val json = files.listFiles()
